@@ -7,9 +7,11 @@ public class WeaponInfo : ScriptableObject
 {
     public GameObject weaponPrefab;
     public GameObject bulletPrefab;
-    public int damage;
-    public int attackSpeed;
+    public float damage;
+    public float attackSpeed;
     public Sprite bulletSprite;
     public Sprite gunSprite;
+    public float bulletSpeed;
+    public float bulletLifeTime;
 
 }
