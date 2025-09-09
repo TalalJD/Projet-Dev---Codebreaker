@@ -13,5 +13,5 @@ public class WeaponInfo : ScriptableObject
     public Sprite gunSprite;
     public float bulletSpeed;
     public float bulletLifeTime;
-
+    public Transform firingPoint;
 }
