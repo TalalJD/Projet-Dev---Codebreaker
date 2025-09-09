@@ -8,9 +8,11 @@ public class BaseGun : Weapon
     {
         if (CanAttack())
         {
-            GameObject bullet = Instantiate(_weaponInfo.bulletPrefab, _weaponInfo.firingPoint);
+            GameObject bullet = Instantiate(_weaponInfo.bulletPrefab, firingPoint.position, firingPoint.rotation);
             ResetCooldown();
         }
     }
+
+   
 
 }

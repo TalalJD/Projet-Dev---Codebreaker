@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     [SerializeField] protected WeaponInfo _weaponInfo;
+    [SerializeField] protected Transform firingPoint;
     private float attackCooldown;
 
 
