@@ -31,6 +31,6 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void ResetCooldown()
     {
-        attackCooldown = _weaponInfo.attackSpeed;
+        attackCooldown = 1f / Mathf.Max(1, _weaponInfo.attackSpeed);
     }
 }
