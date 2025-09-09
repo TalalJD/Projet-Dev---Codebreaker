@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public int Direction = 1; //-1 = gauche , 1 = droite
     public PlayerStateMachine StateMachine;
     public LayerMask LayerMask;
+    public Weapon SelectedGun;
     public float XSpeed //vitesse horizontale du joueur
     {
         get => Rb.velocity.x;
@@ -48,6 +49,9 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.J)) 
+        {
+            SelectedGun.Attack();
+        }
     }
 }
