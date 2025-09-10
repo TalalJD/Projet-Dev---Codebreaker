@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c3b90bd325df542983bb87c731690e, type: 3}
   m_Name: BananaGun
   m_EditorClassIdentifier: 
-  weaponSprite: {fileID: 21300000, guid: a120aeb3bb55d254090bebb759f7b839, type: 3}
+  weaponSprite: {fileID: 21300000, guid: fe994e85bb7b9fb4e970aa472ad43c99, type: 3}
   bulletPrefab: {fileID: 6305855500433276022, guid: b2017721b0be9fa4b848ce42297a7b20, type: 3}
-  gunPrefab: {fileID: 5263507671525512894, guid: c21d4dabcedcb4844abf447d22e0dc81, type: 3}
+  weaponPrefab: {fileID: 5263507671525512894, guid: c21d4dabcedcb4844abf447d22e0dc81, type: 3}
   damage: 1
   attackSpeed: 1
   bulletSpeed: 5
