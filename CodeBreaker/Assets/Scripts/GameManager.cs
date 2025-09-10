@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,14 +9,25 @@ public class GameManager : MonoBehaviour
     public int nbVies = 3;
     public GameObject inventaire1;
     public GameObject inventaire2;
+    public TextMeshProUGUI horlogeText;
+    public float temps = 0f;
+    private bool isDemarrer = true;
 
-    private void Start()
+
+
+    void Start()
     {
         inventaire2.SetActive(false);
+
     }
 
     void Update()
     {
+        if (isDemarrer)
+        {
+            temps += Time.deltaTime;
+            MisAJourHorloge(temps);
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -60,5 +73,17 @@ public class GameManager : MonoBehaviour
 
         nbVies--;
         vies[nbVies].SetActive(false);
+    }
+
+    /// <summary>
+    /// Methode horloge
+    /// </summary>
+    public void MisAJourHorloge(float tempsIU)
+    {
+        int millisecondes = Mathf.FloorToInt((tempsIU * 1000) % 1000);
+        int secondes = Mathf.FloorToInt(tempsIU % 60);
+        int minutes = Mathf.FloorToInt(tempsIU / 60);
+
+        horlogeText.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, secondes, millisecondes);
     }
 }
