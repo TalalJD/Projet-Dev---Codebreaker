@@ -1,18 +1,28 @@
 using CodeBreaker;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    
+    //attributs pour la logique de deplacement
+
     public Rigidbody2D Rb;
     public PhysicsInfo PhysicsInfo;
     public float GroundSpeed;
     public int Direction = 1; //-1 = gauche , 1 = droite
     public PlayerStateMachine StateMachine;
     public LayerMask LayerMask;
-    public Weapon SelectedGun;
+
+    //attributs pour la logique d'inventarie et d'items
+
+    public Weapon SelectedWeapon; //l'arme selectionnee
+    public List<ScriptableObject> Inventory; //liste des scriptable object dans l'inventaire
+    public Transform WeaponHolder;
+    private int inventoryIndex = -1; //index de l'item selectionee dans l'inventaire
+
+
     public float XSpeed //vitesse horizontale du joueur
     {
         get => Rb.velocity.x;
@@ -44,14 +54,63 @@ public class Player : MonoBehaviour
     void Start()
     {
         StateMachine.Init();
-    }
+       
 
-    
+    }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J)) 
+        if (Input.GetKeyDown(KeyCode.J))
         {
-            SelectedGun.Attack();
+            Debug.Log("imshooting");
+            SelectedWeapon?.Attack();
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            CycleInventory();
         }
     }
+    /// <summary>
+    /// Methode qui permet de cycler dans l'inventaire du joueur
+    /// </summary>
+    public void CycleInventory()
+    {
+        inventoryIndex++;
+        if (inventoryIndex >= Inventory.Count)
+        {
+            inventoryIndex = 0; // retour au début
+        }
+
+        EquipWeapon(inventoryIndex);
+    }
+
+    /// <summary>
+    /// Équipe une arme à partir de l'inventaire en utilisant l'index donné.
+    /// Détruit l'arme actuellement équipée si nécessaire, instancie le prefab associé
+    /// au ScriptableObject <see cref="WeaponInfo"/>, puis assigne ses données
+    /// (logique, stats, sprite, etc.) au composant <see cref="Weapon"/>.
+    /// </summary>
+    /// <param name="index">Index de l'arme dans la liste Inventory</param>
+    private void EquipWeapon(int index)
+    {
+        // détruire l’arme précédente si elle existe
+        if (SelectedWeapon != null)
+        {
+            Destroy(SelectedWeapon.gameObject);
+        }
+
+        var weaponInfo = Inventory[index] as WeaponInfo;
+        if (weaponInfo != null)
+        {
+            GameObject weaponObj = Instantiate(weaponInfo.weaponPrefab, WeaponHolder);
+            var weapon = weaponObj.GetComponent<Weapon>();
+            weapon.AssignWeapon(weaponInfo);
+            SelectedWeapon = weapon;
+        }
+        else
+        {
+            Debug.LogWarning($"Item at index {index} is not a WeaponInfo!");
+        }
+    }
+
+   
 }
