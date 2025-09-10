@@ -5,16 +5,36 @@ public class GameManager : MonoBehaviour
 {
     public List<GameObject> vies;
     public int nbVies = 3;
+    public GameObject inventaire1;
+    public GameObject inventaire2;
+
+    private void Start()
+    {
+        inventaire2.SetActive(false);
+    }
 
     void Update()
     {
-        //TEST
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            inventaire1.SetActive(true);
+            inventaire2.SetActive(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            inventaire1.SetActive(false);
+            inventaire2.SetActive(true);
+        }
+
+        //TEST
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             AjouteVie();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             EnleveVie();
         }
