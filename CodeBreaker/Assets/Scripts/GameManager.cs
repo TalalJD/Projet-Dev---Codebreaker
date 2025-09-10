@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI horlogeText;
     public float temps = 0f;
     private bool isDemarrer = true;
+    public Image rotationHorloge;
+    public float rotationAngle = 90f;
+    public float rotationInterval = 1f;
+    public float rotationTimer = 0f;
 
 
 
@@ -28,6 +32,8 @@ public class GameManager : MonoBehaviour
             temps += Time.deltaTime;
             MisAJourHorloge(temps);
         }
+
+        MisAJourRotatitionHorloge();
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -76,7 +82,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Methode horloge
+    /// Methode horloge/minuterie
     /// </summary>
     public void MisAJourHorloge(float tempsIU)
     {
@@ -85,5 +91,20 @@ public class GameManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(tempsIU / 60);
 
         horlogeText.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, secondes, millisecondes);
+    }
+
+    /// <summary>
+    /// Methode tourne image
+    /// </summary>
+    public void MisAJourRotatitionHorloge()
+    {
+        if (rotationHorloge == null) return;
+
+        rotationTimer += Time.deltaTime;
+        if (rotationTimer >= rotationInterval)
+        {
+            rotationHorloge.transform.Rotate(0f, 0f, -rotationAngle);
+            rotationTimer = 0f;
+        }
     }
 }
