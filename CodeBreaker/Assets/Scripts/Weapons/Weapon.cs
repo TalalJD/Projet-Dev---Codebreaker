@@ -7,10 +7,12 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected WeaponInfo _weaponInfo;
     [SerializeField] protected Transform firingPoint;
     private float attackCooldown;
+    [SerializeField] protected SpriteRenderer sprite; 
 
 
     protected virtual void Start()
     {
+       
         attackCooldown = 0f;
     }
     public abstract void Attack();
@@ -22,7 +24,12 @@ public abstract class Weapon : MonoBehaviour
             attackCooldown -= Time.deltaTime;
         }
     }
+    public virtual void AssignWeapon(WeaponInfo weaponInfo)
+    {
+       _weaponInfo = weaponInfo;
+        sprite.sprite = _weaponInfo.weaponSprite;
 
+    }
     public virtual bool CanAttack()
     {
         return attackCooldown <= 0f;
@@ -32,5 +39,5 @@ public abstract class Weapon : MonoBehaviour
     {
         attackCooldown = 1f / Mathf.Max(1, _weaponInfo.attackSpeed);
     }
-    public WeaponInfo Info => _weaponInfo;
+    
 }
