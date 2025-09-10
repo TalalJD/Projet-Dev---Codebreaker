@@ -33,8 +33,6 @@ namespace CodeBreaker
 
         }
 
-     
-
         public void Update()
         {
             CurrentState?.OnUpdate();
