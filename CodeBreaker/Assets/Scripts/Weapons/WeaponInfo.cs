@@ -5,12 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Weapon Object", menuName = "WeaponSystem/WeaponObject")]
 public class WeaponInfo : ScriptableObject
 {
-    public Sprite weaponPrefab;
+    public Sprite weaponSprite;
     public GameObject bulletPrefab;
+    public GameObject weaponPrefab;
     public float damage;
     public float attackSpeed;
-    public Sprite bulletSprite;
-    public Sprite gunSprite;
     public float bulletSpeed;
     public float bulletLifeTime;
     
