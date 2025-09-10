@@ -11,6 +11,7 @@ public class SpeedBuff : PowerUpEffect
 
     public override void Apply(GameObject target)
     {
+        // Intéragit seulement avec le player 
         Player player = target.GetComponent<Player>();
         if (player != null && player.PhysicsInfo != null)
         {
@@ -19,7 +20,8 @@ public class SpeedBuff : PowerUpEffect
     }
 
     private IEnumerator ApplyTempSpeedBuff(Player player)
-    {
+    {   
+        // Acceleration temporaire
         var info = player.PhysicsInfo;
 
         info.MaxSpeed -= speedBonus;
@@ -27,6 +29,7 @@ public class SpeedBuff : PowerUpEffect
 
         yield return new WaitForSeconds(duration);
 
+        // retourn à la vitesse normale
         info.MaxSpeed += speedBonus;
         info.Acceleration += accelerationBonus;
     }
