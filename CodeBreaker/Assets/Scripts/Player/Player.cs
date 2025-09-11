@@ -48,6 +48,9 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-        
+        if (PhysicsInfo != null)
+        {
+            Debug.Log($"[Player Debug] XSpeed: {XSpeed:F2}, YSpeed: {YSpeed:F2}, MaxSpeed: {PhysicsInfo.MaxSpeed:F2}, Acceleration: {PhysicsInfo.Acceleration:F2}");
+        }
     }
 }
