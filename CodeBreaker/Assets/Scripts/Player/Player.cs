@@ -112,5 +112,11 @@ public class Player : MonoBehaviour
         }
     }
 
-   
+   public void AddItemToInventory(ScriptableObject item)
+    {
+        if (Inventory != null)
+        {
+            Inventory.Add(item);
+        }
+    }
 }
