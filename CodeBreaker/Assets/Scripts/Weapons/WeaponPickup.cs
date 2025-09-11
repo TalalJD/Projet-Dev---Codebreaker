@@ -7,10 +7,18 @@ using UnityEngine;
 public class WeaponPickUp : MonoBehaviour
 {
     public WeaponInfo weaponInfo; //L'arme qui sera recupere
+    public KeyCode pickupKey = KeyCode.E;
 
     public string playerTag = "Player";
     private bool _playerInRange = false;
     private Player _player;
+
+    void Update()
+    {
+        if (_playerInRange && Input.GetKeyDown(pickupKey)) {
+            Pickup();
+        }
+    }
 
     //Le joueur peut recuperer l'arme lorsqu'il est dans la zone du OnTrigger de l'arme
     private void OnTriggerEnter2D(Collider2D other)
@@ -29,6 +37,16 @@ public class WeaponPickUp : MonoBehaviour
         {
             _playerInRange = false;
             _player = null;
+        }
+    }
+
+    //Ajoute l'arme a l'inventaire du joueur en appelant la methode de la classe joueur
+    private void Pickup()
+    {
+        if (_player != null && weaponInfo != null)
+        {
+            _player.AddItemToInventory(weaponInfo);
+            Destroy(gameObject);
         }
     }
 
