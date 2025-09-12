@@ -4,8 +4,22 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Powerups/SpeedBuff")]
 public class SpeedBuff : PowerUpEffect
 {
-    public float duration = 5f;
 
+    public float duration = 5f;
+    public float speedStart;
+    public float accelerationStart;
+    public bool reset = false;
+    void Start()
+    {
+        // On peut trouver le Player au lancement
+        Player player = FindObjectOfType<Player>();
+        if (player != null && player.PhysicsInfo != null)
+        {
+            speedStart = player.PhysicsInfo.MaxSpeed;
+            accelerationStart = player.PhysicsInfo.Acceleration;
+            reset = true;
+        }
+    }
     public override void Apply(GameObject target)
     {
         // Seulement intéragir avec le Player
