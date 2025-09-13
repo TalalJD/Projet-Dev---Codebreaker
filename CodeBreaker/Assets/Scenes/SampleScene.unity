@@ -205,9 +205,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2355638639011198281, guid: ef1498460daa80a46974c42a6317aab2, type: 3}
+      propertyPath: _spriteRenderer
+      value: 
+      objectReference: {fileID: 1026331983}
     - target: {fileID: 5091750577415721793, guid: ef1498460daa80a46974c42a6317aab2, type: 3}
       propertyPath: m_Name
       value: SpeedPowerUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5091750577415721793, guid: ef1498460daa80a46974c42a6317aab2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5436829741582269363, guid: ef1498460daa80a46974c42a6317aab2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -745,6 +753,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 884474291}
   m_CullTransparentMesh: 1
+--- !u!212 &1026331983 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2425256699699427953, guid: ef1498460daa80a46974c42a6317aab2, type: 3}
+  m_PrefabInstance: {fileID: 276872412}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1052355312
 GameObject:
   m_ObjectHideFlags: 0

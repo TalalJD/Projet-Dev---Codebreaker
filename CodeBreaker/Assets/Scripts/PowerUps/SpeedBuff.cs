@@ -20,7 +20,7 @@ public class SpeedBuff : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
@@ -29,7 +29,8 @@ public class SpeedBuff : MonoBehaviour
             {
                 StartCoroutine(ApplyTempSpeedBuff());
                 _boxCollider.enabled = false;
-                _spriteRenderer.enabled = false;
+                if (_spriteRenderer != null)
+                    _spriteRenderer.enabled = false;
             }
             Debug.Log(_physicsInfo.MaxSpeed);
             
@@ -56,6 +57,6 @@ public class SpeedBuff : MonoBehaviour
         // Remttre les valeures initialles
         _physicsInfo.MaxSpeed = initialSpeed;
         _physicsInfo.Acceleration = initialAcceleration;
-        Destroy(gameObject);
+        DestroyImmediate(gameObject);
     }
 }

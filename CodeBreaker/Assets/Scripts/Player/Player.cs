@@ -53,8 +53,12 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        StateMachine.Init();
-       
+        if (StateMachine != null)
+        {
+            StateMachine.Init();
+        }
+            
+
 
     }
     void Update()
