@@ -1,51 +1,57 @@
 using System.Collections;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Powerups/SpeedBuff")]
-public class SpeedBuff : PowerUpEffect
+public class SpeedBuff : MonoBehaviour
 {
-
     public float duration = 5f;
-    public float speedStart;
-    public float accelerationStart;
-    public bool reset = false;
+    private Player _player;
+    private PhysicsInfo _physicsInfo;
+    [SerializeField] private BoxCollider2D _boxCollider;
+
     void Start()
     {
-        // On peut trouver le Player au lancement
-        Player player = FindObjectOfType<Player>();
-        if (player != null && player.PhysicsInfo != null)
+
+        _player = FindObjectOfType<Player>();
+        if (_player != null)
         {
-            speedStart = player.PhysicsInfo.MaxSpeed;
-            accelerationStart = player.PhysicsInfo.Acceleration;
-            reset = true;
-        }
-    }
-    public override void Apply(GameObject target)
-    {
-        // Seulement intéragir avec le Player
-        Player player = target.GetComponent<Player>();
-        if (player != null && player.PhysicsInfo != null)
-        {
-            player.StartCoroutine(ApplyTempSpeedBuff(player));
+            _physicsInfo = _player.PhysicsInfo;
         }
     }
 
-    private IEnumerator ApplyTempSpeedBuff(Player player)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        var info = player.PhysicsInfo;
+        if (collision.CompareTag("Player"))
+        {
+            Debug.Log(_physicsInfo.MaxSpeed);
+            if (_player != null && _physicsInfo != null)
+            {
+                StartCoroutine(ApplyTempSpeedBuff());
+            }
+            Debug.Log(_physicsInfo.MaxSpeed);
+            Destroy(gameObject); 
+        }
+    }
 
-        // Sauvegarder les valeurs initiaux
-        float initialSpeed = info.MaxSpeed;
-        float initialAcceleration = info.Acceleration;
+    /// <summary>
+    /// methode qui applique le power up au joueur en modifiant sa vitesse max et son acceleration
+    /// </summary>
+    
+    private IEnumerator ApplyTempSpeedBuff()
+    {
+        // Savegarder les valeurs initiales 
+        float initialSpeed = _physicsInfo.MaxSpeed;
+        float initialAcceleration = _physicsInfo.Acceleration;
 
-        // Implémenter le buff
-        info.MaxSpeed = initialSpeed * 1.5f;
-        info.Acceleration = initialAcceleration * 1.5f;
+        // Appliquer le power up
+        _physicsInfo.MaxSpeed = initialSpeed * 1.5f;
+        _physicsInfo.Acceleration = initialAcceleration * 1.5f;
 
+        // attendre la fin du power up
         yield return new WaitForSeconds(duration);
 
-        // vitesse initial après "duration"
-        info.MaxSpeed = initialSpeed;
-        info.Acceleration = initialAcceleration;
+        // Remttre les valeures initialles
+        _physicsInfo.MaxSpeed = initialSpeed;
+        _physicsInfo.Acceleration = initialAcceleration;
     }
 }
