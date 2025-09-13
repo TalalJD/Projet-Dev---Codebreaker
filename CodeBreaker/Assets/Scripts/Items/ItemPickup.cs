@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class WeaponPickUp : MonoBehaviour
+public class ItemPickUp : MonoBehaviour
 {
-    public WeaponInfo weaponInfo; //L'arme qui sera recupere
+    public ScriptableObject objectRecup; //L'arme qui sera recupere
     public KeyCode pickupKey = KeyCode.E;
 
     public string playerTag = "Player";
@@ -43,9 +43,9 @@ public class WeaponPickUp : MonoBehaviour
     //Ajoute l'arme a l'inventaire du joueur en appelant la methode de la classe joueur
     private void Pickup()
     {
-        if (_player != null && weaponInfo != null)
+        if (_player != null && objectRecup != null)
         {
-            _player.AddItemToInventory(weaponInfo);
+            _player.AddItemToInventory(objectRecup);
             Destroy(gameObject);
         }
     }

@@ -8,7 +8,7 @@ public class WeaponPickUpTest
     private GameObject _playerGameObject;
     private Player _playerScript;
     private GameObject _pickupGameObject;
-    private WeaponPickUp _pickupScript;
+    private ItemPickUp _pickupScript;
     private WeaponInfo _weaponInfo;
 
     [SetUp]
@@ -29,11 +29,11 @@ public class WeaponPickUpTest
         _pickupGameObject = new GameObject("WeaponPickUp");
         var collider = _pickupGameObject.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
-        _pickupScript = _pickupGameObject.AddComponent<WeaponPickUp>();
+        _pickupScript = _pickupGameObject.AddComponent<ItemPickUp>();
 
         // Assigner le weaponInfo scriptable object au pickup
         _weaponInfo = ScriptableObject.CreateInstance<WeaponInfo>();
-        _pickupScript.weaponInfo = _weaponInfo;
+        _pickupScript.objectRecup = _weaponInfo;
 
         // placer le joueur et le pickup a la meme position
         _playerGameObject.transform.position = Vector3.zero;
@@ -56,7 +56,7 @@ public class WeaponPickUpTest
         _pickupScript.OnTriggerEnter2D(playerCollider);
 
         // Simuler l'activation de la methode pickup manuellement au lieu d'avoir un input
-        var pickupMethod = typeof(WeaponPickUp)
+        var pickupMethod = typeof(ItemPickUp)
             .GetMethod("Pickup", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         pickupMethod.Invoke(_pickupScript, null);
 

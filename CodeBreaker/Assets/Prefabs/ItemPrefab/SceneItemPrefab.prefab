@@ -143,6 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecfe102aaeaf75a46840271ee8aec6b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponInfo: {fileID: 11400000, guid: 79100759888de9f44ba94d4af0934ca5, type: 2}
+  objectRecup: {fileID: 11400000, guid: 79100759888de9f44ba94d4af0934ca5, type: 2}
   pickupKey: 101
   playerTag: Player
