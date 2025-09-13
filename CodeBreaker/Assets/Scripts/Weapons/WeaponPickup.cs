@@ -21,7 +21,7 @@ public class WeaponPickUp : MonoBehaviour
     }
 
     //Le joueur peut recuperer l'arme lorsqu'il est dans la zone du OnTrigger de l'arme
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag(playerTag) && other.TryGetComponent(out Player player))
         {
