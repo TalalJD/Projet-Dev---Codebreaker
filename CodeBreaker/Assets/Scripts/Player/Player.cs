@@ -77,22 +77,22 @@ public class Player : MonoBehaviour
         inventoryIndex++;
         if (inventoryIndex >= Inventory.Count)
         {
-            inventoryIndex = 0; // retour au début
+            inventoryIndex = 0; // retour au dï¿½but
         }
 
         EquipWeapon(inventoryIndex);
     }
 
     /// <summary>
-    /// Équipe une arme à partir de l'inventaire en utilisant l'index donné.
-    /// Détruit l'arme actuellement équipée si nécessaire, instancie le prefab associé
-    /// au ScriptableObject <see cref="WeaponInfo"/>, puis assigne ses données
+    /// ï¿½quipe une arme ï¿½ partir de l'inventaire en utilisant l'index donnï¿½.
+    /// Dï¿½truit l'arme actuellement ï¿½quipï¿½e si nï¿½cessaire, instancie le prefab associï¿½
+    /// au ScriptableObject <see cref="WeaponInfo"/>, puis assigne ses donnï¿½es
     /// (logique, stats, sprite, etc.) au composant <see cref="Weapon"/>.
     /// </summary>
     /// <param name="index">Index de l'arme dans la liste Inventory</param>
     private void EquipWeapon(int index)
     {
-        // détruire l’arme précédente si elle existe
+        // dï¿½truire lï¿½arme prï¿½cï¿½dente si elle existe
         if (SelectedWeapon != null)
         {
             Destroy(SelectedWeapon.gameObject);
