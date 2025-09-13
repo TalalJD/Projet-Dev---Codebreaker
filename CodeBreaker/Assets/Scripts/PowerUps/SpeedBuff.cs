@@ -7,6 +7,7 @@ public class SpeedBuff : MonoBehaviour
     private Player _player;
     private PhysicsInfo _physicsInfo;
     [SerializeField] private BoxCollider2D _boxCollider;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
     void Start()
     {
@@ -27,9 +28,11 @@ public class SpeedBuff : MonoBehaviour
             if (_player != null && _physicsInfo != null)
             {
                 StartCoroutine(ApplyTempSpeedBuff());
+                _boxCollider.enabled = false;
+                _spriteRenderer.enabled = false;
             }
             Debug.Log(_physicsInfo.MaxSpeed);
-            Destroy(gameObject); 
+            
         }
     }
 
@@ -53,5 +56,6 @@ public class SpeedBuff : MonoBehaviour
         // Remttre les valeures initialles
         _physicsInfo.MaxSpeed = initialSpeed;
         _physicsInfo.Acceleration = initialAcceleration;
+        Destroy(gameObject);
     }
 }
