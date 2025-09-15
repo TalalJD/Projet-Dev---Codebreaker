@@ -27,9 +27,12 @@ public class Player : MonoBehaviour
 
     public event Action OnWeaponInventoryChanged;
     public event Action OnConsInventoryChanged;
+    public event Action<int, int> OnHealthChanged;
    
 
 
+    public int currentHealth;
+    public int maxHealth = 3;
 
     public float XSpeed //vitesse horizontale du joueur
     {
@@ -61,6 +64,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        currentHealth = maxHealth;
         if (StateMachine != null)
         {
             StateMachine.Init();
@@ -172,8 +176,37 @@ public class Player : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// methode qui permet au joueur de perdre ou gagner de la vie sans depacer sa vie max et sans aller dans le negatif si le joueur perd trop de vie
+    /// </summary>
+    /// <param name="amount">chifre positif ou negatif pour le heal / damage que le joueur prend</param>
+    public void ModifyHealth(int amount)
+    {
+        currentHealth += amount;
+
+       
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+
+        if (amount < 0)
         {
-            Inventory.Add(item);
+            Debug.Log($"Le joueur a pris {-amount} degat! Vie = {currentHealth}/{maxHealth}");
         }
+        else if (amount > 0)
+        {
+            Debug.Log($"Le joueur a heal {amount}! Vie = {currentHealth}/{maxHealth}");
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+       
     }
 }
