@@ -16,7 +16,9 @@ public class SpeedBuff : MonoBehaviour
         if (_player != null)
         {
             _physicsInfo = _player.PhysicsInfo;
-        }
+            _physicsInfo.MaxSpeed = 9.7f;
+            _physicsInfo.Acceleration = 20f;
+}
     }
 
 
@@ -24,15 +26,16 @@ public class SpeedBuff : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log(_physicsInfo.MaxSpeed);
+            
             if (_player != null && _physicsInfo != null)
             {
+                Debug.Log($"[Before Buff] MaxSpeed: {_physicsInfo.MaxSpeed}, Acceleration: {_physicsInfo.Acceleration}");
                 StartCoroutine(ApplyTempSpeedBuff());
                 _boxCollider.enabled = false;
                 if (_spriteRenderer != null)
                     _spriteRenderer.enabled = false;
             }
-            Debug.Log(_physicsInfo.MaxSpeed);
+            
             
         }
     }
@@ -50,6 +53,7 @@ public class SpeedBuff : MonoBehaviour
         // Appliquer le power up
         _physicsInfo.MaxSpeed = initialSpeed * 1.5f;
         _physicsInfo.Acceleration = initialAcceleration * 1.5f;
+        Debug.Log($"[Buff Applied] MaxSpeed: {_physicsInfo.MaxSpeed}, Acceleration: {_physicsInfo.Acceleration}");
 
         // attendre la fin du power up
         yield return new WaitForSeconds(duration);
@@ -57,6 +61,7 @@ public class SpeedBuff : MonoBehaviour
         // Remttre les valeures initialles
         _physicsInfo.MaxSpeed = initialSpeed;
         _physicsInfo.Acceleration = initialAcceleration;
+        Debug.Log($"[Buff Ended] MaxSpeed: {_physicsInfo.MaxSpeed}, Acceleration: {_physicsInfo.Acceleration}");
         DestroyImmediate(gameObject);
     }
 }

@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     public int Direction = 1; //-1 = gauche , 1 = droite
     public PlayerStateMachine StateMachine;
     public LayerMask LayerMask;
+    public int currentHealth = 3;
+    
 
     //attributs pour la logique d'inventarie et d'items
 
