@@ -5,10 +5,24 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public List<GameObject> vies;
-    public int nbVies = 3;
-    public GameObject inventaire1;
-    public GameObject inventaire2;
+    [SerializeField] private List<GameObject> vies;
+    private int nbVies = 3;
+
+    [SerializeField] private GameObject inventaireArme1;
+    [SerializeField] private GameObject inventaireArme2;
+    [SerializeField] private GameObject inventaireConsomable1;
+    [SerializeField] private GameObject inventaireConsomable2;
+
+    [SerializeField] private Image invArmeImg1;
+    [SerializeField] private Image invArmeImg2;
+    [SerializeField] private Image invConsImg1;
+    [SerializeField] private Image invConsImg2;
+
+
+    private Player player;
+
+    public List<ScriptableObject> WeaponInventory;
+
     public TextMeshProUGUI horlogeText;
     public float temps = 0f;
     private bool isDemarrer = true;
@@ -17,11 +31,16 @@ public class GameManager : MonoBehaviour
     public float rotationInterval = 1f;
     public float rotationTimer = 0f;
 
-
+    
 
     void Start()
     {
-        inventaire2.SetActive(false);
+        
+
+         player = FindObjectOfType<Player>();
+         WeaponInventory = player.WeaponInventory;
+        player.OnWeaponInventoryChanged += setInventoryWeaponIcons;
+        setInventoryWeaponIcons();
 
     }
 
@@ -35,19 +54,7 @@ public class GameManager : MonoBehaviour
 
         MisAJourRotatitionHorloge();
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            inventaire1.SetActive(true);
-            inventaire2.SetActive(false);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            inventaire1.SetActive(false);
-            inventaire2.SetActive(true);
-        }
-
-        //TEST
+       
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             AjouteVie();
@@ -58,6 +65,32 @@ public class GameManager : MonoBehaviour
             EnleveVie();
         }
     }
+        {
+            inventaire1.SetActive(false);
+            inventaire2.SetActive(true);
+        }
+
+        //TEST
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+
+
+    /// <summary>
+    /// Methode qui update les icones des armes dans l'inventaire du joueur sur le UI
+    /// </summary>
+    public void setInventoryWeaponIcons()
+    {
+        if (WeaponInventory.Count > 0 && WeaponInventory[0] is WeaponInfo weaponInfo1)
+        {
+            invArmeImg1.sprite = weaponInfo1.weaponSprite;
+        }
+
+        if (WeaponInventory.Count > 1 && WeaponInventory[1] is WeaponInfo weaponInfo2)
+        {
+            invArmeImg2.sprite = weaponInfo2.weaponSprite;
+        }
+    }
+
+
 
     /// <summary>
     /// Methode pour ajout une vie
