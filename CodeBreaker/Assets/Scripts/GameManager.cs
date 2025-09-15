@@ -40,7 +40,9 @@ public class GameManager : MonoBehaviour
          player = FindObjectOfType<Player>();
          WeaponInventory = player.WeaponInventory;
         player.OnWeaponInventoryChanged += setInventoryWeaponIcons;
+        player.OnHealthChanged += UpdateHeartsUI;
         setInventoryWeaponIcons();
+        UpdateHeartsUI(player.currentHealth, player.maxHealth);
 
     }
 
@@ -65,13 +67,28 @@ public class GameManager : MonoBehaviour
             EnleveVie();
         }
     }
+    /// <summary>
+    /// Methode qui update les coeurs sur le ui par rapport a la vie du joueur
+    /// </summary>
+    /// <param name="currentHealth">vie du joueur en ce moment</param>
+    /// <param name="maxHealth">Vie max du joueur</param>
+    private void UpdateHeartsUI(int currentHealth, int maxHealth)
+    {
+       
+        for (int i = 0; i < vies.Count; i++)
         {
-            inventaire1.SetActive(false);
-            inventaire2.SetActive(true);
+            if (i < currentHealth)
+            {
+                vies[i].SetActive(true); 
+            }
+            else
+            {
+                vies[i].SetActive(false); 
+            }
         }
 
-        //TEST
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        nbVies = currentHealth;
+    }
 
 
     /// <summary>
