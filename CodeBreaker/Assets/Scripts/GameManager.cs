@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private Player player;
 
     public List<ScriptableObject> WeaponInventory;
+    public List<ScriptableObject> ConsumableInventory;
 
     public TextMeshProUGUI horlogeText;
     public float temps = 0f;
@@ -37,8 +38,9 @@ public class GameManager : MonoBehaviour
     {
         
 
-         player = FindObjectOfType<Player>();
-         WeaponInventory = player.WeaponInventory;
+        player = FindObjectOfType<Player>();
+        WeaponInventory = player.WeaponInventory;
+        ConsumableInventory = player.ConsumableInventory;
         player.OnWeaponInventoryChanged += setInventoryWeaponIcons;
         player.OnHealthChanged += UpdateHeartsUI;
         setInventoryWeaponIcons();
@@ -107,7 +109,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Methode qui update les icones des items dans l'inventaire du joueur sur le UI
+    /// </summary>
+    public void setInventoryConsumableIcons()
+    {
+        if (WeaponInventory.Count > 0 && WeaponInventory[0] is ItemInfo ItemInfo1)
+        {
+            invArmeImg1.sprite = ItemInfo1.ItemSprite;
+        }
 
+        if (WeaponInventory.Count > 1 && WeaponInventory[1] is ItemInfo ItemInfo2)
+        {
+            invArmeImg2.sprite = ItemInfo2.ItemSprite;
+        }
+    }
 
     /// <summary>
     /// Methode pour ajout une vie

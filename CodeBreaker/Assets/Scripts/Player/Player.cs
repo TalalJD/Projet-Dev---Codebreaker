@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     public Transform WeaponHolder;
     private int inventoryIndex = -1; //index de l'item selectionee dans l'inventaire
 
+
     public event Action OnWeaponInventoryChanged;
     //public event Action OnConsInventoryChanged;
     public event Action<int, int> OnHealthChanged;
@@ -173,7 +174,7 @@ public class Player : MonoBehaviour
             }
             OnWeaponInventoryChanged?.Invoke();
         }
-        
+
     }
 
     /// <summary>
