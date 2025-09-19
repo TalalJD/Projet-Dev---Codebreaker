@@ -65,7 +65,7 @@ public class GS_AttackState : GromarState
 
         }
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < bulletNumber; i++)
         {
             Vector3 spawnPosition = gromar.GetRandomShootPosition();
             GameObject bullet = GameObject.Instantiate(gromar.bigBullet, spawnPosition, Quaternion.identity);
