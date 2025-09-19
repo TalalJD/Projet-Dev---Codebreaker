@@ -1188,9 +1188,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   SelectedWeapon: {fileID: 0}
-  Inventory:
-  - {fileID: 11400000, guid: f47f38498061d484398922edb12d4dd8, type: 2}
+  SelectedWeaponInfo: {fileID: 0}
+  WeaponInventory: []
+  ConsumableInventory: []
   WeaponHolder: {fileID: 767245068}
+  currentHealth: 0
+  maxHealth: 3
 --- !u!50 &1218052893
 Rigidbody2D:
   serializedVersion: 4
@@ -1666,9 +1669,16 @@ MonoBehaviour:
   - {fileID: 884474291}
   - {fileID: 1102660684}
   - {fileID: 861188218}
-  nbVies: 3
-  inventaire1: {fileID: 61235612}
-  inventaire2: {fileID: 548725702}
+  inventaireArme1: {fileID: 0}
+  inventaireArme2: {fileID: 0}
+  inventaireConsomable1: {fileID: 0}
+  inventaireConsomable2: {fileID: 0}
+  invArmeImg1: {fileID: 0}
+  invArmeImg2: {fileID: 0}
+  invConsImg1: {fileID: 0}
+  invConsImg2: {fileID: 0}
+  WeaponInventory: []
+  ConsumableInventory: []
   horlogeText: {fileID: 1071620300}
   temps: 0
   rotationHorloge: {fileID: 843383119}
@@ -1704,7 +1714,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4471003968645306081, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4471003968645306081, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_CollisionDetection
@@ -1724,11 +1734,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6296591436595927979, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_IsTrigger
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6760447196554148781, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8357869592766433426, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1776,7 +1786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8737978799106204385, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8737978799106204385, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_TagString
