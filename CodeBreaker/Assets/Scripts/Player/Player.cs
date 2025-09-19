@@ -1,4 +1,5 @@
 using CodeBreaker;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -18,10 +19,21 @@ public class Player : MonoBehaviour
     //attributs pour la logique d'inventarie et d'items
 
     public Weapon SelectedWeapon; //l'arme selectionnee
-    public List<ScriptableObject> Inventory; //liste des scriptable object dans l'inventaire
+    public WeaponInfo SelectedWeaponInfo;//info de l'arme selectionne
+    public List<ScriptableObject> WeaponInventory; //liste des armes scriptable object dans l'inventaire
+    public List<ScriptableObject> ConsumableInventory; //liste des consomable scriptable object dans l'inventaire
     public Transform WeaponHolder;
     private int inventoryIndex = -1; //index de l'item selectionee dans l'inventaire
 
+
+    public event Action OnWeaponInventoryChanged;
+    //public event Action OnConsInventoryChanged;
+    public event Action<int, int> OnHealthChanged;
+   
+
+
+    public int currentHealth;
+    public int maxHealth = 3;
 
     public float XSpeed //vitesse horizontale du joueur
     {
@@ -53,6 +65,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        currentHealth = maxHealth;
         if (StateMachine != null)
         {
             StateMachine.Init();
@@ -70,25 +83,36 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
-            CycleInventory();
+            CycleWeaponInventory();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            ModifyHealth(-1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            ModifyHealth(1);
         }
     }
     /// <summary>
     /// Methode qui permet de cycler dans l'inventaire du joueur
     /// </summary>
-    public void CycleInventory()
+    public void CycleWeaponInventory()
     {
-        inventoryIndex++;
-        if (inventoryIndex >= Inventory.Count)
+        if (WeaponInventory.Count > 0) 
         {
-            inventoryIndex = 0; // retour au d�but
-        }
+            inventoryIndex++;
+            if (inventoryIndex >= WeaponInventory.Count)
+            {
+                inventoryIndex = 0; // retour au d�but
+            }
 
-        EquipWeapon(inventoryIndex);
+            EquipWeapon(inventoryIndex);
+        }
     }
 
     /// <summary>
-    /// �quipe une arme � partir de l'inventaire en utilisant l'index donn�.
+    /// Equipe une arme a partir de l'inventaire en utilisant l'index donn�.
     /// D�truit l'arme actuellement �quip�e si n�cessaire, instancie le prefab associ�
     /// au ScriptableObject <see cref="WeaponInfo"/>, puis assigne ses donn�es
     /// (logique, stats, sprite, etc.) au composant <see cref="Weapon"/>.
@@ -102,13 +126,14 @@ public class Player : MonoBehaviour
             Destroy(SelectedWeapon.gameObject);
         }
 
-        var weaponInfo = Inventory[index] as WeaponInfo;
+        var weaponInfo = WeaponInventory[index] as WeaponInfo;
         if (weaponInfo != null)
         {
             GameObject weaponObj = Instantiate(weaponInfo.weaponPrefab, WeaponHolder);
             var weapon = weaponObj.GetComponent<Weapon>();
             weapon.AssignWeapon(weaponInfo);
             SelectedWeapon = weapon;
+            SelectedWeaponInfo = weaponInfo;
         }
         else
         {
@@ -116,11 +141,73 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Methode qui regarde si l'item est une arme ou un objet et la rajoute dans la liste d'inventaire specifique du joueur
+    /// </summary>
+    /// <param name="item">scriptable object recupere</param>
    public void AddItemToInventory(ScriptableObject item)
     {
-        if (Inventory != null)
+        if(item.GetType() == typeof(WeaponInfo) && WeaponInventory != null)
         {
-            Inventory.Add(item);
+            if (WeaponInventory.Count < 2) 
+            {
+                WeaponInventory.Add(item);
+            }
+            else
+            {
+                if (SelectedWeapon != null) 
+                {
+                   int selectedIndex = WeaponInventory.IndexOf(SelectedWeaponInfo);
+                    if (selectedIndex != -1)
+                    {
+                        WeaponInventory[selectedIndex] = item; // replace in place
+                        EquipWeapon(selectedIndex); // equip the new one immediately
+                    }
+                }
+                else
+                {
+                    // If no weapon selected, just replace the first slot (or any default slot)
+                    WeaponInventory[0] = item;
+                    EquipWeapon(0);
+                }
+
+            }
+            OnWeaponInventoryChanged?.Invoke();
         }
+
+    }
+
+    /// <summary>
+    /// methode qui permet au joueur de perdre ou gagner de la vie sans depacer sa vie max et sans aller dans le negatif si le joueur perd trop de vie
+    /// </summary>
+    /// <param name="amount">chifre positif ou negatif pour le heal / damage que le joueur prend</param>
+    public void ModifyHealth(int amount)
+    {
+        currentHealth += amount;
+
+       
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+
+        if (amount < 0)
+        {
+            Debug.Log($"Le joueur a pris {-amount} degat! Vie = {currentHealth}/{maxHealth}");
+        }
+        else if (amount > 0)
+        {
+            Debug.Log($"Le joueur a heal {amount}! Vie = {currentHealth}/{maxHealth}");
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+       
     }
 }

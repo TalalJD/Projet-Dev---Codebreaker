@@ -5,10 +5,25 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public List<GameObject> vies;
-    public int nbVies = 3;
-    public GameObject inventaire1;
-    public GameObject inventaire2;
+    [SerializeField] private List<GameObject> vies;
+    private int nbVies = 3;
+
+    [SerializeField] private GameObject inventaireArme1;
+    [SerializeField] private GameObject inventaireArme2;
+    [SerializeField] private GameObject inventaireConsomable1;
+    [SerializeField] private GameObject inventaireConsomable2;
+
+    [SerializeField] private Image invArmeImg1;
+    [SerializeField] private Image invArmeImg2;
+    [SerializeField] private Image invConsImg1;
+    [SerializeField] private Image invConsImg2;
+
+
+    private Player player;
+
+    public List<ScriptableObject> WeaponInventory;
+    public List<ScriptableObject> ConsumableInventory;
+
     public TextMeshProUGUI horlogeText;
     public float temps = 0f;
     private bool isDemarrer = true;
@@ -17,11 +32,19 @@ public class GameManager : MonoBehaviour
     public float rotationInterval = 1f;
     public float rotationTimer = 0f;
 
-
+    
 
     void Start()
     {
-        inventaire2.SetActive(false);
+        
+
+        player = FindObjectOfType<Player>();
+        WeaponInventory = player.WeaponInventory;
+        ConsumableInventory = player.ConsumableInventory;
+        player.OnWeaponInventoryChanged += setInventoryWeaponIcons;
+        player.OnHealthChanged += UpdateHeartsUI;
+        setInventoryWeaponIcons();
+        UpdateHeartsUI(player.currentHealth, player.maxHealth);
 
     }
 
@@ -35,19 +58,7 @@ public class GameManager : MonoBehaviour
 
         MisAJourRotatitionHorloge();
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            inventaire1.SetActive(true);
-            inventaire2.SetActive(false);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            inventaire1.SetActive(false);
-            inventaire2.SetActive(true);
-        }
-
-        //TEST
+       
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             AjouteVie();
@@ -56,6 +67,61 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             EnleveVie();
+        }
+    }
+    /// <summary>
+    /// Methode qui update les coeurs sur le ui par rapport a la vie du joueur
+    /// </summary>
+    /// <param name="currentHealth">vie du joueur en ce moment</param>
+    /// <param name="maxHealth">Vie max du joueur</param>
+    private void UpdateHeartsUI(int currentHealth, int maxHealth)
+    {
+       
+        for (int i = 0; i < vies.Count; i++)
+        {
+            if (i < currentHealth)
+            {
+                vies[i].SetActive(true); 
+            }
+            else
+            {
+                vies[i].SetActive(false); 
+            }
+        }
+
+        nbVies = currentHealth;
+    }
+
+
+    /// <summary>
+    /// Methode qui update les icones des armes dans l'inventaire du joueur sur le UI
+    /// </summary>
+    public void setInventoryWeaponIcons()
+    {
+        if (WeaponInventory.Count > 0 && WeaponInventory[0] is WeaponInfo weaponInfo1)
+        {
+            invArmeImg1.sprite = weaponInfo1.weaponSprite;
+        }
+
+        if (WeaponInventory.Count > 1 && WeaponInventory[1] is WeaponInfo weaponInfo2)
+        {
+            invArmeImg2.sprite = weaponInfo2.weaponSprite;
+        }
+    }
+
+    /// <summary>
+    /// Methode qui update les icones des items dans l'inventaire du joueur sur le UI
+    /// </summary>
+    public void setInventoryConsumableIcons()
+    {
+        if (WeaponInventory.Count > 0 && WeaponInventory[0] is ItemInfo ItemInfo1)
+        {
+            invArmeImg1.sprite = ItemInfo1.ItemSprite;
+        }
+
+        if (WeaponInventory.Count > 1 && WeaponInventory[1] is ItemInfo ItemInfo2)
+        {
+            invArmeImg2.sprite = ItemInfo2.ItemSprite;
         }
     }
 
