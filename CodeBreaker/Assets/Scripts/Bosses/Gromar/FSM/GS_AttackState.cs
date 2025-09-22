@@ -6,13 +6,48 @@ using UnityEngine;
 
 public class GS_AttackState : GromarState
 {
+    private const float mediumSpread = 60f;
+    private const float bigSpread = 90f;
+    private const float smallSpread = 30f;
+
     public override void OnEnter()
     {
         Debug.Log("atackstateEnteredGromar");
         gromar.StartCoroutine(ShootXPatternBarrageAtPlayer(10, 0.2f, 5f));
+    public void ShootCone(int bulletCount, float spreadAngle, float speed)
+    {
+        if (gromar == null || gromar.smallBullet == null || gromar.MINSHOOT == null || gromar.MAXSHOOT == null)
+            return;
+
+        // Midpoint between min and max shoot
+        Vector3 midPoint = (gromar.MINSHOOT.position + gromar.MAXSHOOT.position) / 2f;
+
+        // Base direction (straight left for example)
+        Vector2 baseDir = Vector2.left;
+
+        // Start angle so the cone is centered
+        float startAngle = -spreadAngle / 2f;
+
+        for (int i = 0; i < bulletCount; i++)
+        {
+            // Lerp angle across the spread
+            float t = (bulletCount == 1) ? 0.5f : (float)i / (bulletCount - 1);
+            float angle = startAngle + t * spreadAngle;
+
+            // Rotate the base direction
+            Vector2 dir = Quaternion.Euler(0, 0, angle) * baseDir;
+
+            GameObject bullet = GameObject.Instantiate(gromar.smallBullet, midPoint, Quaternion.identity);
+
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = dir.normalized * speed;
+                bullet.transform.right = dir; // rotate sprite
+            }
+        }
     }
 
-    private IEnumerator ShootXPatternBarrageAtPlayer(int bulletCount, float delay, float speed)
     public IEnumerator ShootStraightLine(int bulletCount, float speed, float delay, Vector2 direction)
     {
    
@@ -74,7 +109,7 @@ public class GS_AttackState : GromarState
 
     public void ShootBulletBarrage()
     {
-        int bulletNumber = 10;
+        int bulletNumber = 20;
         if (gromar == null || gromar.bigBullet == null)
         {
             Debug.Log("Gromar or bulletPrefab is not assigned");
