@@ -13,7 +13,48 @@ public class GS_AttackState : GromarState
     public override void OnEnter()
     {
         Debug.Log("atackstateEnteredGromar");
-        gromar.StartCoroutine(ShootXPatternBarrageAtPlayer(10, 0.2f, 5f));
+    
+       // ShootBulletBarrage();
+        //gromar.StartCoroutine(ShootRegularXPattern(45, 0.1f, 6f, gromar.mapMidPoint.position));
+       // gromar.StartCoroutine(ShootStraightLine(45, 6f, .1f, Vector2.left));
+        ShootCone(10, bigSpread, 5f);
+
+
+    }
+
+    //private IEnumerator ShootXPatternBarrageAtPlayer(int bulletCount, float delay, float speed)
+    //{
+    //    if (gromar == null || gromar.smallBullet == null)
+    //    {
+    //        Debug.Log("Gromar or smallBullet not assigned");
+    //        yield break;
+    //    }
+
+    //    // Take the player's position once
+    //    Vector3 playerPos = new Vector3(gromar.player.transform.position.x, gromar.player.transform.position.y + 2f, gromar.player.transform.position.z);
+
+    //    // Calculate base direction from MINSHOOT to player (up-left line)
+    //    Vector2 dirFromMin = (playerPos - gromar.MINSHOOT.position).normalized;
+
+    //    // Calculate base direction from MAXSHOOT to player (down-left line)
+    //    Vector2 dirFromMax = (playerPos - gromar.MAXSHOOT.position).normalized;
+
+    //    for (int i = 0; i < bulletCount; i++)
+    //    {
+    //        // Fire one bullet from MINSHOOT aimed at player
+    //        SpawnSmallBullet(gromar.MINSHOOT.position, dirFromMin, speed);
+
+    //        // Fire one bullet from MAXSHOOT aimed at player
+    //        SpawnSmallBullet(gromar.MAXSHOOT.position, dirFromMax, speed);
+
+    //        yield return new WaitForSeconds(delay);
+    //    }
+    //    ShootBulletBarrage();
+    //    Debug.Log("X pattern barrage aimed at player complete");
+
+    //}
+
+
     public void ShootCone(int bulletCount, float spreadAngle, float speed)
     {
         if (gromar == null || gromar.smallBullet == null || gromar.MINSHOOT == null || gromar.MAXSHOOT == null)
@@ -48,6 +89,9 @@ public class GS_AttackState : GromarState
         }
     }
 
+
+
+
     public IEnumerator ShootStraightLine(int bulletCount, float speed, float delay, Vector2 direction)
     {
    
@@ -65,36 +109,39 @@ public class GS_AttackState : GromarState
         }
 
     }
+
+
+    public IEnumerator ShootRegularXPattern(int bulletCount, float delay, float speed, Vector2 targetPoint)
     {
         if (gromar == null || gromar.smallBullet == null)
         {
-            Debug.Log("Gromar or smallBullet not assigned");
+            Debug.LogWarning("Gromar or smallBullet not assigned");
             yield break;
         }
 
-        // Take the player's position once
-        Vector3 playerPos = new Vector3(gromar.player.transform.position.x, gromar.player.transform.position.y + 2f, gromar.player.transform.position.z);
+        // Define fixed X directions
+        Vector2 upLeft = new Vector2(-1f, 1f).normalized;   
+        Vector2 downLeft = new Vector2(-1f, -1f).normalized; 
 
-        // Calculate base direction from MINSHOOT to player (up-left line)
-        Vector2 dirFromMin = (playerPos - gromar.MINSHOOT.position).normalized;
+        Vector3 minPos = gromar.MINSHOOT.position;
+        Vector3 maxPos = gromar.MAXSHOOT.position;
 
-        // Calculate base direction from MAXSHOOT to player (down-left line)
-        Vector2 dirFromMax = (playerPos - gromar.MAXSHOOT.position).normalized;
+        Vector2 dirFromMin = (targetPoint - (Vector2)minPos).normalized;
+        Vector2 dirFromMax = (targetPoint - (Vector2)maxPos).normalized;
 
         for (int i = 0; i < bulletCount; i++)
         {
-            // Fire one bullet from MINSHOOT aimed at player
-            SpawnSmallBullet(gromar.MINSHOOT.position, dirFromMin, speed);
+            SpawnSmallBullet(minPos, dirFromMin, speed);
+            SpawnSmallBullet(maxPos, dirFromMax, speed);
 
-            // Fire one bullet from MAXSHOOT aimed at player
-            SpawnSmallBullet(gromar.MAXSHOOT.position, dirFromMax, speed);
-
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(delay); // stagger shots for a stream effect
         }
-        ShootBulletBarrage();
-        Debug.Log("X pattern barrage aimed at player complete");
-        
+
+        Debug.Log("Regular X pattern finished");
     }
+
+
+
     private void SpawnSmallBullet(Vector3 position, Vector2 dir, float speed)
     {
         GameObject bullet = GameObject.Instantiate(gromar.smallBullet, position, Quaternion.identity);
