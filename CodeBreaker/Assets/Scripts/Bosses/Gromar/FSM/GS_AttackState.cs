@@ -152,10 +152,10 @@ public class GS_AttackState : GromarState
 
     public IEnumerator ShootStraightLine(int bulletCount, float speed, float delay, Vector2 direction)
     {
-   
+
 
         // Get the midpoint between minShoot and maxShoot
-        Vector3 midPoint = (gromar.MINSHOOT.position + gromar.MAXSHOOT.position) / 2f;
+        Vector3 midPoint = new Vector3 (gromar.transform.position.x, (gromar.transform.position.y -1f), gromar.transform.position.z);
 
         // Normalize direction to avoid scaling issues
         direction.Normalize();
