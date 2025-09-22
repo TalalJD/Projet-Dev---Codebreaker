@@ -8,7 +8,8 @@ public class Gromar : MonoBehaviour
 {
     public Transform MINSHOOT;
     public Transform MAXSHOOT;
-    public Transform mapMidPoint;
+    public Transform MAPMIDPOINT;
+    public List<Transform> mapPoints;
     public GameObject bigBullet;
     public GameObject smallBullet;
     public GromarStateMachine StateMachine;

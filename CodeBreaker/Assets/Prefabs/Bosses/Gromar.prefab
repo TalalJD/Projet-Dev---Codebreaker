@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 252976640406858818}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3, z: 0}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -142,7 +142,7 @@ Transform:
   m_GameObject: {fileID: 3588326844227554633}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7729874, y: -0.36203796, z: -0.07894805}
+  m_LocalPosition: {x: 9, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -166,6 +166,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MINSHOOT: {fileID: 1597992371259097143}
   MAXSHOOT: {fileID: 5601103454598183106}
+  MAPMIDPOINT: {fileID: 0}
+  mapPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   bigBullet: {fileID: 6305855500433276022, guid: 725379fd9fac36149b79f9038138ff56, type: 3}
   smallBullet: {fileID: 6305855500433276022, guid: 6b44f2f14c4f3cc4887917837607722a, type: 3}
   StateMachine: {fileID: 2963311256672540555}
@@ -207,7 +213,7 @@ Transform:
   m_GameObject: {fileID: 3712692295657345626}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: 0}
+  m_LocalPosition: {x: 0, y: 6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
