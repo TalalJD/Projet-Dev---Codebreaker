@@ -1790,7 +1790,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8737978799106204385, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Ennemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

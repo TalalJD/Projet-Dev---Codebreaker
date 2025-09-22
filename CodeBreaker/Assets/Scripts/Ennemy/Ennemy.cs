@@ -76,19 +76,4 @@ public abstract class Ennemy : MonoBehaviour
     {
         Destroy(gameObject);
     }
-
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Bullet"))
-        {
-            Bullet bullet = collision.collider.GetComponent<Bullet>();
-            Debug.Log("got shot");
-            if (bullet != null)
-            {
-                TakeDamage(bullet.damage);
-                Destroy(collision.collider.gameObject);
-            }
-        }
-
-    }
 }
