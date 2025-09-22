@@ -13,6 +13,23 @@ public class GS_AttackState : GromarState
     }
 
     private IEnumerator ShootXPatternBarrageAtPlayer(int bulletCount, float delay, float speed)
+    public IEnumerator ShootStraightLine(int bulletCount, float speed, float delay, Vector2 direction)
+    {
+   
+
+        // Get the midpoint between minShoot and maxShoot
+        Vector3 midPoint = (gromar.MINSHOOT.position + gromar.MAXSHOOT.position) / 2f;
+
+        // Normalize direction to avoid scaling issues
+        direction.Normalize();
+
+        for (int i = 0; i < bulletCount; i++) 
+        {
+            SpawnSmallBullet(midPoint, direction, speed);
+            yield return new WaitForSeconds(delay);
+        }
+
+    }
     {
         if (gromar == null || gromar.smallBullet == null)
         {
