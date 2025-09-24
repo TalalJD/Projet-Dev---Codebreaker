@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class JumpPad : MonoBehaviour
 {
-
-    public float jumpForce = 25f;
+    [SerializeField] private float boostForce = 25f;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        Player player = collision.GetComponent<Player>();
+        if (player != null)
         {
-            collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            Debug.Log("Jumped");
+
+            // reset le speed vertical 
+            player.YSpeed = boostForce;
+
+            // Maintenant dans l'air
+            var airState = player.StateMachine.Get<AirState>();
+            airState.isJump = true;
+            player.StateMachine.Set<AirState>();
+
+            Debug.Log($"Force appliquer: {boostForce} ");
         }
     }
-
 }
