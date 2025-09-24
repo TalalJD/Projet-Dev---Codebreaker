@@ -32,13 +32,36 @@ public class AirState : PlayerState
         float inputX = Input.GetAxisRaw("Horizontal");
         float maxSpeed = PhysicsInfo.TopSpeed;
 
-        if (inputX == 0)
+        
+        if (inputX == 0 )
         {
-            Player.GroundSpeed -= Player.GroundSpeed * PhysicsInfo.AirDrag * Time.fixedDeltaTime;
+            Player.GroundSpeed -= Player.GroundSpeed * PhysicsInfo.AirDrag * Time.fixedDeltaTime; // tombe
+        }
+        else
+        {
+            if (Mathf.Sign(inputX) == Mathf.Sign(Player.GroundSpeed)) 
+            {
+                
+                Player.GroundSpeed = Mathf.MoveTowards(
+                    Player.GroundSpeed, // Speed actuelle
+                    inputX * maxSpeed, // maxSpeed
+                    PhysicsInfo.AirAcceleration * Time.fixedDeltaTime 
+                );
+            }
+            else
+            {
+                // direction opposé
+                Player.GroundSpeed = Mathf.MoveTowards(
+                    Player.GroundSpeed,
+                    inputX * maxSpeed,
+                    PhysicsInfo.AirDeceleration * Time.fixedDeltaTime
+                );
+            }
         }
 
-
     }
+
+
     public override void OnEnter()
     {
 
@@ -59,7 +82,7 @@ public class AirState : PlayerState
         MovementVertical();
         MovementHorizontal();
 
-        Player.Rb.velocity = new Vector2(Player.GroundSpeed, Player.YSpeed);
+        Player.Rb.velocity = new Vector2(Player.GroundSpeed, Player.Rb.velocity.y);
 
         //on verifie si le joueur a fini de jump
         if (Player.YSpeed < 0)
