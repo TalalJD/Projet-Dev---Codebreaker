@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseEnnemy : Ennemy
 {
-    private float moveSpeed = 10f;
+    private float moveSpeed = 5f;
     private float gravity = -30f;
     private float maxFallSpeed = -20f;
 
@@ -14,18 +14,29 @@ public class BaseEnnemy : Ennemy
     private Collider2D _col;
     private Vector2 _velocity;
     private bool _isGrounded;
-
+    [SerializeField] private GameObject capsuleHitbox;
+    private SpriteRenderer _renderer;
+    private float attackDuration = 0.5f;
 
     protected override void Start()
     {
         base.Start();
         _col = GetComponent<Collider2D>();
+        _renderer = capsuleHitbox.GetComponent<SpriteRenderer>();
+        capsuleHitbox.SetActive(false);
+        _renderer.enabled = false;
     }
     protected void FixedUpdate()
     {
-        float directionX = Mathf.Sign(_targetDirection.x) * moveSpeed;
-        _velocity.x = directionX;
-
+        if (!inAttack)
+        {
+            float directionX = Mathf.Sign(_targetDirection.x) * moveSpeed;
+            _velocity.x = directionX;
+        }
+        else
+        {
+            _velocity.x = 0;
+        }
 
         _isGrounded = CheckOnGround();
 
@@ -44,7 +55,10 @@ public class BaseEnnemy : Ennemy
 
         Vector2 mouvement = rigidBody.position + _velocity * Time.fixedDeltaTime;
         rigidBody.MovePosition(mouvement);
-        Debug.Log(_isGrounded);
+        if (CanAttack() && !inAttack)
+        {
+            Attack();
+        }
     }
 
 
@@ -64,6 +78,7 @@ public class BaseEnnemy : Ennemy
     }
     public override void Attack()
     {
+        StartCoroutine(DoAttack());
     }
 
 }

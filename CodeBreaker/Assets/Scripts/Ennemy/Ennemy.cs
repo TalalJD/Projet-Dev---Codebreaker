@@ -7,15 +7,15 @@ public abstract class Ennemy : MonoBehaviour
 {
 
     [SerializeField] protected EnnemyInfo _ennemyInfo;
-    [SerializeField] protected Transform firingPoint;
 
     protected SpriteRenderer sprite;
     protected Rigidbody2D rigidBody;
     private Transform _target;
     protected Vector2 _targetDirection;
     
-    private float attackCooldown;
+    protected float attackCooldown;
     protected float _currentHealth;
+    protected bool inAttack;
     protected virtual void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
@@ -41,7 +41,6 @@ public abstract class Ennemy : MonoBehaviour
         {
             attackCooldown -= Time.deltaTime;
         }
-
         FindPlayer();
     }
     public virtual void TakeDamage(float amount)
@@ -61,7 +60,7 @@ public abstract class Ennemy : MonoBehaviour
 
     protected virtual void ResetCooldown()
     {
-        attackCooldown = 1f / Mathf.Max(1, _ennemyInfo.attackSpeed);
+        attackCooldown = _ennemyInfo.attackSpeed;
     }
 
     protected virtual void FindPlayer()
