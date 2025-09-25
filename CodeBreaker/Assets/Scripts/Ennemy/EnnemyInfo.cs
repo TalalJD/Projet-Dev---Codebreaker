@@ -10,5 +10,5 @@ public class EnnemyInfo : ScriptableObject
     public float movementSpeed;
     public float healthPoints;
     public float attackSpeed;
-    public float attackDamage;
+    public int attackDamage;
 }

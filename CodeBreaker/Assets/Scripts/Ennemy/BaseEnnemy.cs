@@ -81,4 +81,15 @@ public class BaseEnnemy : Ennemy
         StartCoroutine(DoAttack());
     }
 
+    private IEnumerator DoAttack()
+    {
+        _renderer.enabled = true;
+        inAttack = true;
+        capsuleHitbox.SetActive(true);
+        yield return new WaitForSeconds(attackDuration);
+        inAttack = false;
+        _renderer.enabled = false;
+        capsuleHitbox.SetActive(false);
+        ResetCooldown();
+    }
 }

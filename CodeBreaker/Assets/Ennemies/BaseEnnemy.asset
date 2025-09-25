@@ -16,5 +16,5 @@ MonoBehaviour:
   ennemyPrefab: {fileID: 8737978799106204385, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
   movementSpeed: 5
   healthPoints: 1
-  attackSpeed: 0
-  attackDamage: 0
+  attackSpeed: 2
+  attackDamage: 1
