@@ -24,49 +24,6 @@ public class GS_AttackState : GromarState
 
     }
 
-    //private IEnumerator ShootXPatternBarrageAtPlayer(int bulletCount, float delay, float speed)
-    //{
-    //    if (gromar == null || gromar.smallBullet == null)
-    //    {
-    //        Debug.Log("Gromar or smallBullet not assigned");
-    //        yield break;
-    //    }
-
-    //    // Take the player's position once
-    //    Vector3 playerPos = new Vector3(gromar.player.transform.position.x, gromar.player.transform.position.y + 2f, gromar.player.transform.position.z);
-
-    //    // Calculate base direction from MINSHOOT to player (up-left line)
-    //    Vector2 dirFromMin = (playerPos - gromar.MINSHOOT.position).normalized;
-
-    //    // Calculate base direction from MAXSHOOT to player (down-left line)
-    //    Vector2 dirFromMax = (playerPos - gromar.MAXSHOOT.position).normalized;
-
-    //    for (int i = 0; i < bulletCount; i++)
-    //    {
-    //        // Fire one bullet from MINSHOOT aimed at player
-    //        SpawnSmallBullet(gromar.MINSHOOT.position, dirFromMin, speed);
-
-    //        // Fire one bullet from MAXSHOOT aimed at player
-    //        SpawnSmallBullet(gromar.MAXSHOOT.position, dirFromMax, speed);
-
-    //        yield return new WaitForSeconds(delay);
-    //    }
-    //    ShootBulletBarrage();
-    //    Debug.Log("X pattern barrage aimed at player complete");
-
-    //}
-
-
-
-
-
-
-
-    
-
-
-
-
     public IEnumerator ShootStraightLine(int bulletCount, float speed, float delay, Vector2 direction)
     {
 
@@ -114,8 +71,6 @@ public class GS_AttackState : GromarState
 
         Debug.Log("Regular X pattern finished");
     }
-
-
 
     private void SpawnSmallBullet(Vector3 position, Vector2 dir, float speed)
     {
