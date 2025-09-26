@@ -2,17 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GS_SpiralExplostion : MonoBehaviour
+public class GS_SpiralExplostion : GromarState
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void OnEnter()
+    {
+       
+    }
+    public override void OnExit()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator ShootSpiralExplosion(int bulletCount, float speed, float angleStep, float delay)
     {
-        
+        if (gromar == null || gromar.smallBullet == null)
+            yield break;
+
+        Vector2 center = gromar.transform.position;
+        float currentAngle = 0f;
+
+        for (int i = 0; i < bulletCount; i++)
+        {
+            // Calculate direction based on current angle
+            float rad = currentAngle * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)).normalized;
+
+            // Spawn bullet
+            GameObject bullet = GameObject.Instantiate(gromar.smallBullet, center, Quaternion.identity);
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = dir * speed;
+                bullet.transform.right = dir; // rotate sprite
+            }
+
+            // Increment angle for spiral effect
+            currentAngle += angleStep;
+
+            yield return new WaitForSeconds(delay); // optional delay between bullets
+        }
     }
+
 }
