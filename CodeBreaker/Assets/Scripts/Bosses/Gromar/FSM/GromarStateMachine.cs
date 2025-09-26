@@ -27,6 +27,7 @@ public class GromarStateMachine : StateMachine<GromarState>
     {
         Add(new GS_AttackState());
         Add(new GS_Idle());
+        Add(new GS_Warp());
         Initialize<GS_Idle>();
 
     }

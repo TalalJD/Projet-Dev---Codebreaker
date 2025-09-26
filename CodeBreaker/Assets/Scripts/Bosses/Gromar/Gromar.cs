@@ -14,11 +14,17 @@ public class Gromar : MonoBehaviour
     public GameObject smallBullet;
     public GromarStateMachine StateMachine;
     public Player player;
+    public Transform ShootingPoint;
 
     public Vector3 GetRandomShootPosition()
     {
         var diff = (MAXSHOOT.position - MINSHOOT.position) * UnityEngine.Random.Range(0f, 1f);
         return MINSHOOT.position+ diff;
+    }
+
+    public Transform GetRandomMapPoint()
+    {
+        return mapPoints[UnityEngine.Random.Range(0, mapPoints.Count - 1)];
     }
 
 
