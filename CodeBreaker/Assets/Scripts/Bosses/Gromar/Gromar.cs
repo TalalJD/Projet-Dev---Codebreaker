@@ -22,9 +22,20 @@ public class Gromar : MonoBehaviour
         return MINSHOOT.position+ diff;
     }
 
-    public Transform GetRandomMapPoint()
+
+    public void FacePlayer()
     {
-        return mapPoints[UnityEngine.Random.Range(0, mapPoints.Count - 1)];
+        if (player == null) { return; }
+
+        Vector3 direction = player.transform.position - transform.position;
+        if(direction.x > 0)
+        {
+            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+        else if (direction.x < 0)
+        {
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        }
     }
 
 
@@ -40,6 +51,6 @@ public class Gromar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        FacePlayer();
     }
 }
