@@ -2176,6 +2176,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gromar
       objectReference: {fileID: 0}
+    - target: {fileID: 4089490608842845852, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.7202
+      objectReference: {fileID: 0}
+    - target: {fileID: 4089490608842845852, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.2079
+      objectReference: {fileID: 0}
+    - target: {fileID: 4089490608842845852, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4089490608842845852, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4089490608842845852, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 7368251832082625002, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9
