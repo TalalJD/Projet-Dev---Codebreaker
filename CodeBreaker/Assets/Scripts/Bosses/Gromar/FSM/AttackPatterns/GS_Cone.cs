@@ -7,7 +7,7 @@ public class GS_Cone : GromarState
 
     public override void OnEnter()
     {
-        
+        ShootCone(25, 30, 10);
     }
 
     public override void OnExit()

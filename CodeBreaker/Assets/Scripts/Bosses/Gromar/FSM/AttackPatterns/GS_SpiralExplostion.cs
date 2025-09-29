@@ -6,7 +6,7 @@ public class GS_SpiralExplostion : GromarState
 {
     public override void OnEnter()
     {
-       
+        gromar.StartCoroutine(ShootSpiralExplosion(50,10,20,0.05f));
     }
     public override void OnExit()
     {

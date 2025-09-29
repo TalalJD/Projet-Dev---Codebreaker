@@ -42,10 +42,10 @@ public class Gromar : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Bullet")) // Make sure your bullet has tag "Bullet"
+        
+        if (other.CompareTag("PlayerBullet")) // Make sure your bullet has tag "Bullet"
         {
-            Debug.Log("Bullet hit the boss!");
-            // Here you can apply damage, play effects, etc.
+            ModifyHealth(-1);
         }
     }
 
@@ -88,7 +88,7 @@ public class Gromar : MonoBehaviour
     }
     private void Die()
     {
-        GameObject.Destroy(this);
+        GameObject.Destroy(gameObject);
     }
 
     // Update is called once per frame

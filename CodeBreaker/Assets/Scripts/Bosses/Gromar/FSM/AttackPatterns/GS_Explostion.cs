@@ -6,7 +6,7 @@ public class GS_Explostion : GromarState
 {
     public override void OnEnter()
     {
-       
+        ShootExplosion(20, 10);
     }
 
     public override void OnExit() { }
