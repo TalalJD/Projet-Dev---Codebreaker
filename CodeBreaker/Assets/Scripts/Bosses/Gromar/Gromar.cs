@@ -15,6 +15,8 @@ public class Gromar : MonoBehaviour
     public GromarStateMachine StateMachine;
     public Player player;
     public Transform ShootingPoint;
+    public int maxHealth = 3;
+    public int currentHealth;
 
     public Vector3 GetRandomShootPosition()
     {
@@ -38,14 +40,55 @@ public class Gromar : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bullet")) // Make sure your bullet has tag "Bullet"
+        {
+            Debug.Log("Bullet hit the boss!");
+            // Here you can apply damage, play effects, etc.
+        }
+    }
 
     void Start()
     {
         player = FindObjectOfType<Player>();
+        currentHealth = maxHealth;
         if (StateMachine != null)
         {
             StateMachine.Init();
         }
+    }
+    /// <summary>
+    /// methode qui permet au boss de perdre ou gagner de la vie sans depacer sa vie max et sans aller dans le negatif si le boss perd trop de vie
+    /// </summary>
+    /// <param name="amount">chifre positif ou negatif pour le heal / damage que le boss prend</param>
+    public void ModifyHealth(int amount)
+    {
+        currentHealth += amount;
+
+
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        //OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+
+        if (amount < 0)
+        {
+            Debug.Log($"Le gromar a pris {-amount} degat! Vie = {currentHealth}/{maxHealth}");
+        }
+        else if (amount > 0)
+        {
+            Debug.Log($"Le gromar a heal {amount}! Vie = {currentHealth}/{maxHealth}");
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+    private void Die()
+    {
+        GameObject.Destroy(this);
     }
 
     // Update is called once per frame
