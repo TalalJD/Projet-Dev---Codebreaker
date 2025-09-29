@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d694c10f876f84692207c1a6de8b67, type: 3}
   m_Name: PlayerPhysicsInfo
   m_EditorClassIdentifier: 
-  Acceleration: 15
-  Deceleration: 200
-  Friction: 100
-  MaxSpeed: 25
+  Acceleration: 80
+  Deceleration: 500
+  Friction: 500
+  MaxSpeed: 10
   TopSpeed: 15
-  AirAcceleration: 15
-  AirDeceleration: 80
+  AirAcceleration: 40
+  AirDeceleration: 250
   AirDrag: 10
   JumpAmount: 2
   Gravity: 30
