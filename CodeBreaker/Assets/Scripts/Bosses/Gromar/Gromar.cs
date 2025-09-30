@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class Gromar : MonoBehaviour
 {
-    public Transform MINSHOOT;
-    public Transform MAXSHOOT;
+   
     public Transform MAPMIDPOINT;
+    public Transform SPAWNPOINT;
     public List<Transform> mapPoints;
     public GameObject bigBullet;
     public GameObject smallBullet;
@@ -19,11 +19,7 @@ public class Gromar : MonoBehaviour
     public int maxHealth = 3;
     public int currentHealth;
 
-    public Vector3 GetRandomShootPosition()
-    {
-        var diff = (MAXSHOOT.position - MINSHOOT.position) * UnityEngine.Random.Range(0f, 1f);
-        return MINSHOOT.position + diff;
-    }
+  
 
 
     public void FacePlayer()
