@@ -26,13 +26,15 @@ public class GromarStateMachine : StateMachine<GromarState>
     public void Init()
     {
        // Add(new GS_AttackState());
-        Add(new GS_Idle());
-        Add(new GS_Warp());
-        Add(new GS_SpiralExplostion());
-        Add(new GS_Explostion());
-        Add(new GS_Cone());
-        Add(new GS_SimpleAimedAttack());
-        Add(new GS_RandomBarrage());
+        Add(new GS_Idle());//1
+        Add(new GS_Warp());//2
+        Add(new GS_SpiralExplostion());//3
+        Add(new GS_Explostion());//4
+        Add(new GS_Cone());//5
+        Add(new GS_SimpleAimedAttack());//6
+        Add(new GS_MissilAttack());//7
+        
+
         Initialize<GS_Idle>();
 
         shortcutMap = new Dictionary<int, System.Type>();
