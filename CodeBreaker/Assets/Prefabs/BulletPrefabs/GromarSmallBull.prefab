@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 3824987473367509007}
   - component: {fileID: 9222938976278203932}
   - component: {fileID: 2849898007226624013}
+  - component: {fileID: 6175590388370642409}
   m_Layer: 7
   m_Name: GromarSmallBull
-  m_TagString: Untagged
+  m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,3 +149,15 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1}
   m_Direction: 0
+--- !u!114 &6175590388370642409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6305855500433276022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9207f185a040644c8e6e0a10ed543cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

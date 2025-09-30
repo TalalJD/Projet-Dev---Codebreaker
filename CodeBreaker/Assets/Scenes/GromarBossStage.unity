@@ -2252,6 +2252,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gromar
       objectReference: {fileID: 0}
+    - target: {fileID: 3588326844227554633, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: m_TagString
+      value: Boss
+      objectReference: {fileID: 0}
     - target: {fileID: 4089490608842845852, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
       propertyPath: m_LocalScale.y
       value: 1.7202
@@ -2320,6 +2324,10 @@ PrefabInstance:
       propertyPath: ShootingPoint
       value: 
       objectReference: {fileID: 641069183}
+    - target: {fileID: 8726294625089918997, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: missileBullet
+      value: 
+      objectReference: {fileID: 6305855500433276022, guid: 24305b5cd32ff7d40af2f5f638f3cc30, type: 3}
     - target: {fileID: 8726294625089918997, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
       propertyPath: mapPoints.Array.size
       value: 5
