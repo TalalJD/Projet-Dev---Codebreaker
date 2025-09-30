@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GS_Idle : GromarState
 {
-    public float timer = 3f;
+    public float timer = .5f;
     public float currentTimer;
 
     public override void OnEnter()

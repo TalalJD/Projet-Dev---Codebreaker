@@ -1,44 +1,36 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GS_RandomBarrage : GromarState
 {
     public override void OnEnter()
     {
-     
+        // You can call ShootBulletBarrage here or from a coroutine if needed
+        ShootBulletBarrage();
     }
-    public override void OnExit() { }
 
+    public override void OnExit() { }
 
     public void ShootBulletBarrage()
     {
-        int bulletNumber = 20;
-        if (gromar == null || gromar.bigBullet == null)
+        if (gromar == null)
         {
-            Debug.Log("Gromar or bulletPrefab is not assigned");
+            Debug.Log("Gromar is not assigned");
             return;
-
         }
+
+        int bulletNumber = 20;
 
         for (int i = 0; i < bulletNumber; i++)
         {
+            // Random spawn position between MINSHOOT and MAXSHOOT
             Vector3 spawnPosition = gromar.GetRandomShootPosition();
-            GameObject bullet = GameObject.Instantiate(gromar.bigBullet, spawnPosition, Quaternion.identity);
-            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
 
-            if (rb != null)
-            {
-                // Always left, with random up/down angle
-                Vector2 dir = new Vector2(-1f, Random.Range(-1f, 1f)).normalized;
+            // Random direction to left with some vertical variance
+            Vector2 dir = new Vector2(-1f, Random.Range(-1f, 1f)).normalized;
 
-                rb.velocity = dir * 5f; // adjust speed
-
-                // Rotate bullet to face movement direction
-                bullet.transform.right = dir;
-            }
-            Debug.Log("omarestgro");
+            // Use Gromar's centralized method
+            gromar.ShootBigBullet(spawnPosition, dir, 5f); // speed = 5
         }
-
     }
 }

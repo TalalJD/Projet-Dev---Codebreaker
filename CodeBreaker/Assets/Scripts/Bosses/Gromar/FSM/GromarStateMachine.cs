@@ -32,6 +32,7 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_Explostion());
         Add(new GS_Cone());
         Add(new GS_SimpleAimedAttack());
+        Add(new GS_RandomBarrage());
         Initialize<GS_Idle>();
 
     }

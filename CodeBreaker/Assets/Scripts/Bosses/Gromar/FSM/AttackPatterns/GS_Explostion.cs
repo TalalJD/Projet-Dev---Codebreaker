@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GS_Explostion : GromarState
@@ -10,9 +9,10 @@ public class GS_Explostion : GromarState
     }
 
     public override void OnExit() { }
+
     public void ShootExplosion(int bulletCount, float speed)
     {
-        if (gromar == null || gromar.smallBullet == null)
+        if (gromar == null)
             return;
 
         Vector2 center = gromar.transform.position;
@@ -23,16 +23,8 @@ public class GS_Explostion : GromarState
             float angle = i * Mathf.PI * 2f / bulletCount;
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 
-            // Spawn bullet at Gromar's position
-            GameObject bullet = GameObject.Instantiate(gromar.smallBullet, center, Quaternion.identity);
-
-            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.velocity = dir * speed;
-                bullet.transform.right = dir; // rotate sprite to face movement
-            }
+            // Use Gromar's centralized method to spawn the bullet
+            gromar.ShootSmallBullet(center, dir, speed);
         }
     }
-
 }

@@ -12,6 +12,7 @@ public class Gromar : MonoBehaviour
     public List<Transform> mapPoints;
     public GameObject bigBullet;
     public GameObject smallBullet;
+    public GameObject missileBullet;
     public GromarStateMachine StateMachine;
     public Player player;
     public Transform ShootingPoint;
@@ -21,7 +22,7 @@ public class Gromar : MonoBehaviour
     public Vector3 GetRandomShootPosition()
     {
         var diff = (MAXSHOOT.position - MINSHOOT.position) * UnityEngine.Random.Range(0f, 1f);
-        return MINSHOOT.position+ diff;
+        return MINSHOOT.position + diff;
     }
 
 
@@ -30,7 +31,7 @@ public class Gromar : MonoBehaviour
         if (player == null) { return; }
 
         Vector3 direction = player.transform.position - transform.position;
-        if(direction.x > 0)
+        if (direction.x > 0)
         {
             transform.rotation = Quaternion.Euler(0f, 180f, 0f);
         }
@@ -42,7 +43,7 @@ public class Gromar : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        
+
         if (other.CompareTag("PlayerBullet")) // Make sure your bullet has tag "Bullet"
         {
             ModifyHealth(-1);
@@ -96,4 +97,61 @@ public class Gromar : MonoBehaviour
     {
         FacePlayer();
     }
+
+    #region Bullet Instantiation Methods
+
+    /// <summary>
+    /// Shoot a bullet in a given direction with a speed.
+    /// </summary>
+    public GameObject ShootSmallBullet(Vector3 position, Vector2 direction, float speed)
+    {
+        if (smallBullet == null) return null;
+
+        GameObject bullet = GameObject.Instantiate(smallBullet, position, Quaternion.identity);
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = direction.normalized * speed;
+            bullet.transform.right = direction; // rotate sprite
+        }
+
+        return bullet;
+    }
+
+    /// <summary>
+    /// Shoot a big bullet in a given direction with a speed.
+    /// </summary>
+    public GameObject ShootBigBullet(Vector3 position, Vector2 direction, float speed)
+    {
+        if (bigBullet == null) return null;
+
+        GameObject bullet = GameObject.Instantiate(bigBullet, position, Quaternion.identity);
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = direction.normalized * speed;
+            bullet.transform.right = direction;
+        }
+
+        return bullet;
+    }
+
+    /// <summary>
+    /// Shoot a missile-style bullet towards a target position.
+    /// </summary>
+    public GameObject ShootMissileBullet(Vector3 position, Vector3 targetPosition)
+    {
+        if (missileBullet == null) return null;
+
+        GameObject bullet = GameObject.Instantiate(missileBullet, position, Quaternion.identity);
+        MissileBullet missile = bullet.GetComponent<MissileBullet>();
+        if (missile != null)
+        {
+            missile.Initialize(targetPosition);
+        }
+
+        return bullet;
+    }
+
+    #endregion
 }
