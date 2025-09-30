@@ -85,11 +85,11 @@ public class Player : MonoBehaviour
         {
             CycleWeaponInventory();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             ModifyHealth(-1);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             ModifyHealth(1);
         }

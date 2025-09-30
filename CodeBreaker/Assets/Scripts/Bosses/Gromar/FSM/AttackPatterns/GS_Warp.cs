@@ -61,7 +61,7 @@ public class GS_Warp : GromarState
 
         DisableOrEnableSprites(true);
 
-        Machine.Set<GS_Idle>(); 
+        
 
     }
 

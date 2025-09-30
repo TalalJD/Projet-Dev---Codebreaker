@@ -13,7 +13,7 @@ public class GS_SimpleAimedAttack : GromarState
 
     public IEnumerator ShootAtPlayerContinuously(float speed, float delay)
     {
-        while (true)
+        for(int i = 0; i < 10; i++) 
         {
             Vector2 playerTarget = (Vector2)gromar.player.transform.position + new Vector2(0, 0.5f);
             Vector2 dir = (playerTarget - (Vector2)gromar.ShootingPoint.position).normalized;

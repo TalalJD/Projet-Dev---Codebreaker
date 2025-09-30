@@ -6,7 +6,7 @@ using UnityEngine;
 public class GromarStateMachine : StateMachine<GromarState>
 {
 
-
+    private Dictionary<int, System.Type> shortcutMap;
 
     public override void Add(GromarState state)
     {
@@ -25,7 +25,7 @@ public class GromarStateMachine : StateMachine<GromarState>
 
     public void Init()
     {
-        Add(new GS_AttackState());
+       // Add(new GS_AttackState());
         Add(new GS_Idle());
         Add(new GS_Warp());
         Add(new GS_SpiralExplostion());
@@ -35,11 +35,42 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_RandomBarrage());
         Initialize<GS_Idle>();
 
+        shortcutMap = new Dictionary<int, System.Type>();
+        for (int i = 0; i < AvailableStates.Count; i++)
+        {
+            shortcutMap[i + 1] = AvailableStates[i].GetType();
+        }
+    }
+
+    private void HandleShortcutKeys()
+    {
+       
+            for (int i = 1; i <= shortcutMap.Count; i++)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha0 + i)) // Alpha1..Alpha9
+                {
+                    Set(shortcutMap[i]);
+                    Debug.Log($"Switched to state: {shortcutMap[i].Name}");
+                }
+            }
+        
+    }
+
+    private void Set(System.Type stateType)
+    {
+        var state = AvailableStates.Find(s => s.GetType() == stateType);
+        if (state != null)
+        {
+            CurrentState?.OnExit();
+            CurrentState = state;
+            CurrentState?.OnEnter();
+        }
     }
 
     public void Update()
     {
         CurrentState?.OnUpdate();
+        HandleShortcutKeys();
     }
 
     public void FixedUpdate()
