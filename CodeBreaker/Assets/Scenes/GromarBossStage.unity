@@ -666,6 +666,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &763655618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 763655619}
+  m_Layer: 0
+  m_Name: GromarSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &763655619
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763655618}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &767245067
 GameObject:
   m_ObjectHideFlags: 0
@@ -2317,6 +2348,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8726294625089918997, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+      propertyPath: SPAWNPOINT
+      value: 
+      objectReference: {fileID: 763655619}
+    - target: {fileID: 8726294625089918997, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
       propertyPath: MAPMIDPOINT
       value: 
       objectReference: {fileID: 1405406214}
@@ -2353,7 +2388,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1405406214}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 252976640406858818, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
+    - {fileID: 3712692295657345626, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7368251832082625002, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
       insertIndex: -1
@@ -2381,3 +2418,4 @@ SceneRoots:
   - {fileID: 1254200569}
   - {fileID: 1935704525}
   - {fileID: 808633118}
+  - {fileID: 763655619}
