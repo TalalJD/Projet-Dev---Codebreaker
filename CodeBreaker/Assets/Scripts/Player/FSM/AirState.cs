@@ -31,34 +31,53 @@ public class AirState : PlayerState
     {
         float inputX = Input.GetAxisRaw("Horizontal");
         float maxSpeed = PhysicsInfo.TopSpeed;
+        Vector2 velocity = Player.Rb.velocity;
 
-        
-        if (inputX == 0 )
+        float wallCheck = 0.35f;
+
+
+        if (inputX == 0)
         {
             Player.GroundSpeed -= Player.GroundSpeed * PhysicsInfo.AirDrag * Time.fixedDeltaTime; // tombe
         }
         else
         {
-            if (Mathf.Sign(inputX) == Mathf.Sign(Player.GroundSpeed)) 
+            Vector2 origin = (Vector2)Player.transform.position;
+            Vector2 dir = new Vector2(Mathf.Sign(inputX), 0f);
+            RaycastHit2D hit = Physics2D.Raycast(origin, dir, wallCheck, Player.LayerMask);
+            Debug.DrawRay(origin, dir * wallCheck, hit ? Color.red : Color.green);
+
+            if (hit)
             {
-                
-                Player.GroundSpeed = Mathf.MoveTowards(
-                    Player.GroundSpeed, // Speed actuelle
-                    inputX * maxSpeed, // maxSpeed
-                    PhysicsInfo.AirAcceleration * Time.fixedDeltaTime 
-                );
+                Player.GroundSpeed = 0f;
+
+                if (Mathf.Sign(Player.GroundSpeed) == Mathf.Sign(inputX))
+                {
+                    Player.GroundSpeed = 0f;
+                }
             }
             else
             {
-                // direction opposé
-                Player.GroundSpeed = Mathf.MoveTowards(
-                    Player.GroundSpeed,
-                    inputX * maxSpeed,
-                    PhysicsInfo.AirDeceleration * Time.fixedDeltaTime
-                );
+                if (Mathf.Sign(inputX) == Mathf.Sign(Player.GroundSpeed))
+                {
+
+                    Player.GroundSpeed = Mathf.MoveTowards(
+                        Player.GroundSpeed, // Speed actuelle
+                        inputX * maxSpeed, // maxSpeed
+                        PhysicsInfo.AirAcceleration * Time.fixedDeltaTime
+                    );
+                }
+                else
+                {
+                    // direction opposé
+                    Player.GroundSpeed = Mathf.MoveTowards(
+                        Player.GroundSpeed,
+                        inputX * maxSpeed,
+                        PhysicsInfo.AirDeceleration * Time.fixedDeltaTime
+                    );
+                }
             }
         }
-
     }
 
 
@@ -74,7 +93,7 @@ public class AirState : PlayerState
     }
     public override void OnUpdate()
     {
-
+        
     }
 
     public override void OnFixedUpdate()
@@ -82,7 +101,7 @@ public class AirState : PlayerState
         MovementVertical();
         MovementHorizontal();
 
-        Player.Rb.velocity = new Vector2(Player.GroundSpeed, Player.Rb.velocity.y);
+        Player.Rb.velocity = new Vector2(Player.GroundSpeed, Player.YSpeed);
 
         //on verifie si le joueur a fini de jump
         if (Player.YSpeed < 0)
