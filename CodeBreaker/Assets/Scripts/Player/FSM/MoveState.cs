@@ -77,11 +77,13 @@ public class MoveState : PlayerState
         if (jumpRequested)
         {
             Player.YSpeed = PhysicsInfo.JumpStrength;
+            Player.spriteRenderer.sprite = Player.jumpSprite;
             Machine.Get<AirState>().isJump = true;
             Machine.Set<AirState>();
             return;
         }
-        
+
+
         //si le joueur est pas au sol on change de state
         if (!Player.CheckOnGround())
         {

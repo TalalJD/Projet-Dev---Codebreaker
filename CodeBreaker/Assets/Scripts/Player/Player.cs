@@ -7,6 +7,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    
+    public SpriteRenderer spriteRenderer;
+    public Sprite idleSprite;
+    public Sprite jumpSprite;
+
+
     //attributs pour la logique de deplacement
 
     public Rigidbody2D Rb;

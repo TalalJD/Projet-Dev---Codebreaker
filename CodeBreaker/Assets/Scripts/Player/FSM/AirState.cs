@@ -45,10 +45,12 @@ public class AirState : PlayerState
         {
             if (Player.CheckOnGround())
             {
+                Player.spriteRenderer.sprite = Player.idleSprite;
                 Machine.Set<MoveState>();
             }
+
         }
-        
+
     }
 
 }
