@@ -52,10 +52,18 @@ public class MoveState : PlayerState
 
         if (Mathf.Abs(Player.GroundSpeed) > 0.1f)
         {
-            if (Player.Direction == 1)
-                Player.spriteRenderer.sprite = Player.walkSpriteRight;
-            else if (Player.Direction == -1)
-                Player.spriteRenderer.sprite = Player.walkSpriteLeft;
+            if (Player.GroundSpeed > 0)
+            {
+                Player.Direction = 1;
+                Player.spriteRenderer.flipX = false;
+            }
+            else if (Player.GroundSpeed < 0)
+            {
+                Player.Direction = -1;
+                Player.spriteRenderer.flipX = true;
+            }
+
+            Player.spriteRenderer.sprite = Player.walkSpriteRight;
         }
         else
         {
