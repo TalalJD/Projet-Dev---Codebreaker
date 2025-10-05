@@ -36,11 +36,22 @@ public class AirState : PlayerState
 
     }
 
+    // on verifie si le joueur a fini de jump 
     public override void OnFixedUpdate()
     {
         AirMovement();
 
-        //on verifie si le joueur a fini de jump
+        Player.spriteRenderer.flipX = Player.Direction == -1;
+
+        if (Player.YSpeed > 0)
+        {
+            Player.spriteRenderer.sprite = Player.jumpSprite;
+        }
+        else
+        {
+            Player.spriteRenderer.sprite = Player.fallSprite;
+        }
+
         if (Player.YSpeed < 0)
         {
             if (Player.CheckOnGround())
@@ -48,9 +59,8 @@ public class AirState : PlayerState
                 Player.spriteRenderer.sprite = Player.idleSprite;
                 Machine.Set<MoveState>();
             }
-
         }
-
     }
+
 
 }

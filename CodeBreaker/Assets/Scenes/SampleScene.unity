@@ -1408,12 +1408,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 1323332095}
   idleSprite: {fileID: 21300000, guid: ba8bdbf76e4975c47b41b4966f683039, type: 3}
-  walkSpriteRight: {fileID: 21300000, guid: 66497787bd5c983428eaffc34355029a, type: 3}
-  walkSpriteLeft: {fileID: 21300000, guid: 66497787bd5c983428eaffc34355029a, type: 3}
-  walkSprite1: {fileID: 21300000, guid: 66497787bd5c983428eaffc34355029a, type: 3}
-  walkSprite2: {fileID: 21300000, guid: 9f02df44370dd6840b5272b95cf70f60, type: 3}
   jumpSprite: {fileID: 21300000, guid: fc855b48ef28c1243bb9be338aaa4223, type: 3}
   fallSprite: {fileID: 21300000, guid: 55e8245327954a04f95d574164c1aa43, type: 3}
+  walkSprite1: {fileID: 21300000, guid: 66497787bd5c983428eaffc34355029a, type: 3}
+  walkSprite2: {fileID: 21300000, guid: 9f02df44370dd6840b5272b95cf70f60, type: 3}
   walkAnimTimer: 0
   walkAnimSpeed: 0.2
   Rb: {fileID: 1218052893}

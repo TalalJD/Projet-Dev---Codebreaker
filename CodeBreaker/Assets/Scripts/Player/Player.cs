@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Sprite idleSprite;
     public Sprite jumpSprite;
+    public Sprite fallSprite;
     public Sprite walkSprite1;
     public Sprite walkSprite2;
 
