@@ -63,12 +63,21 @@ public class MoveState : PlayerState
                 Player.spriteRenderer.flipX = true;
             }
 
-            Player.spriteRenderer.sprite = Player.walkSpriteRight;
+            Player.walkAnimTimer += Time.fixedDeltaTime;
+            if (Player.walkAnimTimer >= Player.walkAnimSpeed * 2)
+                Player.walkAnimTimer = 0f;
+
+            if (Player.walkAnimTimer < Player.walkAnimSpeed)
+                Player.spriteRenderer.sprite = Player.walkSprite1;
+            else
+                Player.spriteRenderer.sprite = Player.walkSprite2;
         }
         else
         {
             Player.spriteRenderer.sprite = Player.idleSprite;
+            Player.walkAnimTimer = 0f;
         }
+
 
     }
     public override void OnEnter()

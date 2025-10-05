@@ -11,8 +11,13 @@ public class Player : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Sprite idleSprite;
     public Sprite jumpSprite;
-    public Sprite walkSpriteRight;
-    public Sprite walkSpriteLeft;
+    public Sprite walkSprite1;
+    public Sprite walkSprite2;
+
+    [HideInInspector]
+    public float walkAnimTimer = 0f; // internal timer
+    public float walkAnimSpeed = 0.2f; // time between frames
+
 
 
 
