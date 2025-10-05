@@ -7,10 +7,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    
+
     public SpriteRenderer spriteRenderer;
     public Sprite idleSprite;
     public Sprite jumpSprite;
+    public Sprite walkSpriteRight;
+    public Sprite walkSpriteLeft;
+
+
 
 
     //attributs pour la logique de deplacement

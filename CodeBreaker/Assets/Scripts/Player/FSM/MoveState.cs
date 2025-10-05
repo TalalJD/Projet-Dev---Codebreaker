@@ -49,6 +49,19 @@ public class MoveState : PlayerState
                 Player.GroundSpeed = Mathf.Max(Player.GroundSpeed - PhysicsInfo.Acceleration * Time.fixedDeltaTime, -maxSpeed);
             }
         }
+
+        if (Mathf.Abs(Player.GroundSpeed) > 0.1f)
+        {
+            if (Player.Direction == 1)
+                Player.spriteRenderer.sprite = Player.walkSpriteRight;
+            else if (Player.Direction == -1)
+                Player.spriteRenderer.sprite = Player.walkSpriteLeft;
+        }
+        else
+        {
+            Player.spriteRenderer.sprite = Player.idleSprite;
+        }
+
     }
     public override void OnEnter()
     {
