@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StaticEnnemy
   m_EditorClassIdentifier: 
   ennemySprite: {fileID: 0}
-  ennemyPrefab: {fileID: 0}
+  ennemyPrefab: {fileID: 4777526448715554087, guid: df3ce7fbdb4a217449edfe2886d3587d, type: 3}
   movementSpeed: 0
   healthPoints: 5
   attackSpeed: 1

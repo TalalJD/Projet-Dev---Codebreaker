@@ -7,6 +7,7 @@ TagManager:
   - Bullet
   - Ennemy
   - EnnemyBullet
+  - EnnemyHitbox
   layers:
   - Default
   - TransparentFX

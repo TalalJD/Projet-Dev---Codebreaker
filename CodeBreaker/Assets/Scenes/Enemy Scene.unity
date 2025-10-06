@@ -285,7 +285,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 3
 --- !u!1001 &276872412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1444,7 +1444,7 @@ GameObject:
   - component: {fileID: 1785084367}
   m_Layer: 7
   m_Name: Hitbox
-  m_TagString: Ennemy
+  m_TagString: EnnemyHitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -77,4 +77,6 @@ public abstract class Ennemy : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public float CurrentHealth => _currentHealth;
 }
