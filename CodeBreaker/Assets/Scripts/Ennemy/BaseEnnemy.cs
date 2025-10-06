@@ -11,7 +11,6 @@ public class BaseEnnemy : Ennemy
     [SerializeField] private LayerMask LayerMask;
     private float groundCheck = 0.55f;
 
-    private Collider2D _col;
     private Vector2 _velocity;
     private bool _isGrounded;
     [SerializeField] private GameObject capsuleHitbox;
@@ -21,7 +20,6 @@ public class BaseEnnemy : Ennemy
     protected override void Start()
     {
         base.Start();
-        _col = GetComponent<Collider2D>();
         _renderer = capsuleHitbox.GetComponent<SpriteRenderer>();
         capsuleHitbox.SetActive(false);
         _renderer.enabled = false;

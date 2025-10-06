@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Properties;
@@ -46,6 +47,7 @@ public abstract class Ennemy : MonoBehaviour
     public virtual void TakeDamage(float amount)
     {
         _currentHealth -= amount;
+        Debug.Log($"took damage {_currentHealth}");
         if (_currentHealth <= 0f)
         {
             Die();
