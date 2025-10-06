@@ -7,7 +7,7 @@ using UnityEngine;
 public abstract class Ennemy : MonoBehaviour
 {
 
-    [SerializeField] protected EnnemyInfo _ennemyInfo;
+    [SerializeField] public EnnemyInfo _ennemyInfo;
 
     protected SpriteRenderer sprite;
     protected Rigidbody2D rigidBody;
