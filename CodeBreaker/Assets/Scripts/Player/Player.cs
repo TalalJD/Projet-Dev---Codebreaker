@@ -8,6 +8,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    public SpriteRenderer spriteRenderer;
+    public Sprite idleSprite;
+    public Sprite jumpSprite;
+    public Sprite fallSprite;
+    public Sprite walkSprite1;
+    public Sprite walkSprite2;
+
+    [HideInInspector]
+    public float walkAnimTimer = 0f; // internal timer
+    public float walkAnimSpeed = 0.2f; // time between frames
+
+
+
+
+
     //attributs pour la logique de deplacement
 
     public Rigidbody2D Rb;
