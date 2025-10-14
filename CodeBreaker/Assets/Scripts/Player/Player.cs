@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
     //attributs pour la logique de deplacement
@@ -209,5 +210,20 @@ public class Player : MonoBehaviour
     private void Die()
     {
        
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("EnnemyBullet"))
+        {
+            ModifyHealth(-1);
+            Destroy(other.gameObject); // player decides when bullet is destroyed
+        }
+
+        if (other.CompareTag("EnnemyHitbox"))
+        {
+            var ennemyHitbox = other.GetComponent<EnnemyAttackHitbox>();
+            ModifyHealth(-ennemyHitbox._ennemyInfo.attackDamage);
+        }
     }
 }
