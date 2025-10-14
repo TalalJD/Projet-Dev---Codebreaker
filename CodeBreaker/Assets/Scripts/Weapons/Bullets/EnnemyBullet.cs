@@ -7,10 +7,10 @@ public class EnnemyBullet : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag != "Player" && collision.tag != "Enemy" && collision.tag != "Boss" && collision.tag !="EnemyBullet")
+        if (collision.tag != "Player" && collision.tag != "Ennemy" && collision.tag != "Boss" && collision.tag != "EnnemyBullet")
         {
             Destroy(gameObject);
         }
-        
+
     }
 }

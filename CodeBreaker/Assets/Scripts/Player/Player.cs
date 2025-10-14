@@ -5,8 +5,25 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
+
+    public SpriteRenderer spriteRenderer;
+    public Sprite idleSprite;
+    public Sprite jumpSprite;
+    public Sprite fallSprite;
+    public Sprite walkSprite1;
+    public Sprite walkSprite2;
+
+    [HideInInspector]
+    public float walkAnimTimer = 0f; // internal timer
+    public float walkAnimSpeed = 0.2f; // time between frames
+
+
+
+
+
     //attributs pour la logique de deplacement
 
     public Rigidbody2D Rb;
@@ -210,15 +227,19 @@ public class Player : MonoBehaviour
     {
        
     }
- private void OnTriggerEnter2D(Collider2D other)
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("EnemyBullet"))
+        if (other.CompareTag("EnnemyBullet"))
         {
             ModifyHealth(-1);
             Destroy(other.gameObject); // player decides when bullet is destroyed
         }
+
+        if (other.CompareTag("EnnemyHitbox"))
+        {
+            var ennemyHitbox = other.GetComponent<EnnemyAttackHitbox>();
+            ModifyHealth(-ennemyHitbox._ennemyInfo.attackDamage);
+        }
     }
-   
-
-
 }

@@ -9,7 +9,6 @@ public class  BasePlayerBullet : MonoBehaviour
     private float _lifeTime;
     private float _damage;
     private Rigidbody2D rb;
-
     protected virtual void Start()
     {
         _speed = _weaponInfo.bulletSpeed;
@@ -30,15 +29,13 @@ public class  BasePlayerBullet : MonoBehaviour
 
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Enemy"))
-    //    {
-    //        Destroy(gameObject);
-    //        Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-    //        enemy.TakeDamage(damage);
-
-
-    //    }
-    //}
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ennemy"))
+        {
+            Ennemy ennemy = collision.gameObject.GetComponent<Ennemy>();
+            ennemy.TakeDamage(_damage);
+            Destroy(gameObject);
+        }
+    }
 }
