@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Bullet : MonoBehaviour
+public class  BasePlayerBullet : MonoBehaviour
 {
     [SerializeField] private WeaponInfo _weaponInfo;
     private float _speed;
@@ -33,9 +33,8 @@ public abstract class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ennemy"))
         {
-            Ennemy ennemy = collision.gameObject.GetComponent<Ennemy>();
-            ennemy.TakeDamage(_damage);
-            Destroy(gameObject);
+           
+            Destroy(gameObject, .5f);
         }
     }
 }

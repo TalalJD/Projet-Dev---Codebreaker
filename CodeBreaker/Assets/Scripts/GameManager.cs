@@ -59,15 +59,7 @@ public class GameManager : MonoBehaviour
         MisAJourRotatitionHorloge();
 
        
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            AjouteVie();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            EnleveVie();
-        }
+        
     }
     /// <summary>
     /// Methode qui update les coeurs sur le ui par rapport a la vie du joueur

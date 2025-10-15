@@ -10,22 +10,13 @@ public class Player : MonoBehaviour
 {
 
     public SpriteRenderer spriteRenderer;
-    public Sprite idleSprite;
-    public Sprite jumpSprite;
-    public Sprite fallSprite;
-    public Sprite walkSprite1;
-    public Sprite walkSprite2;
 
-    [HideInInspector]
-    public float walkAnimTimer = 0f; // internal timer
-    public float walkAnimSpeed = 0.2f; // time between frames
-
-
+    public Animator animator;
 
 
 
     //attributs pour la logique de deplacement
-
+    public float GroundRayLenght; //longueur du ray pour dectecter le ground check
     public Rigidbody2D Rb;
     public PhysicsInfo PhysicsInfo;
     public float GroundSpeed;
@@ -64,14 +55,26 @@ public class Player : MonoBehaviour
         set => Rb.velocity = new Vector2(Rb.velocity.x, value);
     }
 
+
+    public void UpdateAnimator()
+    {
+        if (animator != null) {
+            spriteRenderer.flipX = Direction == -1;
+            animator.SetFloat("Xspeed", Mathf.Abs(XSpeed));
+            animator.SetFloat("Yspeed", YSpeed);
+            animator.SetInteger("StateNumber", StateMachine.CurrentState.StateNumber);
+        }
+        
+    }
+
     /// <summary>
     /// Regarde si le joueur touche le sol en envoyant un raycast
     /// </summary>
     /// <returns></returns>
     public bool CheckOnGround()
     {
-        var GroundRay = Physics2D.Raycast(transform.position, Vector2.down, 0.25f, LayerMask);
-        Debug.DrawRay(transform.position, Vector2.down*.25f);
+        var GroundRay = Physics2D.Raycast(transform.position, Vector2.down, GroundRayLenght, LayerMask);
+        Debug.DrawRay(transform.position, Vector2.down* GroundRayLenght);
         if (GroundRay)
         {
             Rb.position = GroundRay.point;
@@ -79,6 +82,9 @@ public class Player : MonoBehaviour
         }
         return false;
     }
+
+
+
 
     void Start()
     {
@@ -93,6 +99,9 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+
+        UpdateAnimator();
+
         if (Input.GetKeyDown(KeyCode.J))
         {
             Debug.Log("imshooting");
@@ -102,11 +111,11 @@ public class Player : MonoBehaviour
         {
             CycleWeaponInventory();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             ModifyHealth(-1);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             ModifyHealth(1);
         }
