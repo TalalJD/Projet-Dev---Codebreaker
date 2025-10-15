@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class AirState : PlayerState
 {
+    public AirState() : base(1) { }
+
     public bool isJump;
     
     /// <summary>
@@ -41,22 +43,11 @@ public class AirState : PlayerState
     {
         AirMovement();
 
-        Player.spriteRenderer.flipX = Player.Direction == -1;
-
-        if (Player.YSpeed > 0)
-        {
-            Player.spriteRenderer.sprite = Player.jumpSprite;
-        }
-        else
-        {
-            Player.spriteRenderer.sprite = Player.fallSprite;
-        }
-
         if (Player.YSpeed < 0)
         {
             if (Player.CheckOnGround())
             {
-                Player.spriteRenderer.sprite = Player.idleSprite;
+               
                 Machine.Set<MoveState>();
             }
         }

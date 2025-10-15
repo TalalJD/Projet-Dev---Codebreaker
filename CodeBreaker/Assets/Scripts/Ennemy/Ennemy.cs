@@ -36,6 +36,15 @@ public abstract class Ennemy : MonoBehaviour
         }
     }
 
+    protected virtual void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if (other.CompareTag("PlayerBullet")) // Make sure your bullet has tag "Bullet"
+        {
+            TakeDamage(-1);
+        }
+    }
+
     protected virtual void Update()
     {
         if (attackCooldown > 0f)
