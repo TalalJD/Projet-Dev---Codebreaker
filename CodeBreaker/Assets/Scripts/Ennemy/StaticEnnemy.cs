@@ -33,7 +33,7 @@ public class StaticEnnemy : Ennemy
         Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = _targetDirection.normalized * projectileSpeed;
+            rb.linearVelocity = _targetDirection.normalized * projectileSpeed;
         }
         ResetCooldown();
     }

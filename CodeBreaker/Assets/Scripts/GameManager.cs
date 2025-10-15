@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -5,48 +6,102 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> vies;
+    //placeholder pour le nb de vies
     private int nbVies = 3;
 
-    [SerializeField] private GameObject inventaireArme1;
-    [SerializeField] private GameObject inventaireArme2;
-    [SerializeField] private GameObject inventaireConsomable1;
-    [SerializeField] private GameObject inventaireConsomable2;
+    //liste des coeurs
+    private List<GameObject> vies = new List<GameObject>();
 
-    [SerializeField] private Image invArmeImg1;
-    [SerializeField] private Image invArmeImg2;
-    [SerializeField] private Image invConsImg1;
-    [SerializeField] private Image invConsImg2;
+    // Images de l'inventaire
+    private Image invArmeImg1;
+    private Image invArmeImg2;
+    private Image invConsImg1;
+    private Image invConsImg2;
 
-
+    //joueur
     private Player player;
 
+    //liste des inventaires
     public List<ScriptableObject> WeaponInventory;
     public List<ScriptableObject> ConsumableInventory;
 
-    public TextMeshProUGUI horlogeText;
+    //horloge et timer
+    private TextMeshProUGUI horlogeText;
+    private Image rotationHorloge;
+
+    //rotation de l'horologe et temps
     public float temps = 0f;
     private bool isDemarrer = true;
-    public Image rotationHorloge;
     public float rotationAngle = 90f;
     public float rotationInterval = 1f;
     public float rotationTimer = 0f;
 
-    
+    void Awake()
+    {
+        // trouver le canvas dans la scene
+        Canvas canvas = FindAnyObjectByType<Canvas>();
+
+        if (canvas == null)
+        {
+            Debug.LogError("No Canvas found in the scene!");
+            return;
+        }
+
+        // Trouver les coeurs sur le UI
+        vies.Clear();
+        for (int i = 1; i <= 3; i++)
+        {
+            Transform vie = canvas.transform.Find($"Vie{i}");
+            if (vie != null)
+                vies.Add(vie.gameObject);
+            else
+                Debug.LogWarning($"Vie{i} not found in Canvas!");
+        }
+
+        //Trouver les image d'inventaire dans les parents
+        invArmeImg1 = canvas.transform.Find("InventaireArme1/Image")?.GetComponent<Image>();
+        invArmeImg2 = canvas.transform.Find("InventaireArme2/Image")?.GetComponent<Image>();
+        invConsImg1 = canvas.transform.Find("InventaireCons1/Image")?.GetComponent<Image>();
+        invConsImg2 = canvas.transform.Find("InventaireCons2/Image")?.GetComponent<Image>();
+
+        //trouver l'horloge et le timer
+        rotationHorloge = canvas.transform.Find("Horloge")?.GetComponent<Image>();
+        horlogeText = canvas.transform.Find("Temps")?.GetComponent<TextMeshProUGUI>();
+
+        if (rotationHorloge == null)
+            Debug.LogWarning("Horloge image not found!");
+        if (horlogeText == null)
+            Debug.LogWarning("Temps TextMeshProUGUI not found!");
+    }
 
     void Start()
     {
-        
+        StartCoroutine(InitAfterPlayerReady());
+    }
 
-        player = FindObjectOfType<Player>();
+    private IEnumerator InitAfterPlayerReady()
+    {
+        // attendre une frame pour etre sur que le start du player se lance avant
+        yield return null;
+
+        player = FindAnyObjectByType<Player>();
+        if (player == null)
+        {
+            Debug.LogError(" Player not found in scene!");
+            yield break;
+        }
+
         WeaponInventory = player.WeaponInventory;
         ConsumableInventory = player.ConsumableInventory;
+
         player.OnWeaponInventoryChanged += setInventoryWeaponIcons;
         player.OnHealthChanged += UpdateHeartsUI;
+
+        // initialiser le ui
         setInventoryWeaponIcons();
         UpdateHeartsUI(player.currentHealth, player.maxHealth);
-
     }
+
 
     void Update()
     {
@@ -55,95 +110,40 @@ public class GameManager : MonoBehaviour
             temps += Time.deltaTime;
             MisAJourHorloge(temps);
         }
-
         MisAJourRotatitionHorloge();
-
-       
-        
     }
-    /// <summary>
-    /// Methode qui update les coeurs sur le ui par rapport a la vie du joueur
-    /// </summary>
-    /// <param name="currentHealth">vie du joueur en ce moment</param>
-    /// <param name="maxHealth">Vie max du joueur</param>
+
+  
     private void UpdateHeartsUI(int currentHealth, int maxHealth)
     {
-       
         for (int i = 0; i < vies.Count; i++)
-        {
-            if (i < currentHealth)
-            {
-                vies[i].SetActive(true); 
-            }
-            else
-            {
-                vies[i].SetActive(false); 
-            }
-        }
+            vies[i].SetActive(i < currentHealth);
 
         nbVies = currentHealth;
     }
 
 
-    /// <summary>
-    /// Methode qui update les icones des armes dans l'inventaire du joueur sur le UI
-    /// </summary>
     public void setInventoryWeaponIcons()
     {
         if (WeaponInventory.Count > 0 && WeaponInventory[0] is WeaponInfo weaponInfo1)
-        {
             invArmeImg1.sprite = weaponInfo1.weaponSprite;
-        }
 
         if (WeaponInventory.Count > 1 && WeaponInventory[1] is WeaponInfo weaponInfo2)
-        {
             invArmeImg2.sprite = weaponInfo2.weaponSprite;
-        }
     }
 
-    /// <summary>
-    /// Methode qui update les icones des items dans l'inventaire du joueur sur le UI
-    /// </summary>
     public void setInventoryConsumableIcons()
     {
-        if (WeaponInventory.Count > 0 && WeaponInventory[0] is ItemInfo ItemInfo1)
-        {
-            invArmeImg1.sprite = ItemInfo1.ItemSprite;
-        }
+        if (ConsumableInventory.Count > 0 && ConsumableInventory[0] is ItemInfo itemInfo1)
+            invConsImg1.sprite = itemInfo1.ItemSprite;
 
-        if (WeaponInventory.Count > 1 && WeaponInventory[1] is ItemInfo ItemInfo2)
-        {
-            invArmeImg2.sprite = ItemInfo2.ItemSprite;
-        }
+        if (ConsumableInventory.Count > 1 && ConsumableInventory[1] is ItemInfo itemInfo2)
+            invConsImg2.sprite = itemInfo2.ItemSprite;
     }
-
-    /// <summary>
-    /// Methode pour ajout une vie
-    /// </summary>
-    public void AjouteVie()
-    {
-        if (nbVies >= vies.Count) return;
-
-        vies[nbVies].SetActive(true);
-        nbVies++;
-    }
-
-    /// <summary>
-    /// Methode pour enlever une vie
-    /// </summary>
-    public void EnleveVie()
-    {
-        if (nbVies <= 0) return;
-
-        nbVies--;
-        vies[nbVies].SetActive(false);
-    }
-
-    /// <summary>
-    /// Methode horloge/minuterie
-    /// </summary>
     public void MisAJourHorloge(float tempsIU)
     {
+        if (horlogeText == null) return;
+
         int millisecondes = Mathf.FloorToInt((tempsIU * 1000) % 1000);
         int secondes = Mathf.FloorToInt(tempsIU % 60);
         int minutes = Mathf.FloorToInt(tempsIU / 60);
@@ -151,9 +151,7 @@ public class GameManager : MonoBehaviour
         horlogeText.text = string.Format("{0:00}:{1:00}:{2:000}", minutes, secondes, millisecondes);
     }
 
-    /// <summary>
-    /// Methode tourne image
-    /// </summary>
+   
     public void MisAJourRotatitionHorloge()
     {
         if (rotationHorloge == null) return;

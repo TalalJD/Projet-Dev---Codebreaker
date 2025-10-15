@@ -45,14 +45,14 @@ public class Player : MonoBehaviour
 
     public float XSpeed //vitesse horizontale du joueur
     {
-        get => Rb.velocity.x;
+        get => Rb.linearVelocity.x;
 
-        set => Rb.velocity = new Vector2(value, Rb.velocity.y);
+        set => Rb.linearVelocity = new Vector2(value, Rb.linearVelocity.y);
     }
     public float YSpeed //vitesse verticale du joueur
     {
-        get => Rb.velocity.y;
-        set => Rb.velocity = new Vector2(Rb.velocity.x, value);
+        get => Rb.linearVelocity.y;
+        set => Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, value);
     }
 
 
