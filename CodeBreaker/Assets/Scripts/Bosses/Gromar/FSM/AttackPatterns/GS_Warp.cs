@@ -5,6 +5,18 @@ using UnityEngine;
 
 public class GS_Warp : GromarState
 {
+   
+
+    bool _isFollowedByAttack;
+
+    public GS_Warp(int count = 1, bool isFollowedByAttack = false) : base(1)
+    {
+        warpTimes = count;
+        _isFollowedByAttack = isFollowedByAttack;
+    }
+
+
+
     SpriteRenderer[] sprites;
     Queue<Transform> WarpHistory = new Queue<Transform>();
     int maxHistory = 3;
@@ -19,14 +31,8 @@ public class GS_Warp : GromarState
     /// Permet de set le nombre de fois que le boss va warp
     /// </summary>
     /// <param name="count">nombre de warps</param>
-    public GS_Warp(int count)
-    {
-        warpTimes = count;
-    }
-    public GS_Warp()
-    {
-      
-    }
+   
+    
 
     /// <summary>
     /// coroutine qui va faire warp le boss avec un delai de 0.3s entre chaque warp
