@@ -18,7 +18,7 @@ public class WeaponPickUpTest
         _playerGameObject = new GameObject("Player");
         _playerGameObject.tag = "Player"; //bien s'assurer d'avoir le tag pour la logique de pickup
         _playerScript = _playerGameObject.AddComponent<Player>();
-        _playerScript.Inventory = new System.Collections.Generic.List<ScriptableObject>(); //initialiser la liste d'inventaire
+        _playerScript.WeaponInventory = new System.Collections.Generic.List<ScriptableObject>(); //initialiser la liste d'inventaire
 
         //ajouter un rigid body et un boxCollider au joueur pour le fonctionnement du test
         var rb = _playerGameObject.AddComponent<Rigidbody2D>();
@@ -63,7 +63,7 @@ public class WeaponPickUpTest
         yield return null; // attendre une frame pour s'assurer que la methode a rouler
 
         // verifie si le scriptable object est bien dans la liste
-        Assert.Contains(_weaponInfo, _playerScript.Inventory, "l'arme n'est pas dans l'inventaire");
+        Assert.Contains(_weaponInfo, _playerScript.WeaponInventory, "l'arme n'est pas dans l'inventaire");
 
         // verifier que l'objet de pickup s'est bien detruit
         Assert.IsTrue(_pickupGameObject == null || _pickupGameObject.Equals(null), "le pickup object ne s'est pas detruit");

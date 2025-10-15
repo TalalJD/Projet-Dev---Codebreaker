@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class AirState : PlayerState
 {
+    public AirState() : base(1) { }
+
     public bool isJump;
     
     /// <summary>
@@ -96,6 +98,7 @@ public class AirState : PlayerState
         
     }
 
+    // on verifie si le joueur a fini de jump 
     public override void OnFixedUpdate()
     {
         MovementVertical();
@@ -103,15 +106,15 @@ public class AirState : PlayerState
 
         Player.Rb.velocity = new Vector2(Player.GroundSpeed, Player.YSpeed);
 
-        //on verifie si le joueur a fini de jump
         if (Player.YSpeed < 0)
         {
             if (Player.CheckOnGround())
             {
+               
                 Machine.Set<MoveState>();
             }
         }
-        
     }
+
 
 }

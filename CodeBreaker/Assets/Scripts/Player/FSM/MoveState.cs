@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MoveState : PlayerState
 {
+    public MoveState() : base(0){}
     public bool jumpRequested; //indique si un saut a ete demander par le joueur
 
     /// <summary>
@@ -13,7 +14,7 @@ public class MoveState : PlayerState
     /// </summary>
     public void GroundMovement()
     {
-        Vector2 MoveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 MoveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         float maxSpeed = PhysicsInfo.MaxSpeed;
 
         if (MoveInput.x == 0)
@@ -49,6 +50,36 @@ public class MoveState : PlayerState
                 Player.GroundSpeed = Mathf.Max(Player.GroundSpeed - PhysicsInfo.Acceleration * Time.fixedDeltaTime, -maxSpeed);
             }
         }
+
+        //if (Mathf.Abs(Player.GroundSpeed) > 0.1f)
+        //{
+        //    if (Player.GroundSpeed > 0)
+        //    {
+        //        Player.Direction = 1;
+        //        Player.spriteRenderer.flipX = false;
+        //    }
+        //    else if (Player.GroundSpeed < 0)
+        //    {
+        //        Player.Direction = -1;
+        //        Player.spriteRenderer.flipX = true;
+        //    }
+
+        //    Player.walkAnimTimer += Time.fixedDeltaTime;
+        //    if (Player.walkAnimTimer >= Player.walkAnimSpeed * 2)
+        //        Player.walkAnimTimer = 0f;
+
+        //    if (Player.walkAnimTimer < Player.walkAnimSpeed)
+        //        Player.spriteRenderer.sprite = Player.walkSprite1;
+        //    else
+        //        Player.spriteRenderer.sprite = Player.walkSprite2;
+        //}
+        //else
+        //{
+        //    Player.spriteRenderer.sprite = Player.idleSprite;
+        //    Player.walkAnimTimer = 0f;
+        //}
+
+
     }
     public override void OnEnter()
     {
@@ -77,11 +108,14 @@ public class MoveState : PlayerState
         if (jumpRequested)
         {
             Player.YSpeed = PhysicsInfo.JumpStrength;
+           // Player.spriteRenderer.sprite = Player.jumpSprite;
             Machine.Get<AirState>().isJump = true;
             Machine.Set<AirState>();
+            Player.animator.SetTrigger("Jump");
             return;
         }
-        
+
+
         //si le joueur est pas au sol on change de state
         if (!Player.CheckOnGround())
         {
