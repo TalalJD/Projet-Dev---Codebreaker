@@ -33,7 +33,7 @@ public class AirState : PlayerState
     {
         float inputX = Input.GetAxisRaw("Horizontal");
         float maxSpeed = PhysicsInfo.TopSpeed;
-        Vector2 velocity = Player.Rb.velocity;
+        Vector2 velocity = Player.Rb.linearVelocity;
 
         float wallCheck = 0.35f;
 
@@ -104,7 +104,7 @@ public class AirState : PlayerState
         MovementVertical();
         MovementHorizontal();
 
-        Player.Rb.velocity = new Vector2(Player.GroundSpeed, Player.YSpeed);
+        Player.Rb.linearVelocity = new Vector2(Player.GroundSpeed, Player.YSpeed);
 
         if (Player.YSpeed < 0)
         {

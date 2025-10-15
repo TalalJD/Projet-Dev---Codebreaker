@@ -9,7 +9,7 @@ public class HealthBuff : MonoBehaviour
     void Start()
     {
 
-        _player = FindObjectOfType<Player>();
+        _player = FindAnyObjectByType<Player>();
     }
     public void OnTriggerEnter2D(Collider2D collision)
     {

@@ -48,7 +48,7 @@ public class Gromar : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        player = FindAnyObjectByType<Player>();
         currentHealth = maxHealth;
         if (StateMachine != null)
         {
@@ -107,7 +107,7 @@ public class Gromar : MonoBehaviour
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = direction.normalized * speed;
+            rb.linearVelocity = direction.normalized * speed;
             bullet.transform.right = direction; // rotate sprite
         }
 
@@ -125,7 +125,7 @@ public class Gromar : MonoBehaviour
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = direction.normalized * speed;
+            rb.linearVelocity = direction.normalized * speed;
             bullet.transform.right = direction;
         }
 

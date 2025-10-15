@@ -11,8 +11,8 @@ public class SpeedBuff : MonoBehaviour
 
     void Start()
     {
-
-        _player = FindObjectOfType<Player>();
+            
+        _player = FindAnyObjectByType<Player>();
         if (_player != null)
         {
             _physicsInfo = _player.PhysicsInfo;

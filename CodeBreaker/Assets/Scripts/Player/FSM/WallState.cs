@@ -12,7 +12,7 @@ public class WallState : PlayerState
         float inputX = Input.GetAxisRaw("Horizontal"); // x
 
         float wallDistance = 0.35f;
-        Vector2 velocity = Player.Rb.velocity;
+        Vector2 velocity = Player.Rb.linearVelocity;
 
         Vector2 origin = (Vector2)Player.transform.position;
         Vector2 dir = new Vector2(Mathf.Sign(inputX), 0f);

@@ -9,8 +9,8 @@ public class MoveState : PlayerState
     public bool jumpRequested; //indique si un saut a ete demander par le joueur
 
     /// <summary>
-    /// Gère le mouvement horizontal du joueur au sol en appliquant 
-    /// une accélération, une décélération et une friction selon les inputs.
+    /// Gï¿½re le mouvement horizontal du joueur au sol en appliquant 
+    /// une accï¿½lï¿½ration, une dï¿½cï¿½lï¿½ration et une friction selon les inputs.
     /// </summary>
     public void GroundMovement()
     {
@@ -123,6 +123,6 @@ public class MoveState : PlayerState
         }
 
         GroundMovement();
-        Player.Rb.velocity = new Vector2(Player.GroundSpeed, 0); //on update la vitesse du rigidbody
+        Player.Rb.linearVelocity = new Vector2(Player.GroundSpeed, 0); //on update la vitesse du rigidbody
     }
 }
