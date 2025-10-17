@@ -25,4 +25,8 @@ public class PhysicsInfo : ScriptableObject
     public float MaxFallSpeed = 20f;
     public float CoyoteTime = 0.15f;
 
+    public float WallJumpHori = 6f;
+    public float WallJumpVert = 9f;
+    public float WallJumpX = 6f;
+
 }
