@@ -94,7 +94,7 @@ public class Gromar : MonoBehaviour
         FacePlayer();
     }
 
-    #region Bullet Instantiation Methods
+    /*#region Bullet Instantiation Methods
 
     /// <summary>
     /// Shoot a bullet in a given direction with a speed.
@@ -140,14 +140,15 @@ public class Gromar : MonoBehaviour
         if (missileBullet == null) return null;
 
         GameObject bullet = GameObject.Instantiate(missileBullet, position, Quaternion.identity);
-        MissileBullet missile = bullet.GetComponent<MissileBullet>();
+        ParabolicMissile missile = bullet.GetComponent<ParabolicMissile>();
         if (missile != null)
         {
-            missile.Initialize(targetPosition);
+            missile.Initialize(position, targetPosition); //  deux arguments maintenant
         }
 
         return bullet;
-    }
+    }*/
 
-    #endregion
+
+   /* #endregion*/
 }

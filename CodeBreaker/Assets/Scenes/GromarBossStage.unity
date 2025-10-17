@@ -540,6 +540,27 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4318231309966712751, guid: dcaa4601eacc8b242ad4930f8eb09a2f, type: 3}
   m_PrefabInstance: {fileID: 9098105256644734114}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &926203066 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4679016891467183578, guid: d3394c228fd586841a6685c108cf075b, type: 3}
+  m_PrefabInstance: {fileID: 6822213015067889576}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &926203069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926203066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9aeeba75b5fd6544a9e9b6d90adfd8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smallBulletPrefab: {fileID: 6305855500433276022, guid: 6b44f2f14c4f3cc4887917837607722a, type: 3}
+  bigBulletPrefab: {fileID: 6305855500433276022, guid: 725379fd9fac36149b79f9038138ff56, type: 3}
+  parabolicMissilePrefab: {fileID: 6305855500433276022, guid: 24305b5cd32ff7d40af2f5f638f3cc30, type: 3}
+  homingMissilePrefab: {fileID: 0}
 --- !u!212 &1026331983 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 2425256699699427953, guid: ef1498460daa80a46974c42a6317aab2, type: 3}
@@ -1259,7 +1280,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4679016891467183578, guid: d3394c228fd586841a6685c108cf075b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 926203069}
   m_SourcePrefab: {fileID: 100100000, guid: d3394c228fd586841a6685c108cf075b, type: 3}
 --- !u!1001 &9098105256644734114
 PrefabInstance:

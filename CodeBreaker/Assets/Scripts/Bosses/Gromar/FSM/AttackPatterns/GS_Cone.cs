@@ -34,7 +34,7 @@ public class GS_Cone : GromarState
             float angle = startAngle + t * spreadAngle;
             Vector2 dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
 
-            gromar.ShootSmallBullet(origin, dir, speed);
+            //gromar.ShootSmallBullet(origin, dir, speed);
         }
     }
     private void ShootCone(int bulletCount, float spreadAngle, float speed)
@@ -56,7 +56,7 @@ public class GS_Cone : GromarState
 
             Vector2 dir = new Vector2(Mathf.Cos(bulletAngle * Mathf.Deg2Rad), Mathf.Sin(bulletAngle * Mathf.Deg2Rad));
 
-            gromar.ShootSmallBullet(origin, dir, speed);
+            //gromar.ShootSmallBullet(origin, dir, speed);
         }
     }
 

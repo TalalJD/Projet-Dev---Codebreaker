@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3824987473367509007}
   - component: {fileID: 9222938976278203932}
   - component: {fileID: 2849898007226624013}
-  - component: {fileID: 7356044057662471184}
+  - component: {fileID: 1087973155947224534}
   m_Layer: 7
   m_Name: GromarSmallBull
   m_TagString: EnnemyBullet
@@ -52,6 +52,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -89,7 +92,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!50 &9222938976278203932
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -100,8 +103,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -122,6 +125,7 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6305855500433276022}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -145,11 +149,12 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1}
   m_Direction: 0
---- !u!114 &7356044057662471184
+--- !u!114 &1087973155947224534
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,6 +163,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 6305855500433276022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1904bf61140ef8e4f8ef8913b4cff6a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 4327ad52ca37c334992ff51b78bd0438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10
+  lifetime: 10
