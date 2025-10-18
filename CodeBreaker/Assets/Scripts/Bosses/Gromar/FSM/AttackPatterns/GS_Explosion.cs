@@ -16,11 +16,11 @@ public class GS_Explosion : GromarState
 
         foreach (Collider2D hit in hits)
         {
-            if (hit.CompareTag("Player")) // ou un script spécifique
+            if (hit.CompareTag("Player")) 
             {
                 Debug.Log("Player hit by Gromar explosion!");
 
-                // Exemple : si ton joueur a un script de vie
+                
                 Player player = hit.GetComponent<Player>();
                 if (player != null)
                     player.ModifyHealth(-damage);
