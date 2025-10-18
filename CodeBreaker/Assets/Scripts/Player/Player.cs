@@ -239,11 +239,16 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("EnnemyBullet"))
+        if (other.GetComponent<Projectile>() != null)
         {
             ModifyHealth(-1);
-            Destroy(other.gameObject); // player decides when bullet is destroyed
         }
+
+        //if (other.CompareTag("EnnemyBullet"))
+        //{
+        //    ModifyHealth(-1);
+        //    Destroy(other.gameObject); // player decides when bullet is destroyed
+        //}
 
         if (other.CompareTag("EnnemyHitbox"))
         {
