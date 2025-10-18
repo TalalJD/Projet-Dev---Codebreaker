@@ -14,8 +14,8 @@ public class GS_Idle : GromarState
     }
     public override void OnFixedUpdate()
     {
-       if (currentTimer <= 0) { Machine.Set<GS_Cone>(); return; }
-       else { currentTimer -= Time.deltaTime; }
+       //if (currentTimer <= 0) { Machine.Set<GS_Cone>(); return; }
+       //else { currentTimer -= Time.deltaTime; }
 
     }
 }
