@@ -29,7 +29,7 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_Idle());//1
         Add(new GS_Warp());//2
         Add(new GS_Explosion());//4
-        Add(new GS_Cone());//5
+        Add(new Gs_Cone());//5
         Add(new GS_MissilAttack());//7
         
 
