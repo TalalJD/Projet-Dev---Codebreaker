@@ -8,6 +8,7 @@ public class WallState : PlayerState
     private bool isOnRightWall;
     private bool jumpRequested;
     private float wallSlideSpeed = 0.6f;
+    private float inputKeyTimer = 0f;
 
     public override void OnEnter()
     {
@@ -21,7 +22,7 @@ public class WallState : PlayerState
     }
 
     public override void OnExit()
-    {   
+    {
         // Pour l'animation
         // Player.animator.SetBool("isWallSliding", false);
         jumpRequested = false;
@@ -29,7 +30,7 @@ public class WallState : PlayerState
 
     public override void OnUpdate()
     {
-        
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             jumpRequested = true;
@@ -41,6 +42,14 @@ public class WallState : PlayerState
         if ((isOnRightWall && inputX > 0) || (!isOnRightWall && inputX < 0))
         {
             Machine.Set<AirState>();
+            Debug.Log("On wall");
+        }
+
+        if ((isOnRightWall && inputX < 0) || (!isOnRightWall && inputX > 0))
+        {
+            Machine.Set<MoveState>();
+            Debug.Log("Detached from wall");
+            return;
         }
 
         // retourn au move state quand player touch le sol
@@ -52,7 +61,7 @@ public class WallState : PlayerState
 
     public override void OnFixedUpdate()
     {
-        float inputKeyTimer = 0f;
+
 
         // verifier si player est sur le mur
         if (!Player.CheckWall())
@@ -60,35 +69,33 @@ public class WallState : PlayerState
             Machine.Set<AirState>();
             return;
         }
-        if((isOnRightWall && Input.GetKeyDown(KeyCode.A)) || 
-            (!isOnRightWall && Input.GetKeyDown(KeyCode.D)))
-        {
-            Machine.Set<AirState>();
-        }
+        
 
         // check input
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {
-            Player.YSpeed = -wallSlideSpeed;
-
-        //    inputKeyTimer += Time.fixedDeltaTime;
-        //    if (inputKeyTimer >= 1f)
-        //    {
-        //        Debug.Log("sliding down");
-        //        Player.YSpeed = -wallSlideSpeed;
-        //    } 
-        //} else
-        //{
-        //    inputKeyTimer = 0f;
-        //    Debug.Log("wasd not clicked");
-        }
-            Player.Rb.linearVelocity = new Vector2(0, Player.YSpeed);
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            
-        }
-
+            inputKeyTimer += Time.fixedDeltaTime;
+            //Player.YSpeed = -wallSlideSpeed;
             if (jumpRequested)
+            {
+                //Debug.Log("Jmped");
+                inputKeyTimer = 0f;
+            }
+            else if (inputKeyTimer >= 0.15f) // petit delai avant de tomber
+            {
+                //Debug.Log("sliding down");
+                Player.YSpeed = -wallSlideSpeed;
+            }
+        }
+        else
+        {
+            inputKeyTimer = 0f;
+            //Debug.Log("wasd not clicked");
+        }
+        Player.Rb.linearVelocity = new Vector2(0, Player.YSpeed);
+        
+
+        if (jumpRequested)
         {
             jumpRequested = false;
 
