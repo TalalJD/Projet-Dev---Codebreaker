@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseEnnemy : Ennemy
 {
-    private float moveSpeed = 5f;
+    private float moveSpeed = 10f;
     private float gravity = -30f;
     private float maxFallSpeed = -20f;
 
@@ -16,7 +16,10 @@ public class BaseEnnemy : Ennemy
     [SerializeField] private GameObject capsuleHitbox;
     private SpriteRenderer _renderer;
     private float attackDuration = 0.5f;
-
+    [SerializeField] private float aggroRange = 8f;
+    [SerializeField] private float stopAggroRange = 12f;
+    [SerializeField] private float inAttackRange = 1f;
+    protected float distanceTarget;
     protected override void Start()
     {
         base.Start();
@@ -26,17 +29,30 @@ public class BaseEnnemy : Ennemy
     }
     protected void FixedUpdate()
     {
-        if (!inAttack)
+        if (_target != null)
+        {
+            distanceTarget = Vector2.Distance(transform.position, _target.position);
+        }
+        else
+        {
+            distanceTarget = Mathf.Infinity;
+        }
+
+        bool aggro = distanceTarget <= aggroRange;
+        bool idle = distanceTarget >= stopAggroRange;
+        bool tryAttack = distanceTarget < inAttackRange;
+
+        if (inAttack || idle)
+        {
+            _velocity.x = 0;
+        }
+        else if (aggro)
         {
             float directionX = Mathf.Sign(_targetDirection.x) * moveSpeed;
             _velocity.x = directionX;
         }
-        else
-        {
-            _velocity.x = 0;
-        }
 
-        _isGrounded = CheckOnGround();
+            _isGrounded = CheckOnGround();
 
         if (!_isGrounded)
         {
@@ -53,7 +69,7 @@ public class BaseEnnemy : Ennemy
 
         Vector2 mouvement = rigidBody.position + _velocity * Time.fixedDeltaTime;
         rigidBody.MovePosition(mouvement);
-        if (CanAttack() && !inAttack)
+        if (CanAttack() && !inAttack && tryAttack)
         {
             Attack();
         }
