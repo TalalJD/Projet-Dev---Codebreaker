@@ -50,6 +50,7 @@ public class BaseEnnemy : Ennemy
         {
             float directionX = Mathf.Sign(_targetDirection.x) * moveSpeed;
             _velocity.x = directionX;
+            RegarderJoueur(_targetDirection.x);
         }
 
             _isGrounded = CheckOnGround();
@@ -75,7 +76,25 @@ public class BaseEnnemy : Ennemy
         }
     }
 
+    private void RegarderJoueur(float directionX)
+    {
+        if (Mathf.Approximately(directionX, 0f))
+        {
+            return;
+        }
 
+        Vector3 localScale = transform.localScale;
+
+        if (directionX > 0f)
+        {
+            localScale.x = Mathf.Abs(localScale.x);
+        }
+        else if (directionX < 0f)
+        {
+            localScale.x = -Mathf.Abs(localScale.x);
+        }
+        transform.localScale = localScale;
+    }
     private bool CheckOnGround()
     {
         var hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheck, LayerMask);
