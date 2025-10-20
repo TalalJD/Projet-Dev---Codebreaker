@@ -30,19 +30,27 @@ public class GromarStateMachine : StateMachine<GromarState>
 
     public void Init()
     {
-       // Add(new GS_AttackState());
+        // Add(new GS_AttackState());
         Add(new GS_Idle());//1
         Add(new GS_Warp());//2
         Add(new GS_Explosion());//4
         Add(new GS_Cone());//5
         Add(new GS_MissilAttack());//7
-        
-        attackPatterns.Add(new AttackPattern
-            ("Pattern A",
-            typeof(GS_Cone),
-            typeof(GS_Warp),
-            typeof(GS_Cone),
-            typeof(GS_MissilAttack)
+
+       /* attackPatterns.Add(new AttackPattern(
+            "Pattern Test", 3f,
+            new StateCall(typeof(GS_Cone)),                // cone
+            new StateCall(typeof(GS_Warp)),                // warp (default params)
+            new StateCall(typeof(GS_Cone)),                // cone again
+            new StateCall(typeof(GS_MissilAttack), 5, 0.5f) // missile (5 missiles, 0.5s delay)
+        ));*/
+
+        attackPatterns.Add(new AttackPattern(
+            "Pattern A", 3f,
+            new StateCall(typeof(GS_Warp),1, false, false, true, false),
+            new StateCall(typeof(GS_Cone),3,.3f),
+            new StateCall(typeof(GS_MissilAttack),6,.1f),
+            new StateCall(typeof(GS_Cone),3,.3f)
             ));
 
         Initialize<GS_Idle>();
@@ -103,6 +111,21 @@ public class GromarStateMachine : StateMachine<GromarState>
         else
         {
             Debug.LogWarning($"Failed to create state of type {call.stateType}");
+        }
+    }
+
+
+    private void SetIdleWithDelay(float delay)
+    {
+        var idleState = Get<GS_Idle>();
+        if (idleState != null)
+        {
+            idleState.Idletimer = delay;
+            Set<GS_Idle>();
+        }
+        else
+        {
+            Debug.LogWarning("Idle state not found!");
         }
     }
 
