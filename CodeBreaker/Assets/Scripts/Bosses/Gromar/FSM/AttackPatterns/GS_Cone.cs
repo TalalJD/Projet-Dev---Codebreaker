@@ -1,21 +1,28 @@
+using Codice.CM.Common.Serialization;
 using PlasticGui.WorkspaceWindow.BrowseRepository;
 using System.Collections;
 using UnityEngine;
 
 public class GS_Cone : GromarState
 {
-    public override int StateNumber => 2;
+    
 
     int numberOfCones = 1;
     float delay = .3f;
     
-    public GS_Cone(int count = 1, float delay = .3f) { numberOfCones = count; this.delay = delay; }
+    public GS_Cone() : base(2) {}
 
     public override void OnEnter()
     {
 
         gromar.StartCoroutine(shootCone());
         
+    }
+
+    public override void SetParam(object[] args)
+    {
+        numberOfCones =  (int)args[0];
+        delay = (float)args[1];
     }
 
     public override void OnExit()

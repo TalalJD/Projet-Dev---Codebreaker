@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class GS_Warp : GromarState
 {
-    public override int StateNumber => 1;
 
     SpriteRenderer[] sprites;
     Queue<Transform> WarpHistory = new Queue<Transform>();
@@ -23,19 +22,19 @@ public class GS_Warp : GromarState
     bool tpSpawn = false;//ecq on tp au spawn
 
 
-    public GS_Warp(int count = 1, bool tpOnPlayer = false, bool tpMiddle = false, bool tpCornerOnly = false, bool tpSpawn = false)
+    public GS_Warp() : base(1) { }
+    
+
+    public override void SetParam(object[] args)
     {
-        warpTimes = count;
-        this.tpOnPlayer = tpOnPlayer;
-        this.tpMiddle = tpMiddle;
-        this.tpCornerOnly = tpCornerOnly;
-        this.tpSpawn = tpSpawn;
-        
+        warpTimes = (int)args[0];
+        tpOnPlayer = (bool)args[1];
+        tpMiddle = (bool)args[2];
+        tpCornerOnly = (bool)args[3];
+        tpSpawn = (bool)args[4];
     }
 
 
-
-    
     public override void OnEnter()
     {
         sprites = gromar.GetComponentsInChildren<SpriteRenderer>();

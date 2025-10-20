@@ -3,10 +3,20 @@ using UnityEngine;
 
 public class GS_MissilAttack : GromarState
 {
-    public override int StateNumber => 3;
+   
     int nbMissile = 1;
     float delay = 1f;
-    public GS_MissilAttack(int nbMissile =  1, float delay = 1f) { this.nbMissile = nbMissile; this.delay = delay; }
+    public GS_MissilAttack() : base(3) {}
+
+
+
+    public override void SetParam(object[] args)
+    {
+        nbMissile = (int)args[0];
+        delay = (float)args[1];
+    }
+
+
     public override void OnEnter()
     {
         // Commence le pattern de tir

@@ -6,10 +6,16 @@ using UnityEngine;
 public class GS_Idle : GromarState
 {
 
-    public override int StateNumber => 0;
+ 
     public float Idletimer = 1f;
    
-    public GS_Idle(float timer = 1f) { Idletimer = timer; }
+    public GS_Idle() : base(0) {}
+
+    public override void SetParam(object[] args)
+    {
+        Idletimer = (float)args[0];
+     
+    }
 
     public override void OnEnter()
     {

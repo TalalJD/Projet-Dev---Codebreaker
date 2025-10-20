@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class GS_Explosion : GromarState
 {
-    public override int StateNumber => 4;
-    public GS_Explosion() { }
+    
+    public GS_Explosion() : base(4) { }
     public override void OnEnter() => DoExplosionDamage(3,1);
 
     public IEnumerator DoExplosionDamage(float radius, int damage)
