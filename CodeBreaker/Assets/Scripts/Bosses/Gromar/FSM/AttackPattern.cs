@@ -1,21 +1,30 @@
-using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System;
 
 [Serializable]
-public class AttackPattern 
+public class StateCall
 {
+    public Type stateType;
+    public object[] args;
 
-    public string name;
-    public List<Type> stateSequence = new List<Type>();
-
-    public AttackPattern(string name, params Type[] states){
-        this.name = name;
-        stateSequence.AddRange(states);
-        
+    public StateCall(Type type, params object[] args)
+    {
+        stateType = type;
+        this.args = args;
     }
+}
 
+[Serializable]
+public class AttackPattern
+{
+    public string name;
+    public float delay;
+    public List<StateCall> sequence = new List<StateCall>();
 
-
+    public AttackPattern(string name, float delay, params StateCall[] calls)
+    {
+        this.name = name;
+        this.delay = delay;
+        sequence.AddRange(calls);
+    }
 }
