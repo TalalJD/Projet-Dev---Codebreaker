@@ -21,6 +21,8 @@ public class GS_Warp : GromarState
 
     bool tpSpawn = false;//ecq on tp au spawn
 
+    private bool skipNextState = false;
+
 
     public GS_Warp() : base(1) { }
     
@@ -32,11 +34,18 @@ public class GS_Warp : GromarState
         tpMiddle = (bool)args[2];
         tpCornerOnly = (bool)args[3];
         tpSpawn = (bool)args[4];
+
+       
+        if (args.Length > 5 && args[5] is bool skip)
+            skipNextState = skip;
+        else
+            skipNextState = false;
     }
 
 
     public override void OnEnter()
     {
+       
         sprites = gromar.GetComponentsInChildren<SpriteRenderer>();
         gromar.StartCoroutine(DoWarp());
     }
@@ -59,8 +68,12 @@ public class GS_Warp : GromarState
             WarpPosition();
             yield return new WaitForSeconds(0.3f);
         }
-        yield return new WaitForSeconds(.3f);
-        Machine.ExecuteNextState();
+
+        if (!skipNextState)
+        {
+            yield return new WaitForSeconds(.3f);
+            Machine.ExecuteNextState();
+        }
     }
 
     /// <summary>
