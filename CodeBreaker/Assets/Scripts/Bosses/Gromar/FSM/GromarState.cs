@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class GromarState : State
 {
-    public virtual int StateNumber => -1;
+    public int StateNumber = -1;
     public Gromar gromar;
     public GromarStateMachine Machine;
    
 
-    public GromarState()
+    public GromarState(int number = -1)
     {
+       StateNumber = number;
     }
+
+    
 
     public override void OnEnter()
     {
