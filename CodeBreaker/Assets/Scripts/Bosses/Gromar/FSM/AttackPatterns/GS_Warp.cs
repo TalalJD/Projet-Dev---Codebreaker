@@ -45,6 +45,8 @@ public class GS_Warp : GromarState
             WarpPosition();
             yield return new WaitForSeconds(0.3f);
         }
+        yield return new WaitForSeconds(1.5f);
+        Machine.ExecuteNextState();
     }
 
     /// <summary>

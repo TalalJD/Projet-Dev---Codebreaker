@@ -46,5 +46,7 @@ public class GS_MissilAttack : GromarState
             // Délai entre les tirs
             yield return new WaitForSeconds(delay);
         }
+        yield return new WaitForSeconds(1.5f);
+        Machine.ExecuteNextState();
     }
 }

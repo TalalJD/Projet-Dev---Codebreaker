@@ -1,12 +1,13 @@
 using log4net.Util;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class GS_Explosion : GromarState
 {
     public override void OnEnter() => DoExplosionDamage(3,1);
 
-    public void DoExplosionDamage(float radius, int damage)
+    public IEnumerator DoExplosionDamage(float radius, int damage)
     {
         // Centre de l'explosion (le boss)
         Vector2 center = gromar.transform.position;
@@ -29,6 +30,9 @@ public class GS_Explosion : GromarState
 
         // Debug visuel dans la scène
         DrawDebugCircle(center, radius, Color.red);
+
+        yield return new WaitForSeconds(1.5f);
+        Machine.ExecuteNextState();
 
     }
     void DrawDebugCircle(Vector2 center, float radius, Color color, int segments = 32)

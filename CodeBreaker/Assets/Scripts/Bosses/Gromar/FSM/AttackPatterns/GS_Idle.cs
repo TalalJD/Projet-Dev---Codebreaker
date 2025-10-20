@@ -9,13 +9,11 @@ public class GS_Idle : GromarState
 
     public override void OnEnter()
     {
-        Debug.Log("IdleGroamr");
-        currentTimer = timer;
+        gromar.StartCoroutine(WaitAndAttack());
     }
-    public override void OnFixedUpdate()
+    private IEnumerator WaitAndAttack()
     {
-       //if (currentTimer <= 0) { Machine.Set<GS_Cone>(); return; }
-       //else { currentTimer -= Time.deltaTime; }
-
+        yield return new WaitForSeconds(2f); // short delay between patterns
+        Machine.StartRandomPattern();
     }
 }
