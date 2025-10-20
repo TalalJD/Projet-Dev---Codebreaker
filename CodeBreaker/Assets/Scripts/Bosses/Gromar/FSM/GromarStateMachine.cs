@@ -37,14 +37,6 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_Cone());//5
         Add(new GS_MissilAttack());//7
 
-        /* attackPatterns.Add(new AttackPattern(
-             "Pattern Test", 3f,
-             new StateCall(typeof(GS_Cone)),                // cone
-             new StateCall(typeof(GS_Warp)),                // warp (default params)
-             new StateCall(typeof(GS_Cone)),                // cone again
-             new StateCall(typeof(GS_MissilAttack), 5, 0.5f) // missile (5 missiles, 0.5s delay)
-         ));*/
-
         attackPatterns.Add(new AttackPattern(
             "Pattern A", 3f,
             new StateCall(typeof(GS_Warp), 1, false, false, true, false),
@@ -56,8 +48,8 @@ public class GromarStateMachine : StateMachine<GromarState>
         attackPatterns.Add(
             AttackPattern.BuildAlternatingPattern(
                 "Pattern B", 3f, 10,
-                typeof(GS_Warp), new object[] { 1, false, false, true, false },
-                typeof(GS_Cone), new object[] { 1, .3f }
+                new StateCall(typeof(GS_Warp), 1, false, false, true, false),
+                new StateCall(typeof(GS_Cone), 1, .3f)
             )
         );
 
@@ -123,22 +115,22 @@ public class GromarStateMachine : StateMachine<GromarState>
     /// </summary>
     private void SetIdleWithDelay(float delay)
     {
-        
+
         var warpState = Get<GS_Warp>();
 
         if (warpState != null)
         {
-           
+
             bool warpToSpawn = UnityEngine.Random.value < 0.5f;//entre 0 et 1 aka false or true
 
-            
+
             object[] args = warpToSpawn
                 ? new object[] { 1, false, false, false, true, true }   //si true on set les args a tp au spawn
                 : new object[] { 1, false, true, false, false, true };  //si false on set les args a tp au middle
 
             warpState.SetParam(args); //on set les args du warp
 
-            
+
             ForceSet(warpState);
 
 
@@ -150,7 +142,7 @@ public class GromarStateMachine : StateMachine<GromarState>
             GoIdle(delay);
         }
     }
-  
+
     /// <summary>
     /// get le idle state et rentre dedans en lui pasasnt le temps a etre en delay
     /// </summary>

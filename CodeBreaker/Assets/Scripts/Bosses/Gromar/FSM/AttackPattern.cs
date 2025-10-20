@@ -28,18 +28,15 @@ public class AttackPattern
         sequence.AddRange(calls);
     }
 
-    public static AttackPattern BuildAlternatingPattern(
-    string name,
-    float endDelay,
-    int repeatCount,
-    Type stateA, object[] argsA,
-    Type stateB, object[] argsB)
+    public static AttackPattern BuildAlternatingPattern(string name, float endDelay, int repeatCount, params StateCall[] calls)
     {
         var pattern = new AttackPattern(name, endDelay);
         for (int i = 0; i < repeatCount; i++)
         {
-            pattern.sequence.Add(new StateCall(stateA, argsA));
-            pattern.sequence.Add(new StateCall(stateB, argsB));
+            foreach (var call in calls)
+            {
+                pattern.sequence.Add(new StateCall(call.stateType, call.args));
+            }
         }
         return pattern;
     }
