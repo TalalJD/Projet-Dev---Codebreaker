@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour
@@ -15,14 +16,24 @@ public abstract class Projectile : MonoBehaviour
         spawnTime = Time.time;
     }
 
-    public virtual void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.tag != "Player" && collision.tag != "Ennemy" && collision.tag != "Boss" && collision.tag != "EnnemyBullet")
-        {
-            Destroy(gameObject);
-        }
+   public virtual void OnTriggerEnter2D(Collider2D collision)
+{
+    // Ignore other projectiles
+    if (collision.GetComponent<Projectile>() != null)
+        return;
 
-    }
+    // Ignore friendly fire (boss or enemies)
+    if (collision.CompareTag("Boss") || collision.CompareTag("Ennemy"))
+        return;
+
+    // Ignore the player — player script already handles damage logic
+    if (collision.CompareTag("Player"))
+        return;
+
+    // Destroy if it hits anything else (like walls, ground, etc.)
+    Destroy(gameObject);
+}
+
 
     protected virtual void Update()
     {
