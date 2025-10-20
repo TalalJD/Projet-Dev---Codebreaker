@@ -9,7 +9,8 @@ public class GromarStateMachine : StateMachine<GromarState>
 
     private Dictionary<int, System.Type> shortcutMap;
     private List<AttackPattern> attackPatterns = new List<AttackPattern>();
-    private Queue<Type> currentPatternQueue;
+    private Queue<StateCall> currentPatternQueue;
+    private AttackPattern currentPattern;
 
 
     public override void Add(GromarState state)
@@ -59,10 +60,11 @@ public class GromarStateMachine : StateMachine<GromarState>
             return;
 
         int index = UnityEngine.Random.Range(0, attackPatterns.Count);
-        AttackPattern chosen = attackPatterns[index];
-        currentPatternQueue = new Queue<Type>(chosen.stateSequence);
+        currentPattern = attackPatterns[index];
+        currentPatternQueue = new Queue<StateCall>(currentPattern.sequence);
 
-        Debug.Log($"Starting pattern: {chosen.name}");
+
+        Debug.Log($"Starting pattern: {currentPattern.name}");
 
         ExecuteNextState();
     }
@@ -72,26 +74,51 @@ public class GromarStateMachine : StateMachine<GromarState>
         if (currentPatternQueue == null || currentPatternQueue.Count == 0)
         {
             Debug.Log("Pattern finished, returning to Idle.");
-            Set<GS_Idle>();
+
+            float delay = currentPattern != null ? currentPattern.delay : 1f;
+
+            SetIdleWithDelay(delay);
             return;
         }
 
-        Type nextState = currentPatternQueue.Dequeue();
-        Set(nextState);
+        StateCall nextCall = currentPatternQueue.Dequeue();
+        SetStateCall(nextCall);
     }
+
+
+    private void SetStateCall(StateCall call)
+    {
+        // dynamically create state using its constructor arguments
+        GromarState newState = Activator.CreateInstance(call.stateType, call.args) as GromarState;
+
+        if (newState != null)
+        {
+            newState.Machine = this;
+            newState.gromar = GetComponent<Gromar>();
+
+            CurrentState?.OnExit();
+            CurrentState = newState;
+            CurrentState?.OnEnter();
+        }
+        else
+        {
+            Debug.LogWarning($"Failed to create state of type {call.stateType}");
+        }
+    }
+
 
     private void HandleShortcutKeys()
     {
-       
-            for (int i = 1; i <= shortcutMap.Count; i++)
+
+        for (int i = 1; i <= shortcutMap.Count; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i)) // Alpha1..Alpha9
             {
-                if (Input.GetKeyDown(KeyCode.Alpha0 + i)) // Alpha1..Alpha9
-                {
-                    Set(shortcutMap[i]);
-                    Debug.Log($"Switched to state: {shortcutMap[i].Name}");
-                }
+                Set(shortcutMap[i]);
+                Debug.Log($"Switched to state: {shortcutMap[i].Name}");
             }
-        
+        }
+
     }
 
     private void Set(Type stateType)
