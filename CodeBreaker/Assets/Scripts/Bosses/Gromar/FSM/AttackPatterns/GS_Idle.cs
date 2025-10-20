@@ -8,13 +8,13 @@ public class GS_Idle : GromarState
 
  
     public float Idletimer = 1f;
-   
+ 
     public GS_Idle() : base(0) {}
 
     public override void SetParam(object[] args)
     {
         Idletimer = (float)args[0];
-     
+       
     }
 
     public override void OnEnter()
