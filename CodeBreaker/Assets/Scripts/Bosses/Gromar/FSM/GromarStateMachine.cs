@@ -1,4 +1,5 @@
 using CodeBreaker;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class GromarStateMachine : StateMachine<GromarState>
 {
 
     private Dictionary<int, System.Type> shortcutMap;
+    private List<AttackPattern> attackPatterns = new List<AttackPattern>();
+    private Queue<Type> currentPatternQueue;
+
 
     public override void Add(GromarState state)
     {
@@ -29,17 +33,51 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_Idle());//1
         Add(new GS_Warp());//2
         Add(new GS_Explosion());//4
-        Add(new Gs_Cone());//5
+        Add(new GS_Cone());//5
         Add(new GS_MissilAttack());//7
         
+        attackPatterns.Add(new AttackPattern
+            ("Pattern A",
+            typeof(GS_Cone),
+            typeof(GS_Warp),
+            typeof(GS_Cone),
+            typeof(GS_MissilAttack)
+            ));
 
         Initialize<GS_Idle>();
 
-        shortcutMap = new Dictionary<int, System.Type>();
+        shortcutMap = new Dictionary<int, Type>();
         for (int i = 0; i < AvailableStates.Count; i++)
         {
             shortcutMap[i + 1] = AvailableStates[i].GetType();
         }
+    }
+
+    public void StartRandomPattern()
+    {
+        if (attackPatterns.Count == 0)
+            return;
+
+        int index = UnityEngine.Random.Range(0, attackPatterns.Count);
+        AttackPattern chosen = attackPatterns[index];
+        currentPatternQueue = new Queue<Type>(chosen.stateSequence);
+
+        Debug.Log($"Starting pattern: {chosen.name}");
+
+        ExecuteNextState();
+    }
+
+    public void ExecuteNextState()
+    {
+        if (currentPatternQueue == null || currentPatternQueue.Count == 0)
+        {
+            Debug.Log("Pattern finished, returning to Idle.");
+            Set<GS_Idle>();
+            return;
+        }
+
+        Type nextState = currentPatternQueue.Dequeue();
+        Set(nextState);
     }
 
     private void HandleShortcutKeys()
@@ -56,7 +94,7 @@ public class GromarStateMachine : StateMachine<GromarState>
         
     }
 
-    private void Set(System.Type stateType)
+    private void Set(Type stateType)
     {
         var state = AvailableStates.Find(s => s.GetType() == stateType);
         if (state != null)
