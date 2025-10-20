@@ -94,24 +94,18 @@ public class GromarStateMachine : StateMachine<GromarState>
     }
 
 
-    private void SetStateCall(StateCall call)
+    private void SetStateCall(StateCall statecall)
     {
-        // dynamically create state using its constructor arguments
-        GromarState newState = Activator.CreateInstance(call.stateType, call.args) as GromarState;
+      
+        var state = AvailableStates.Find(s => s.GetType() == statecall.stateType);
 
-        if (newState != null)
+        if (state != null)
         {
-            newState.Machine = this;
-            newState.gromar = GetComponent<Gromar>();
-
-            CurrentState?.OnExit();
-            CurrentState = newState;
-            CurrentState?.OnEnter();
+            
+            state.SetParam(statecall.args);
+            ForceSet(state);
         }
-        else
-        {
-            Debug.LogWarning($"Failed to create state of type {call.stateType}");
-        }
+       
     }
 
 
