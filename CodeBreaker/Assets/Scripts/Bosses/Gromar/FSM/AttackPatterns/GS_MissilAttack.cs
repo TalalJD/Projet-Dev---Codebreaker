@@ -3,17 +3,28 @@ using UnityEngine;
 
 public class GS_MissilAttack : GromarState
 {
+    public override int StateNumber => 3;
+    int nbMissile = 1;
+    float delay = 1f;
+    public GS_MissilAttack(int nbMissile =  1, float delay = 1f) { this.nbMissile = nbMissile; this.delay = delay; }
     public override void OnEnter()
     {
         // Commence le pattern de tir
-        gromar.StartCoroutine(ShootAtPlayerContinuously(1f, 10));
+        gromar.StartCoroutine(ShootAtPlayerContinuously());
     }
 
     public override void OnExit() { }
 
-    private IEnumerator ShootAtPlayerContinuously(float delay, int number)
+    public GS_MissilAttack Configure(int count, float shotDelay)
     {
-        for (int i = 0; i < number; i++)
+        nbMissile = count;
+        delay = shotDelay;
+        return this; // allow chaining if needed
+    }
+
+    private IEnumerator ShootAtPlayerContinuously()
+    {
+        for (int i = 0; i < nbMissile; i++)
         {
             // Position du point de tir du boss
             Vector2 origin = gromar.ShootingPoint.position;
@@ -46,7 +57,7 @@ public class GS_MissilAttack : GromarState
             // Délai entre les tirs
             yield return new WaitForSeconds(delay);
         }
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.3f);
         Machine.ExecuteNextState();
     }
 }

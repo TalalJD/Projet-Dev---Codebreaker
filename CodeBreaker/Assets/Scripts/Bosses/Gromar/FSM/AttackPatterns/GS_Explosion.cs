@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GS_Explosion : GromarState
 {
+    public override int StateNumber => 4;
+    public GS_Explosion() { }
     public override void OnEnter() => DoExplosionDamage(3,1);
 
     public IEnumerator DoExplosionDamage(float radius, int damage)
@@ -31,7 +33,7 @@ public class GS_Explosion : GromarState
         // Debug visuel dans la scène
         DrawDebugCircle(center, radius, Color.red);
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.3f);
         Machine.ExecuteNextState();
 
     }

@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class GS_Idle : GromarState
 {
-    public float timer = .5f;
-    public float currentTimer;
+
+    public override int StateNumber => 0;
+    public float Idletimer = 1f;
+   
+    public GS_Idle(float timer = 1f) { Idletimer = timer; }
 
     public override void OnEnter()
     {
@@ -13,7 +17,7 @@ public class GS_Idle : GromarState
     }
     private IEnumerator WaitAndAttack()
     {
-        yield return new WaitForSeconds(2f); // short delay between patterns
+        yield return new WaitForSeconds(Idletimer); // short delay between patterns
         Machine.StartRandomPattern();
     }
 }

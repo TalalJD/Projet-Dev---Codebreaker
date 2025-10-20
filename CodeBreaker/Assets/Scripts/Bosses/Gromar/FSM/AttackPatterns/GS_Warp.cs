@@ -1,26 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
 public class GS_Warp : GromarState
 {
-   
+    public override int StateNumber => 1;
 
-    bool _isFollowedByAttack;
+    SpriteRenderer[] sprites;
+    Queue<Transform> WarpHistory = new Queue<Transform>();
+    const int maxHistory = 3;
 
-    public GS_Warp(int count = 1, bool isFollowedByAttack = false) : base(1)
+    int warpTimes = 1; //nb de warps
+
+    bool tpOnPlayer = false;//ecq on tp sur le joueur
+
+    bool tpMiddle = false;//ecq on tp au millieu de la map
+
+    bool tpCornerOnly = false; //ecq on tp dans les corner only
+
+    bool tpSpawn = false;//ecq on tp au spawn
+
+
+    public GS_Warp(int count = 1, bool tpOnPlayer = false, bool tpMiddle = false, bool tpCornerOnly = false, bool tpSpawn = false)
     {
         warpTimes = count;
-        _isFollowedByAttack = isFollowedByAttack;
+        this.tpOnPlayer = tpOnPlayer;
+        this.tpMiddle = tpMiddle;
+        this.tpCornerOnly = tpCornerOnly;
+        this.tpSpawn = tpSpawn;
+        
     }
 
 
 
-    SpriteRenderer[] sprites;
-    Queue<Transform> WarpHistory = new Queue<Transform>();
-    int maxHistory = 3;
-    int warpTimes = 1;
+    
     public override void OnEnter()
     {
         sprites = gromar.GetComponentsInChildren<SpriteRenderer>();
@@ -45,7 +60,7 @@ public class GS_Warp : GromarState
             WarpPosition();
             yield return new WaitForSeconds(0.3f);
         }
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.3f);
         Machine.ExecuteNextState();
     }
 
@@ -56,16 +71,35 @@ public class GS_Warp : GromarState
     {
         DisableOrEnableSprites(false);
 
-        Transform targetPoint = GetRandomPointAvoidPattern();
-
-        gromar.transform.position = targetPoint.position;
-
-        WarpHistory.Enqueue(targetPoint);
-
-        if (WarpHistory.Count > maxHistory)
+        if (tpOnPlayer)
         {
-            WarpHistory.Dequeue();
+            gromar.transform.position = new Vector3 (
+                gromar.player.transform.position.x,
+                1,
+                gromar.transform.position.z);
         }
+        else if (tpMiddle)
+        {
+            gromar.transform.position = gromar.MAPMIDPOINT.position;
+        }
+        else if (tpSpawn)
+        {
+            gromar.transform.position = gromar.SPAWNPOINT.position;
+        }
+        else
+        {
+            Transform targetPoint = GetRandomPointAvoidPattern();
+
+            gromar.transform.position = targetPoint.position;
+
+            WarpHistory.Enqueue(targetPoint);
+
+            if (WarpHistory.Count > maxHistory)
+            {
+                WarpHistory.Dequeue();
+            }
+        }
+       
 
         DisableOrEnableSprites(true);
 
@@ -80,6 +114,8 @@ public class GS_Warp : GromarState
     /// <returns></returns>
     public Transform GetRandomPointAvoidPattern()
     {
+        
+
         // Si l'historique est pas assez long on utilise la methode simplifiee
         if (WarpHistory.Count < 3)
             return GetRandomPointSimple();
@@ -89,25 +125,30 @@ public class GS_Warp : GromarState
         Transform secondLast = WarpHistory.ElementAt(WarpHistory.Count - 2); // deuxieme point
 
         // faire la liste de points potentiels
-        var possiblePoints = gromar.mapPoints
-            .Where(point =>
-            {
-                // ignorer le point ou le boss est deja present
-                if (point.position == gromar.transform.position)
-                    return false;
+            var possiblePoints = gromar.mapPoints
+           .Where(point =>
+           {
+               // ignorer le point ou le boss est deja present
+               if (point.position == gromar.transform.position)
+                   return false;
+               if (tpCornerOnly && point.position == gromar.MAPMIDPOINT.position)
+                   return false;
+               // Verifier pour un pattern A B A B
+               // Si les 2 derniers points sont A & B, ne pas choisir A encore
+               if (WarpHistory.Count >= 3)
+               {
+                   Transform thirdLast = WarpHistory.First(); //point le plus ancien
+                   if (thirdLast == last && point == secondLast) //Si il ya patterne ABAB de potentiel on ignore le point B
+                       return false;
+               }
 
-                // Verifier pour un pattern A B A B
-                // Si les 2 derniers points sont A & B, ne pas choisir A encore
-                if (WarpHistory.Count >= 3)
-                {
-                    Transform thirdLast = WarpHistory.First(); //point le plus ancien
-                    if (thirdLast == last && point == secondLast) //Si il ya patterne ABAB de potentiel on ignore le point B
-                        return false; 
-                }
+               return true;
+           })
+           .ToList();
 
-                return true;
-            })
-            .ToList();
+          
+        
+       
 
        //choisir un point random dans la liste
         int randomIndex = Random.Range(0, possiblePoints.Count);
@@ -121,12 +162,24 @@ public class GS_Warp : GromarState
     private Transform GetRandomPointSimple()
     {
         var possiblePoints = gromar.mapPoints
-            .Where(p => p.position != gromar.transform.position)
+            .Where(point =>
+            {
+                // Never pick where Gromar already is
+                if (point.position == gromar.transform.position)
+                    return false;
+
+                // If we're in corner-only mode, exclude the midpoint
+                if (tpCornerOnly && point.position == gromar.MAPMIDPOINT.position)
+                    return false;
+
+                return true;
+            })
             .ToList();
 
         int randomIndex = Random.Range(0, possiblePoints.Count);
         return possiblePoints[randomIndex];
     }
+
 
     /// <summary>
     /// methode qui active ou desactive les sprite du boss pour le faire disparaitre visuellement
