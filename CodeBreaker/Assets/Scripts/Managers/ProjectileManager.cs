@@ -13,7 +13,7 @@ public class ProjectileManager : MonoBehaviour
 {
     public static ProjectileManager Instance;
 
-    [Header("Préfabriqués de projectiles")]
+    [Header("Prefab de projectiles")]
     public GameObject smallBulletPrefab;
     public GameObject bigBulletPrefab;
     public GameObject parabolicMissilePrefab;

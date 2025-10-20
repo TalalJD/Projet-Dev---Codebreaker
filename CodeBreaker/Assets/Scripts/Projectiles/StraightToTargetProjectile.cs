@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StraightBullet : Projectile
+public class StraightToTargetProjectile : Projectile
 {
     private Vector2 direction;
 
@@ -9,7 +9,7 @@ public class StraightBullet : Projectile
         base.Initialize(origin, target);
         transform.position = origin;
         direction = (target - origin).normalized;
-        transform.right = direction;
+        
     }
 
     protected override void Update()
