@@ -6,16 +6,19 @@ using UnityEngine;
 
 public class Gromar : MonoBehaviour
 {
-   
+    public GameObject laserPrefab;
+
+
     public Transform MAPMIDPOINT;
     public Transform SPAWNPOINT;
     public List<Transform> mapPoints;
-    public GameObject bigBullet;
-    public GameObject smallBullet;
-    public GameObject missileBullet;
+
+
     public GromarStateMachine StateMachine;
     public Player player;
     public Transform ShootingPoint;
+
+
     public int maxHealth = 3;
     public int currentHealth;
 
