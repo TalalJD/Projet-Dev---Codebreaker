@@ -5,13 +5,9 @@ public class GS_LaserAttack : GromarState
 {
     public GS_LaserAttack() : base(8) { }
 
-    private float warningTime = 1f;     // Temps ou le joueur ce fait track
-    private float lockDelay = 0.2f;     // temps avant le tire ou le laser ce lock
-    private float fireDuration = 1.5f;  // temps du tire du laser
-    private float damageTimer = 0f;     //temps entre chaque tic de degat
-
-   
-   
+    private float warningTime = 1f;   // track window
+    private float lockDelay = 0.2f;   // lock-in delay
+    private float fireDuration = 1.5f;
 
     private LineRenderer laser;
     private Transform firingPoint;
@@ -19,21 +15,32 @@ public class GS_LaserAttack : GromarState
 
     private bool firingActive;
     private Vector2 lockedDirection;
+    private float damageTimer;
 
-    private float beamLength = 200f; // distance a la quelle le laser s'etend visuellement
+    private float beamLength = 200f;
+    private float warningBeamWidth = 0.05f;
+    private float shootingBeamWidth = 1.25f;
 
-    private float warningBeamWidth = 0.05f; //largeur du tire d'avertissement
-    private float shootingBeamWidth = 1.25f; //largeur du vrai tire
+    public override void SetParam(object args)
+    {
+        // reset each time
+        warningTime = 1f;
+        lockDelay = 0.2f;
+        fireDuration = 1.5f;
 
-
-
+        if (args is LaserArgs a)
+        {
+            if (a.WarningTime > 0f) warningTime = a.WarningTime;
+            if (a.LockDelay > 0f) lockDelay = a.LockDelay;
+            if (a.FireDuration > 0f) fireDuration = a.FireDuration;
+        }
+    }
 
     public override void OnEnter()
     {
         firingPoint = gromar.ShootingPoint;
         player = gromar.player.transform;
 
-        // Spawn ou reutilise le laser
         if (laser == null)
         {
             GameObject laserObj = Object.Instantiate(gromar.laserPrefab);
@@ -43,9 +50,14 @@ public class GS_LaserAttack : GromarState
         gromar.StartCoroutine(LaserRoutine());
     }
 
+    public override void OnExit()
+    {
+        if (laser != null) laser.enabled = false;
+    }
+
     private IEnumerator LaserRoutine()
     {
-        // --- PHASE 1:tire de precaution (traque le joueur) ---
+        // PHASE 1: warning track
         laser.enabled = true;
         firingActive = false;
         laser.startWidth = warningBeamWidth;
@@ -59,7 +71,7 @@ public class GS_LaserAttack : GromarState
             yield return null;
         }
 
-        // --- PHASE 2: LOCK-IN (pas de degat, 0.2s) ---
+        // PHASE 2: lock-in
         lockedDirection = ((Vector2)player.position - (Vector2)firingPoint.position).normalized;
         laser.startWidth = warningBeamWidth + 0.02f;
         laser.endWidth = warningBeamWidth + 0.02f;
@@ -72,7 +84,7 @@ public class GS_LaserAttack : GromarState
             yield return null;
         }
 
-        // --- PHASE 3: Vrai tire (direction locked-in, fait des degats par seconde) ---
+        // PHASE 3: fire
         firingActive = true;
         damageTimer = 0f;
         laser.startWidth = shootingBeamWidth;
@@ -87,7 +99,7 @@ public class GS_LaserAttack : GromarState
             yield return null;
         }
 
-        // --- FIN ---
+        // end
         firingActive = false;
         laser.enabled = false;
         yield return new WaitForSeconds(0.3f);
@@ -123,39 +135,18 @@ public class GS_LaserAttack : GromarState
         if (damageTimer > 0f) return;
         damageTimer = 1f;
 
-
-
-        Vector2 start = firingPoint.position;
+        Vector2 start = gromar.ShootingPoint.position;
         RaycastHit2D[] hits = Physics2D.RaycastAll(start, lockedDirection, beamLength);
 
         foreach (var hit in hits)
         {
-            if (hit.collider == null)
-                continue;
-             
-             Debug.Log($"Laser hit: {hit.collider.name} (tag: {hit.collider.tag})");
+            if (hit.collider == null) continue;
 
             if (hit.collider.CompareTag("Player"))
             {
-                Player p = hit.collider.GetComponent<Player>();
-                if (p != null)
-                {
-                    Debug.Log("Laser essaye de faire des degats!");
-                    p.ModifyHealth(-1);
-                }
-                else
-                {
-                    Debug.LogWarning("Laser a trouver un collider avec le tag player mais pas de script");
-                }
+                var p = hit.collider.GetComponent<Player>();
+                if (p != null) p.ModifyHealth(-1);
             }
-
         }
-    }
-
-
-    public override void OnExit()
-    {
-        if (laser != null)
-            laser.enabled = false;
     }
 }
