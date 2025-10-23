@@ -39,26 +39,26 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_LaserAttack());
 
 
-        //attackPatterns.Add(new AttackPattern(
-        //    "Pattern A", 3f,
-        //    new StateCall(typeof(GS_Warp), 1, false, false, true, false),
-        //    new StateCall(typeof(GS_Cone), 3, .3f),
-        //    new StateCall(typeof(GS_Warp), 1, false, false, true, false),
-        //    new StateCall(typeof(GS_MissilAttack), 6, .1f)
-        //    ));
+        attackPatterns.Add(new AttackPattern(
+            "Pattern A", 3f,
+            new StateCall(typeof(GS_Warp), 1, false, false, true, false),
+            new StateCall(typeof(GS_Cone), 3, .3f),
+            new StateCall(typeof(GS_Warp), 1, false, false, true, false),
+            new StateCall(typeof(GS_MissilAttack), 6, .1f)
+            ));
 
-        //attackPatterns.Add(
-        //    AttackPattern.BuildAlternatingPattern(
-        //        "Pattern B", 3f, 10,
-        //        new StateCall(typeof(GS_Warp), 1, false, false, true, false),
-        //        new StateCall(typeof(GS_Cone), 1, .3f)
-        //    )
-        //);
+        attackPatterns.Add(
+            AttackPattern.BuildAlternatingPattern(
+                "Pattern B", 3f, 10,
+                new StateCall(typeof(GS_Warp), 1, false, false, true, false),
+                new StateCall(typeof(GS_Cone), 1, .3f)
+            )
+        );
         attackPatterns.Add(new AttackPattern(
             "Laser Pattern", 3f,
-            new StateCall(typeof(GS_Warp), 1, false, false, true, false),
+            new StateCall(typeof(GS_Warp), 1, false, false, false, false),
             new StateCall(typeof(GS_LaserAttack)),
-            new StateCall(typeof(GS_Warp), 1, false, false, true, false)
+            new StateCall(typeof(GS_Warp), 1, false, false, false, false)
             ));
 
 
