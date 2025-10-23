@@ -1,29 +1,38 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Etat d'attaque laser du boss Gromar.
+/// Le laser suit le joueur pendant un court instant, se verrouille,
+/// puis tire un rayon infligeant des degats.
+/// </summary>
 public class GS_LaserAttack : GromarState
 {
-    public GS_LaserAttack() : base(8) { }
+    public GS_LaserAttack() : base(5) { }
 
-    private float warningTime = 1f;   // track window
-    private float lockDelay = 0.2f;   // lock-in delay
-    private float fireDuration = 1.5f;
+    // durees des differentes phases
+    private float warningTime = 1f;   // temps de suivi avant verrouillage
+    private float lockDelay = 0.2f;   // petit delai apres le verrouillage
+    private float fireDuration = 1.5f; // duree du tir
 
+    // references
     private LineRenderer laser;
     private Transform firingPoint;
     private Transform player;
 
+    // variables internes
     private bool firingActive;
     private Vector2 lockedDirection;
     private float damageTimer;
 
+    // parametres visuels
     private float beamLength = 200f;
     private float warningBeamWidth = 0.05f;
     private float shootingBeamWidth = 1.25f;
 
     public override void SetParam(object args)
     {
-        // reset each time
+        // reinitialisation
         warningTime = 1f;
         lockDelay = 0.2f;
         fireDuration = 1.5f;
@@ -36,15 +45,22 @@ public class GS_LaserAttack : GromarState
         }
     }
 
+    /// <summary>
+    /// Debute l'attaque laser.
+    /// </summary>
     public override void OnEnter()
     {
         firingPoint = gromar.ShootingPoint;
         player = gromar.player.transform;
 
+        // cree le laser s'il n'existe pas encore
         if (laser == null)
         {
             GameObject laserObj = Object.Instantiate(gromar.laserPrefab);
             laser = laserObj.GetComponent<LineRenderer>();
+
+            // assure que le laser utilise bien le meme materiel que le prefab
+            laser.sharedMaterial = gromar.laserPrefab.GetComponent<LineRenderer>().sharedMaterial;
         }
 
         gromar.StartCoroutine(LaserRoutine());
@@ -55,9 +71,15 @@ public class GS_LaserAttack : GromarState
         if (laser != null) laser.enabled = false;
     }
 
+    /// <summary>
+    /// Gere le cycle complet du laser :
+    /// 1. avertissement (suit le joueur)
+    /// 2. verrouillage
+    /// 3. tir
+    /// </summary>
     private IEnumerator LaserRoutine()
     {
-        // PHASE 1: warning track
+        // PHASE 1 : avertissement
         laser.enabled = true;
         firingActive = false;
         laser.startWidth = warningBeamWidth;
@@ -71,10 +93,10 @@ public class GS_LaserAttack : GromarState
             yield return null;
         }
 
-        // PHASE 2: lock-in
+        // PHASE 2 : verrouillage
         lockedDirection = ((Vector2)player.position - (Vector2)firingPoint.position).normalized;
-        laser.startWidth = warningBeamWidth + 0.02f;
-        laser.endWidth = warningBeamWidth + 0.02f;
+        laser.startWidth = warningBeamWidth;
+        laser.endWidth = warningBeamWidth;
 
         float lockTimer = 0f;
         while (lockTimer < lockDelay)
@@ -84,7 +106,7 @@ public class GS_LaserAttack : GromarState
             yield return null;
         }
 
-        // PHASE 3: fire
+        // PHASE 3 : tir
         firingActive = true;
         damageTimer = 0f;
         laser.startWidth = shootingBeamWidth;
@@ -99,13 +121,16 @@ public class GS_LaserAttack : GromarState
             yield return null;
         }
 
-        // end
+        // fin de l'attaque
         firingActive = false;
         laser.enabled = false;
         yield return new WaitForSeconds(0.3f);
         Machine.ExecuteNextState();
     }
 
+    /// <summary>
+    /// Met a jour les positions du LineRenderer (debut et fin du laser).
+    /// </summary>
     private void UpdateLaserPositions(bool trackPlayer)
     {
         if (!laser || !firingPoint) return;
@@ -115,11 +140,13 @@ public class GS_LaserAttack : GromarState
 
         if (trackPlayer && player != null)
         {
+            // suit la position actuelle du joueur
             Vector2 dir = ((Vector2)player.position - (Vector2)firingPoint.position).normalized;
             end = (Vector2)firingPoint.position + dir * beamLength;
         }
         else
         {
+            // tire dans la direction verrouillee
             end = (Vector2)firingPoint.position + lockedDirection * beamLength;
         }
 
@@ -127,13 +154,16 @@ public class GS_LaserAttack : GromarState
         laser.SetPosition(1, end);
     }
 
+    /// <summary>
+    /// Inflige des degats au joueur touche par le rayon.
+    /// </summary>
     private void DealDamageAlongLaser()
     {
         if (!firingActive) return;
 
         damageTimer -= Time.deltaTime;
         if (damageTimer > 0f) return;
-        damageTimer = 1f;
+        damageTimer = 1f; // applique les degats une fois par seconde
 
         Vector2 start = gromar.ShootingPoint.position;
         RaycastHit2D[] hits = Physics2D.RaycastAll(start, lockedDirection, beamLength);

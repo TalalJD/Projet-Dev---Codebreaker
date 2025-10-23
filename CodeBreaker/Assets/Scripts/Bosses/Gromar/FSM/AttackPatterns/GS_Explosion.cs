@@ -1,15 +1,22 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Etat du boss Gromar qui inflige des degats en zone (explosion).
+/// </summary>
 public class GS_Explosion : GromarState
 {
     public GS_Explosion() : base(4) { }
 
     public override void OnEnter()
     {
+        // Lance la coroutine qui gere les degats de l'explosion
         gromar.StartCoroutine(DoExplosionDamage(3f, 1));
     }
 
+    /// <summary>
+    /// Applique des degats a tous les joueurs dans un rayon specifique.
+    /// </summary>
     private IEnumerator DoExplosionDamage(float radius, int damage)
     {
         Vector2 center = gromar.transform.position;
@@ -24,7 +31,7 @@ public class GS_Explosion : GromarState
             }
         }
 
-        // optional: debug circle
+        // petite pause avant de passer a l'etat suivant
         yield return new WaitForSeconds(0.3f);
         Machine.ExecuteNextState();
     }

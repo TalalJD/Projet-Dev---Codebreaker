@@ -4,13 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Machine d'etats du boss Gromar :
+/// gere les transitions entre ses differents comportements
+/// et execute les sequences d'attaques (AttackPatterns).
+/// </summary>
 public class GromarStateMachine : StateMachine<GromarState>
 {
-
-    private Dictionary<int, System.Type> shortcutMap;
-    private List<AttackPattern> attackPatterns = new List<AttackPattern>();
-    private Queue<StateCall> currentPatternQueue;
-    private AttackPattern currentPattern;
+    private Dictionary<int, System.Type> shortcutMap; // raccourcis clavier -> etats
+    private List<AttackPattern> attackPatterns = new(); // tous les patterns du boss
+    private Queue<StateCall> currentPatternQueue; // etapes du pattern en cours
+    private AttackPattern currentPattern; // pattern actuellement actif
 
 
     public override void Add(GromarState state)
@@ -19,15 +23,15 @@ public class GromarStateMachine : StateMachine<GromarState>
         state.Machine = this;
         state.gromar = GetComponent<Gromar>();
     }
-    /// <summary>
-    /// permet d'excuter / entrer dans un etat
-    /// </summary>
-    /// <typeparam name="G">etat quelconque choisi</typeparam>
+
     public override void Set<G>(bool TriggerEnter = true)
     {
         base.Set<G>(TriggerEnter);
     }
 
+    /// <summary>
+    /// Initialise les etats et les patterns d'attaque du boss.
+    /// </summary>
     public void Init()
     {
         Add(new GS_Idle());
@@ -37,7 +41,7 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_MissilAttack());
         Add(new GS_LaserAttack());
 
-        // === Modern builder-based system ===
+        // --- Definition des schemas d'attaque ---
         //attackPatterns.Add(
         //    AttackPatternBuilder.New("Pattern A", 3f)
         //        .Warp(new WarpArgs { CornerOnly = true })
@@ -63,17 +67,18 @@ public class GromarStateMachine : StateMachine<GromarState>
                 .Warp()
                 .Build()
         );
-        // ===================================
 
         Initialize<GS_Idle>();
 
-        shortcutMap = new Dictionary<int, Type>();
+        // map clavier : 1 -> Idle, 2 -> Warp, etc.
+        shortcutMap = new();
         for (int i = 0; i < AvailableStates.Count; i++)
             shortcutMap[i + 1] = AvailableStates[i].GetType();
     }
 
-
-
+    /// <summary>
+    /// Selectionne et demarre un pattern aleatoire.
+    /// </summary>
     public void StartRandomPattern()
     {
         if (attackPatterns.Count == 0)
@@ -83,122 +88,102 @@ public class GromarStateMachine : StateMachine<GromarState>
         currentPattern = attackPatterns[index];
         currentPatternQueue = new Queue<StateCall>(currentPattern.sequence);
 
-
         Debug.Log($"Starting pattern: {currentPattern.name}");
-
         ExecuteNextState();
     }
 
+    /// <summary>
+    /// Passe a l'etat suivant du pattern en cours.
+    /// </summary>
     public void ExecuteNextState()
     {
         if (currentPatternQueue == null || currentPatternQueue.Count == 0)
         {
-            Debug.Log("Pattern finished, returning to Idle.");
-
             float delay = currentPattern != null ? currentPattern.delay : 1f;
-
             SetIdleWithDelay(delay);
             return;
         }
 
-        StateCall nextCall = currentPatternQueue.Dequeue();
+        var nextCall = currentPatternQueue.Dequeue();
         SetStateCall(nextCall);
     }
-
 
     private void SetStateCall(StateCall statecall)
     {
         var state = AvailableStates.Find(s => s.GetType() == statecall.stateType);
+        if (state == null) return;
 
-        if (state != null)
-        {
-            // In the new system, statecall.arg is a single object (WarpArgs, ConeArgs, etc.)
-            state.SetParam(statecall.arg);
-            ForceSet(state);
-        }
+        state.SetParam(statecall.arg); // applique les parametres du StateCall
+        ForceSet(state);               // active l'etat
     }
 
-
     /// <summary>
-    /// Set le idle avec un delai mais choisi une position a warp avant de idle entre le millieu et le spawnpoint du boss
+    /// Fait un warp aleatoire (spawn/milieu) puis attend avant de relancer un pattern.
     /// </summary>
     private void SetIdleWithDelay(float delay)
     {
-
         var warpState = Get<GS_Warp>();
-
-        if (warpState != null)
+        if (warpState == null)
         {
-
-            bool warpToSpawn = UnityEngine.Random.value < 0.5f;//entre 0 et 1 aka false or true
-
-
-            WarpArgs warpArgs = warpToSpawn
-                ? new WarpArgs { Times = 1, Spawn = true, Middle = false, SkipNextState = true }
-                : new WarpArgs { Times = 1, Spawn = false, Middle = true, SkipNextState = true };
-
-            warpState.SetParam(warpArgs);
-
-
-
-            ForceSet(warpState);
-
-
+            Debug.LogWarning("Warp state not found - going directly to Idle.");
             GoIdle(delay);
+            return;
         }
-        else
-        {
-            Debug.LogWarning("Warp state not found — going directly to Idle.");
-            GoIdle(delay);
-        }
+
+        bool warpToSpawn = UnityEngine.Random.value < 0.5f;
+        var warpArgs = warpToSpawn
+            ? new WarpArgs { Spawn = true, Middle = false, SkipNextState = true }
+            : new WarpArgs { Spawn = false, Middle = true, SkipNextState = true };
+
+        warpState.SetParam(warpArgs);
+        ForceSet(warpState);
+        GoIdle(delay);
     }
 
     /// <summary>
-    /// get le idle state et rentre dedans en lui pasasnt le temps a etre en delay
+    /// Lance l'etat d'attente (Idle) avec un delai avant le prochain pattern.
     /// </summary>
     private void GoIdle(float delay)
     {
         var idleState = Get<GS_Idle>();
-        if (idleState != null)
-        {
-            idleState.SetParam(new IdleArgs { Duration = delay });
-            Set<GS_Idle>();
+        if (idleState == null) return;
 
-        }
+        idleState.SetParam(new IdleArgs { Duration = delay });
+        Set<GS_Idle>();
     }
 
+    /// <summary>
+    /// Permet de changer d'etat avec les touches 1,2,3... (debug / test)
+    /// </summary>
     private void HandleShortcutKeys()
     {
-
         for (int i = 1; i <= shortcutMap.Count; i++)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i)) // Alpha1..Alpha9
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
             {
                 Set(shortcutMap[i]);
                 Debug.Log($"Switched to state: {shortcutMap[i].Name}");
             }
         }
-
     }
 
     private void Set(Type stateType)
     {
         var state = AvailableStates.Find(s => s.GetType() == stateType);
-        if (state != null)
-        {
-            CurrentState?.OnExit();
-            CurrentState = state;
-            CurrentState?.OnEnter();
-        }
+        if (state == null) return;
+
+        CurrentState?.OnExit();
+        CurrentState = state;
+        CurrentState?.OnEnter();
     }
 
-    public void Update()
+    private void Update()
     {
         CurrentState?.OnUpdate();
         HandleShortcutKeys();
     }
 
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         CurrentState?.OnFixedUpdate();
     }

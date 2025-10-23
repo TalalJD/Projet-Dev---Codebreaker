@@ -3,12 +3,16 @@ using System.Collections.Generic;
 
 namespace CodeBreaker
 {
-    /// <summary>One invocation of a state with its argument object.</summary>
+    /// <summary>
+    /// Represente un appel d'etat (State) avec ses arguments.
+    /// Chaque StateCall contient le type de l'etat et un objet de parametres.
+    /// Exemple : (GS_Warp, new WarpArgs {...})
+    /// </summary>
     [Serializable]
     public class StateCall
     {
-        public Type stateType;
-        public object arg; // single arg object (e.g., WarpArgs, ConeArgs, etc.)
+        public Type stateType; // type de l'etat a executer
+        public object arg;     // objet d'arguments (WarpArgs, ConeArgs, etc.)
 
         public StateCall(Type stateType, object arg = null)
         {
@@ -17,13 +21,17 @@ namespace CodeBreaker
         }
     }
 
-    /// <summary>A named sequence of state calls, followed by an end-delay.</summary>
+    /// <summary>
+    /// Represente un pattern d'attaque complet :
+    /// un nom, une sequence ordonnee d'appels d'etats,
+    /// et un delai final avant le prochain pattern.
+    /// </summary>
     [Serializable]
     public class AttackPattern
     {
-        public string name;
-        public float delay;
-        public List<StateCall> sequence = new List<StateCall>();
+        public string name;                     // nom du pattern
+        public float delay;                     // delai apres la fin du pattern
+        public List<StateCall> sequence = new(); // liste des etapes du pattern
 
         public AttackPattern(string name, float endDelay)
         {
@@ -36,20 +44,6 @@ namespace CodeBreaker
             if (calls != null) sequence.AddRange(calls);
         }
 
-        public static AttackPattern BuildAlternatingPattern(
-            string name,
-            float endDelay,
-            int repeatCount,
-            StateCall callA,
-            StateCall callB)
-        {
-            var ap = new AttackPattern(name, endDelay);
-            for (int i = 0; i < repeatCount; i++)
-            {
-                ap.sequence.Add(callA);
-                ap.sequence.Add(callB);
-            }
-            return ap;
-        }
+       
     }
 }

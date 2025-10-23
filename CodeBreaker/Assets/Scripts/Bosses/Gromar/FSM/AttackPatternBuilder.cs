@@ -3,12 +3,15 @@ using System.Collections.Generic;
 
 namespace CodeBreaker
 {
-    /// <summary>Fluent builder for AttackPattern using simple arg objects.</summary>
+    /// <summary>
+    /// Classe utilitaire permettant de construire facilement un AttackPattern
+    /// avec une syntaxe fluide (builder). Chaque etape correspond a un etat du boss.
+    /// </summary>
     public class AttackPatternBuilder
     {
-        private readonly string _name;
-        private readonly float _endDelay;
-        private readonly List<StateCall> _seq = new();
+        private readonly string _name;          // nom du pattern
+        private readonly float _endDelay;       // delai apres la fin du pattern
+        private readonly List<StateCall> _seq = new(); // sequence des appels d'etats
 
         private AttackPatternBuilder(string name, float endDelay)
         {
@@ -16,15 +19,22 @@ namespace CodeBreaker
             _endDelay = endDelay;
         }
 
+        /// <summary>
+        /// Cree un nouveau builder d'AttackPattern.
+        /// </summary>
         public static AttackPatternBuilder New(string name, float endDelay) => new(name, endDelay);
 
+        /// <summary>
+        /// Ajoute un etat avec ses arguments a la sequence.
+        /// </summary>
         public AttackPatternBuilder Add(Type stateType, object arg = null)
         {
             _seq.Add(new StateCall(stateType, arg));
             return this;
         }
 
-        // Convenience methods. The concrete state classes are assumed to exist.
+        // --- Methodes simplifiees pour ajouter des etats connus du boss ---
+
         public AttackPatternBuilder Warp(WarpArgs args = null)
             => Add(typeof(GS_Warp), args ?? new WarpArgs());
 
@@ -37,11 +47,16 @@ namespace CodeBreaker
         public AttackPatternBuilder Laser(LaserArgs args = null)
             => Add(typeof(GS_LaserAttack), args ?? new LaserArgs());
 
-        /// <summary>Insert an Idle with a given delay.</summary>
+        /// <summary>
+        /// Ajoute un etat d'attente (Idle) pour une duree precise.
+        /// </summary>
         public AttackPatternBuilder Wait(float seconds)
             => Add(typeof(GS_Idle), new IdleArgs { Duration = seconds });
 
-        /// <summary>Repeat the provided sub-sequence builder N times (args are treated as immutable per call).</summary>
+        /// <summary>
+        /// Repete un sous-pattern un certain nombre de fois.
+        /// Le contenu de la sous-fonction est ajoute plusieurs fois a la sequence.
+        /// </summary>
         public AttackPatternBuilder Repeat(int times, Func<AttackPatternBuilder, AttackPatternBuilder> sub)
         {
             for (int i = 0; i < times; i++)
@@ -53,6 +68,9 @@ namespace CodeBreaker
             return this;
         }
 
+        /// <summary>
+        /// Termine la construction et retourne l'AttackPattern final.
+        /// </summary>
         public AttackPattern Build()
         {
             var ap = new AttackPattern(_name, _endDelay);

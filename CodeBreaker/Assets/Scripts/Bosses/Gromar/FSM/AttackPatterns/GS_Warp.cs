@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Etat du boss qui gere les teleports (warps) de Gromar.
+/// </summary>
 public class GS_Warp : GromarState
 {
-    private SpriteRenderer[] sprites;
-    private readonly Queue<Transform> warpHistory = new();
-    private const int maxHistory = 3;
+    private SpriteRenderer[] sprites;             // sprites du boss, caches pendant le teleport
+    private readonly Queue<Transform> warpHistory = new(); // historique des derniers points de teleport
+    private const int maxHistory = 3;             // taille max de l'historique
 
+    // parametres du warp
     private int warpTimes = 1;
     private bool tpOnPlayer = false;
     private bool tpMiddle = false;
@@ -18,9 +22,12 @@ public class GS_Warp : GromarState
 
     public GS_Warp() : base(1) { }
 
+    /// <summary>
+    /// Recoit et applique les arguments du warp (WarpArgs).
+    /// </summary>
     public override void SetParam(object args)
     {
-        // Default every time to avoid sticky params
+        // reinitialisation
         warpTimes = 1;
         tpOnPlayer = tpMiddle = tpCornerOnly = tpSpawn = skipNextState = false;
 
@@ -35,12 +42,18 @@ public class GS_Warp : GromarState
         }
     }
 
+    /// <summary>
+    /// Lance la sequence de teleportations.
+    /// </summary>
     public override void OnEnter()
     {
         sprites = gromar.GetComponentsInChildren<SpriteRenderer>();
         gromar.StartCoroutine(DoWarp());
     }
 
+    /// <summary>
+    /// Coroutine qui effectue plusieurs teleports consecutifs.
+    /// </summary>
     private IEnumerator DoWarp()
     {
         for (int i = 0; i < warpTimes; i++)
@@ -49,6 +62,7 @@ public class GS_Warp : GromarState
             yield return new WaitForSeconds(0.3f);
         }
 
+        // passe a l'etat suivant sauf si skipNextState est actif
         if (!skipNextState)
         {
             yield return new WaitForSeconds(0.3f);
@@ -56,12 +70,16 @@ public class GS_Warp : GromarState
         }
     }
 
+    /// <summary>
+    /// Choisit une nouvelle position selon les options de teleport.
+    /// </summary>
     public void WarpPosition()
     {
-        DisableSprites(false);
+        DisableSprites(false); // fait disparaitre le sprite pendant le teleport
 
         if (tpOnPlayer)
         {
+            // se teleporte sur le joueur
             var p = gromar.player.transform.position;
             gromar.transform.position = new Vector3(p.x, 1f, gromar.transform.position.z);
         }
@@ -75,6 +93,7 @@ public class GS_Warp : GromarState
         }
         else
         {
+            // se teleporte vers un point aleatoire en evitant les repetitions
             Transform target = GetRandomPointAvoidPattern();
             gromar.transform.position = target.position;
 
@@ -82,9 +101,12 @@ public class GS_Warp : GromarState
             if (warpHistory.Count > maxHistory) warpHistory.Dequeue();
         }
 
-        DisableSprites(true);
+        DisableSprites(true); // reapparait
     }
 
+    /// <summary>
+    /// Choisit un point aleatoire qui evite les motifs repetitifs (ex: ABAB).
+    /// </summary>
     public Transform GetRandomPointAvoidPattern()
     {
         var points = gromar.mapPoints;
@@ -102,7 +124,7 @@ public class GS_Warp : GromarState
                 if (p.position == gromar.transform.position) return false;
                 if (tpCornerOnly && p.position == gromar.MAPMIDPOINT.position) return false;
 
-                // avoid ABAB pattern: thirdLast == last and candidate == secondLast
+                // evite le pattern ABAB : si on a deja fait A -> B -> A, ne pas refaire B
                 if (warpHistory.Count >= 3)
                 {
                     if (thirdLast == last && p == secondLast) return false;
@@ -115,6 +137,9 @@ public class GS_Warp : GromarState
         return possible[idx];
     }
 
+    /// <summary>
+    /// Choisit un point aleatoire sans verification de pattern.
+    /// </summary>
     private Transform GetRandomPointSimple()
     {
         var possible = gromar.mapPoints
@@ -130,6 +155,9 @@ public class GS_Warp : GromarState
         return possible[idx];
     }
 
+    /// <summary>
+    /// Active ou desactive les sprites (utile pendant les teleports).
+    /// </summary>
     private void DisableSprites(bool enable)
     {
         if (sprites == null) return;

@@ -1,13 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Etat du boss Gromar qui tire plusieurs missiles paraboliques vers le joueur.
+/// </summary>
 public class GS_MissilAttack : GromarState
 {
-    private int nbMissile = 1;
-    private float delay = 1f;
+    private int nbMissile = 1; // nombre de missiles a tirer
+    private float delay = 1f;  // delai entre chaque tir
 
     public GS_MissilAttack() : base(3) { }
 
+    /// <summary>
+    /// Recoit les parametres (ParabolicMissileArgs) pour configurer le nombre et le delai.
+    /// </summary>
     public override void SetParam(object args)
     {
         nbMissile = 1;
@@ -20,11 +26,17 @@ public class GS_MissilAttack : GromarState
         }
     }
 
+    /// <summary>
+    /// Lance la sequence de tir des missiles.
+    /// </summary>
     public override void OnEnter()
     {
         gromar.StartCoroutine(ShootAtPlayerContinuously());
     }
 
+    /// <summary>
+    /// Tire plusieurs missiles vers le joueur avec un delai entre chaque tir.
+    /// </summary>
     private IEnumerator ShootAtPlayerContinuously()
     {
         for (int i = 0; i < nbMissile; i++)
@@ -49,6 +61,7 @@ public class GS_MissilAttack : GromarState
             if (delay > 0f) yield return new WaitForSeconds(delay);
         }
 
+        // courte pause avant de passer a l'etat suivant
         yield return new WaitForSeconds(0.3f);
         Machine.ExecuteNextState();
     }
