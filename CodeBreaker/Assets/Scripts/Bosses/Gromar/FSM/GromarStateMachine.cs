@@ -30,7 +30,6 @@ public class GromarStateMachine : StateMachine<GromarState>
 
     public void Init()
     {
-        // Add(new GS_AttackState());
         Add(new GS_Idle());
         Add(new GS_Warp());
         Add(new GS_Explosion());
@@ -38,39 +37,42 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_MissilAttack());
         Add(new GS_LaserAttack());
 
+        // === Modern builder-based system ===
+        //attackPatterns.Add(
+        //    AttackPatternBuilder.New("Pattern A", 3f)
+        //        .Warp(new WarpArgs { CornerOnly = true })
+        //        .Cone(new ConeArgs { Count = 3, Delay = 0.3f })
+        //        .Warp(new WarpArgs { CornerOnly = true })
+        //        .ParabolicMissile(new ParabolicMissileArgs { Count = 6, Delay = 0.1f })
+        //        .Build()
+        //);
 
-        attackPatterns.Add(new AttackPattern(
-            "Pattern A", 3f,
-            new StateCall(typeof(GS_Warp), 1, false, false, true, false),
-            new StateCall(typeof(GS_Cone), 3, .3f),
-            new StateCall(typeof(GS_Warp), 1, false, false, true, false),
-            new StateCall(typeof(GS_MissilAttack), 6, .1f)
-            ));
+        //attackPatterns.Add(
+        //    AttackPatternBuilder.New("Pattern B", 3f)
+        //        .Repeat(10, b => b
+        //            .Warp(new WarpArgs { CornerOnly = true })
+        //            .Cone(new ConeArgs { Count = 1, Delay = 0.3f })
+        //        )
+        //        .Build()
+        //);
 
         attackPatterns.Add(
-            AttackPattern.BuildAlternatingPattern(
-                "Pattern B", 3f, 10,
-                new StateCall(typeof(GS_Warp), 1, false, false, true, false),
-                new StateCall(typeof(GS_Cone), 1, .3f)
-            )
+            AttackPatternBuilder.New("Laser Pattern", 3f)
+                .Warp()
+                .Laser()
+                .Warp()
+                .Build()
         );
-        attackPatterns.Add(new AttackPattern(
-            "Laser Pattern", 3f,
-            new StateCall(typeof(GS_Warp), 1, false, false, false, false),
-            new StateCall(typeof(GS_LaserAttack)),
-            new StateCall(typeof(GS_Warp), 1, false, false, false, false)
-            ));
-
-
+        // ===================================
 
         Initialize<GS_Idle>();
 
         shortcutMap = new Dictionary<int, Type>();
         for (int i = 0; i < AvailableStates.Count; i++)
-        {
             shortcutMap[i + 1] = AvailableStates[i].GetType();
-        }
     }
+
+
 
     public void StartRandomPattern()
     {
@@ -106,17 +108,16 @@ public class GromarStateMachine : StateMachine<GromarState>
 
     private void SetStateCall(StateCall statecall)
     {
-
         var state = AvailableStates.Find(s => s.GetType() == statecall.stateType);
 
         if (state != null)
         {
-
-            state.SetParam(statecall.args);
+            // In the new system, statecall.arg is a single object (WarpArgs, ConeArgs, etc.)
+            state.SetParam(statecall.arg);
             ForceSet(state);
         }
-
     }
+
 
     /// <summary>
     /// Set le idle avec un delai mais choisi une position a warp avant de idle entre le millieu et le spawnpoint du boss
@@ -132,11 +133,12 @@ public class GromarStateMachine : StateMachine<GromarState>
             bool warpToSpawn = UnityEngine.Random.value < 0.5f;//entre 0 et 1 aka false or true
 
 
-            object[] args = warpToSpawn
-                ? new object[] { 1, false, false, false, true, true }   //si true on set les args a tp au spawn
-                : new object[] { 1, false, true, false, false, true };  //si false on set les args a tp au middle
+            WarpArgs warpArgs = warpToSpawn
+                ? new WarpArgs { Times = 1, Spawn = true, Middle = false, SkipNextState = true }
+                : new WarpArgs { Times = 1, Spawn = false, Middle = true, SkipNextState = true };
 
-            warpState.SetParam(args); //on set les args du warp
+            warpState.SetParam(warpArgs);
+
 
 
             ForceSet(warpState);
@@ -159,8 +161,9 @@ public class GromarStateMachine : StateMachine<GromarState>
         var idleState = Get<GS_Idle>();
         if (idleState != null)
         {
-            idleState.Idletimer = delay;
+            idleState.SetParam(new IdleArgs { Duration = delay });
             Set<GS_Idle>();
+
         }
     }
 

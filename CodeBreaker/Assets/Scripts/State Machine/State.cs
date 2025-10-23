@@ -8,6 +8,6 @@
         public virtual void OnUpdate() { }
         public virtual void OnLateUpdate() { }
         public virtual void OnFixedUpdate() { }
-        public virtual void SetParam(object[] args) {}
+        public virtual void SetParam(object args) { }
     }
 }
