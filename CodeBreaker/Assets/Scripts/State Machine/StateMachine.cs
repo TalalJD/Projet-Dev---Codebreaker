@@ -67,12 +67,23 @@ namespace CodeBreaker
             if (TriggerEnter) CurrentState.OnEnter();
         }
 
+        public virtual void ForceSet(T state)
+        {
+            NextState = state;
+            CurrentState.OnExit();
+            PreviousState = CurrentState;
+            CurrentState = NextState;
+            NextState = null;
+            CurrentState.OnEnter();
+        }
 
 
         public G Get<G>() where G : T
         {
             return AvailableStates.Find((s => s is G)) as G;
         }
-        
+
+      
+
     }
 }

@@ -1,26 +1,68 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Etat du boss Gromar qui tire plusieurs missiles paraboliques vers le joueur.
+/// </summary>
 public class GS_MissilAttack : GromarState
 {
+    private int nbMissile = 1; // nombre de missiles a tirer
+    private float delay = 1f;  // delai entre chaque tir
+
+    public GS_MissilAttack() : base(3) { }
+
+    /// <summary>
+    /// Recoit les parametres (ParabolicMissileArgs) pour configurer le nombre et le delai.
+    /// </summary>
+    public override void SetParam(object args)
+    {
+        nbMissile = 1;
+        delay = 1f;
+
+        if (args is ParabolicMissileArgs a)
+        {
+            nbMissile = Mathf.Max(1, a.Count);
+            delay = Mathf.Max(0f, a.Delay);
+        }
+    }
+
+    /// <summary>
+    /// Lance la sequence de tir des missiles.
+    /// </summary>
     public override void OnEnter()
     {
-        gromar.StartCoroutine(ShootAtPlayerContinuously(10f, 1f));
+        gromar.StartCoroutine(ShootAtPlayerContinuously());
     }
-    public override void OnExit() { }
 
-    public IEnumerator ShootAtPlayerContinuously(float speed, float delay)
+    /// <summary>
+    /// Tire plusieurs missiles vers le joueur avec un delai entre chaque tir.
+    /// </summary>
+    private IEnumerator ShootAtPlayerContinuously()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < nbMissile; i++)
         {
-            Vector2 playerTarget = (Vector2)gromar.player.transform.position + new Vector2(0, 0.5f);
-            Vector2 dir = (playerTarget - (Vector2)gromar.ShootingPoint.position).normalized;
+            Vector2 origin = gromar.ShootingPoint.position;
+            Vector2 target = gromar.player.transform.position + Vector3.up * 0.5f;
 
-            // centralized bullet spawning
-            gromar.ShootMissileBullet(gromar.ShootingPoint.position, gromar.player.transform.position);
+            if (ProjectileManager.Instance != null)
+            {
+                var missile = ProjectileManager.Instance.Spawn(ProjectileType.ParabolicMissile, origin, target);
+                if (missile != null)
+                {
+                    missile.speed = Random.Range(8f, 12f);
+                    missile.lifetime = 8f;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[GS_MissilAttack] ProjectileManager.Instance is null.");
+            }
 
-            yield return new WaitForSeconds(delay);
+            if (delay > 0f) yield return new WaitForSeconds(delay);
         }
+
+        // courte pause avant de passer a l'etat suivant
+        yield return new WaitForSeconds(0.3f);
+        Machine.ExecuteNextState();
     }
 }
