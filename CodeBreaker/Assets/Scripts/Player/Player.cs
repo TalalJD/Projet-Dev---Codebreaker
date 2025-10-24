@@ -140,6 +140,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void CycleConsumableInventory()
+    {
+        if (ConsumableInventory.Count > 0)
+        {
+            ConsumableInventoryIndex++;
+            if (ConsumableInventoryIndex >= ConsumableInventory.Count)
+            {
+                ConsumableInventoryIndex = 0; // retour au d�but
+            }
+            EquipConsumable(ConsumableInventoryIndex);
+        }
+    }
+
     /// <summary>
     /// Equipe une arme a partir de l'inventaire en utilisant l'index donn�.
     /// D�truit l'arme actuellement �quip�e si n�cessaire, instancie le prefab associ�
