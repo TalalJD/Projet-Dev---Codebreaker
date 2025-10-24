@@ -42,23 +42,23 @@ public class GromarStateMachine : StateMachine<GromarState>
         Add(new GS_LaserAttack());
 
         // --- Definition des schemas d'attaque ---
-        //attackPatterns.Add(
-        //    AttackPatternBuilder.New("Pattern A", 3f)
-        //        .Warp(new WarpArgs { CornerOnly = true })
-        //        .Cone(new ConeArgs { Count = 3, Delay = 0.3f })
-        //        .Warp(new WarpArgs { CornerOnly = true })
-        //        .ParabolicMissile(new ParabolicMissileArgs { Count = 6, Delay = 0.1f })
-        //        .Build()
-        //);
+        attackPatterns.Add(
+            AttackPatternBuilder.New("Pattern A", 3f)
+                .Warp(new WarpArgs { CornerOnly = true })
+                .Cone(new ConeArgs { Count = 3, Delay = 0.3f })
+                .Warp(new WarpArgs { CornerOnly = true })
+                .ParabolicMissile(new ParabolicMissileArgs { Count = 6, Delay = 0.1f })
+                .Build()
+        );
 
-        //attackPatterns.Add(
-        //    AttackPatternBuilder.New("Pattern B", 3f)
-        //        .Repeat(10, b => b
-        //            .Warp(new WarpArgs { CornerOnly = true })
-        //            .Cone(new ConeArgs { Count = 1, Delay = 0.3f })
-        //        )
-        //        .Build()
-        //);
+        attackPatterns.Add(
+            AttackPatternBuilder.New("Pattern B", 3f)
+                .Repeat(10, b => b
+                    .Warp(new WarpArgs { CornerOnly = true })
+                    .Cone(new ConeArgs { Count = 1, Delay = 0.3f })
+                )
+               .Build()
+        );
 
         attackPatterns.Add(
             AttackPatternBuilder.New("Laser Pattern", 3f)
