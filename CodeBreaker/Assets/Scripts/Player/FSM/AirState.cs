@@ -34,6 +34,8 @@ public class AirState : PlayerState
         float inputX = Input.GetAxisRaw("Horizontal");
         float maxSpeed = PhysicsInfo.TopSpeed;
         Vector2 velocity = Player.Rb.linearVelocity;
+        float airControl = 0.6f;
+        float airMaxSpeed = PhysicsInfo.TopSpeed * 0.3f;
 
         float wallCheck = 0.55f;
 
@@ -53,20 +55,19 @@ public class AirState : PlayerState
             {
                 Player.GroundSpeed = 0f;
 
-                if (Mathf.Sign(Player.GroundSpeed) == Mathf.Sign(inputX))
-                {
-                    Player.GroundSpeed = 0f;
-                }
             }
             else
             {
+                float accel = PhysicsInfo.AirAcceleration * airControl;
+                float decel = PhysicsInfo.AirDeceleration * airControl;
+
                 if (Mathf.Sign(inputX) == Mathf.Sign(Player.GroundSpeed))
                 {
 
                     Player.GroundSpeed = Mathf.MoveTowards(
                         Player.GroundSpeed, // Speed actuelle
-                        inputX * maxSpeed, // maxSpeed
-                        PhysicsInfo.AirAcceleration * Time.fixedDeltaTime
+                        inputX * airMaxSpeed, // maxSpeed
+                        accel * Time.fixedDeltaTime
                     );
                 }
                 else
@@ -74,8 +75,8 @@ public class AirState : PlayerState
                     // direction opposé
                     Player.GroundSpeed = Mathf.MoveTowards(
                         Player.GroundSpeed,
-                        inputX * maxSpeed,
-                        PhysicsInfo.AirDeceleration * Time.fixedDeltaTime
+                        inputX * airMaxSpeed,
+                        decel * Time.fixedDeltaTime
                     );
                 }
             }
