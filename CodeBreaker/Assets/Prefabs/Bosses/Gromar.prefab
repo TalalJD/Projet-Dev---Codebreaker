@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1597992371259097143}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MinShoot
   m_TagString: Untagged
   m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1405231111829877236}
   - component: {fileID: 968247810624084198}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,6 +80,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -126,7 +129,7 @@ GameObject:
   - component: {fileID: 7368251832082625002}
   - component: {fileID: 8726294625089918997}
   - component: {fileID: 2963311256672540555}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Gromar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,9 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d6ccb9f1f9458d48b73bb46665f5d92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MINSHOOT: {fileID: 1597992371259097143}
-  MAXSHOOT: {fileID: 5601103454598183106}
   MAPMIDPOINT: {fileID: 0}
+  SPAWNPOINT: {fileID: 0}
   mapPoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -174,8 +176,12 @@ MonoBehaviour:
   - {fileID: 0}
   bigBullet: {fileID: 6305855500433276022, guid: 725379fd9fac36149b79f9038138ff56, type: 3}
   smallBullet: {fileID: 6305855500433276022, guid: 6b44f2f14c4f3cc4887917837607722a, type: 3}
+  missileBullet: {fileID: 0}
   StateMachine: {fileID: 2963311256672540555}
   player: {fileID: 0}
+  ShootingPoint: {fileID: 0}
+  maxHealth: 3
+  currentHealth: 0
 --- !u!114 &2963311256672540555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5601103454598183106}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MaxShoot
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
@@ -229,7 +235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4089490608842845852}
   - component: {fileID: 4553732223184419533}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,6 +274,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
