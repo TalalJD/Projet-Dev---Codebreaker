@@ -183,6 +183,28 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void EquipConsumable(int index)
+    {
+        if (SelectedConsumable != null)
+        {
+            Destroy(SelectedConsumable.gameObject);
+        }
+
+        var consumableInfo = ConsumableInventory[index] as ConsumableInfo;
+        if (consumableInfo != null)
+        {
+            GameObject consObj = Instantiate(consumableInfo.consumablePrefab, WeaponHolder);
+            var cons = consObj.GetComponent<Consumable>();
+            cons.AssignConsumable(consumableInfo);
+            SelectedConsumable = cons;
+            SelectedConsumableInfo = consumableInfo;
+        }
+        else
+        {
+            Debug.LogWarning($"Item at index {index} is not a ConsumableInfo!");
+        }
+    }
+
     /// <summary>
     /// Methode qui regarde si l'item est une arme ou un objet et la rajoute dans la liste d'inventaire specifique du joueur
     /// </summary>
