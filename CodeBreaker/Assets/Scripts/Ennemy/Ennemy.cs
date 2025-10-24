@@ -11,7 +11,7 @@ public abstract class Ennemy : MonoBehaviour
 
     protected SpriteRenderer sprite;
     protected Rigidbody2D rigidBody;
-    private Transform _target;
+    protected Transform _target;
     protected Vector2 _targetDirection;
     
     protected float attackCooldown;
@@ -41,7 +41,7 @@ public abstract class Ennemy : MonoBehaviour
 
         if (other.CompareTag("PlayerBullet")) // Make sure your bullet has tag "Bullet"
         {
-            TakeDamage(-1);
+            TakeDamage(1);
         }
     }
 

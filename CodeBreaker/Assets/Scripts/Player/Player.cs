@@ -31,12 +31,15 @@ public class Player : MonoBehaviour
     public WeaponInfo SelectedWeaponInfo;//info de l'arme selectionne
     public List<ScriptableObject> WeaponInventory; //liste des armes scriptable object dans l'inventaire
     public List<ScriptableObject> ConsumableInventory; //liste des consomable scriptable object dans l'inventaire
+    public Consumable SelectedConsumable;
+    public ConsumableInfo SelectedConsumableInfo;
     public Transform WeaponHolder;
     private int inventoryIndex = -1; //index de l'item selectionee dans l'inventaire
+    private int ConsumableInventoryIndex = -1;
 
 
     public event Action OnWeaponInventoryChanged;
-    //public event Action OnConsInventoryChanged;
+    public event Action OnConsInventoryChanged;
     public event Action<int, int> OnHealthChanged;
    
 
@@ -108,6 +111,15 @@ public class Player : MonoBehaviour
             Debug.Log("imshooting");
             SelectedWeapon?.Attack();
         }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log("Using Consumable");
+            SelectedConsumable?.UseConsumable();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            CycleConsumableInventory();
+        }
         if (Input.GetKeyDown(KeyCode.I))
         {
             CycleWeaponInventory();
@@ -135,6 +147,19 @@ public class Player : MonoBehaviour
             }
 
             EquipWeapon(inventoryIndex);
+        }
+    }
+
+    public void CycleConsumableInventory()
+    {
+        if (ConsumableInventory.Count > 0)
+        {
+            ConsumableInventoryIndex++;
+            if (ConsumableInventoryIndex >= ConsumableInventory.Count)
+            {
+                ConsumableInventoryIndex = 0; // retour au d�but
+            }
+            EquipConsumable(ConsumableInventoryIndex);
         }
     }
 
@@ -168,11 +193,33 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void EquipConsumable(int index)
+    {
+        if (SelectedConsumable != null)
+        {
+            Destroy(SelectedConsumable.gameObject);
+        }
+
+        var consumableInfo = ConsumableInventory[index] as ConsumableInfo;
+        if (consumableInfo != null)
+        {
+            GameObject consObj = Instantiate(consumableInfo.consumablePrefab, WeaponHolder);
+            var cons = consObj.GetComponent<Consumable>();
+            cons.AssignConsumable(consumableInfo);
+            SelectedConsumable = cons;
+            SelectedConsumableInfo = consumableInfo;
+        }
+        else
+        {
+            Debug.LogWarning($"Item at index {index} is not a ConsumableInfo!");
+        }
+    }
+
     /// <summary>
     /// Methode qui regarde si l'item est une arme ou un objet et la rajoute dans la liste d'inventaire specifique du joueur
     /// </summary>
     /// <param name="item">scriptable object recupere</param>
-   public void AddItemToInventory(ScriptableObject item)
+    public void AddItemToInventory(ScriptableObject item)
     {
         if(item.GetType() == typeof(WeaponInfo) && WeaponInventory != null)
         {
@@ -200,6 +247,32 @@ public class Player : MonoBehaviour
 
             }
             OnWeaponInventoryChanged?.Invoke();
+        }
+
+        if (item.GetType() == typeof(ConsumableInfo) && ConsumableInventory != null)
+        {
+            if (ConsumableInventory.Count < 2)
+            {
+                ConsumableInventory.Add(item);
+            }
+            else
+            {
+                    if (SelectedConsumable != null)
+                    {
+                        int selectedIndex = ConsumableInventory.IndexOf(SelectedConsumableInfo);
+                        if (selectedIndex != -1)
+                        {
+                            ConsumableInventory[selectedIndex] = item;
+                            EquipConsumable(selectedIndex);
+                        }
+                }
+                else
+                {
+                    ConsumableInventory[0] = item;
+                    EquipConsumable(0);
+                }
+            }
+            OnConsInventoryChanged?.Invoke();
         }
 
     }

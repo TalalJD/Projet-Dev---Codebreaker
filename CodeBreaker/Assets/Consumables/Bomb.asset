@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 329a37625a359c3488ee600650f8d674, type: 3}
+  m_Name: Bomb
+  m_EditorClassIdentifier: 
+  consumableSprite: {fileID: 6268514053893988317, guid: 796cb0b7c3c07fa498fdf307ab1649de, type: 3}
+  consumablePrefab: {fileID: 274793680580076999, guid: bc7bf1edc165362418c34bf8f0d4e596, type: 3}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseEnnemy : Ennemy
 {
-    private float moveSpeed = 5f;
+    private float moveSpeed = 10f;
     private float gravity = -30f;
     private float maxFallSpeed = -20f;
 
@@ -16,7 +16,10 @@ public class BaseEnnemy : Ennemy
     [SerializeField] private GameObject capsuleHitbox;
     private SpriteRenderer _renderer;
     private float attackDuration = 0.5f;
-
+    [SerializeField] private float aggroRange = 8f;
+    [SerializeField] private float stopAggroRange = 12f;
+    [SerializeField] private float inAttackRange = 1f;
+    protected float distanceTarget;
     protected override void Start()
     {
         base.Start();
@@ -26,17 +29,31 @@ public class BaseEnnemy : Ennemy
     }
     protected void FixedUpdate()
     {
-        if (!inAttack)
+        if (_target != null)
         {
-            float directionX = Mathf.Sign(_targetDirection.x) * moveSpeed;
-            _velocity.x = directionX;
+            distanceTarget = Vector2.Distance(transform.position, _target.position);
         }
         else
         {
-            _velocity.x = 0;
+            distanceTarget = Mathf.Infinity;
         }
 
-        _isGrounded = CheckOnGround();
+        bool aggro = distanceTarget <= aggroRange;
+        bool idle = distanceTarget >= stopAggroRange;
+        bool tryAttack = distanceTarget < inAttackRange;
+
+        if (inAttack || idle)
+        {
+            _velocity.x = 0;
+        }
+        else if (aggro)
+        {
+            float directionX = Mathf.Sign(_targetDirection.x) * moveSpeed;
+            _velocity.x = directionX;
+            RegarderJoueur(_targetDirection.x);
+        }
+
+            _isGrounded = CheckOnGround();
 
         if (!_isGrounded)
         {
@@ -53,13 +70,31 @@ public class BaseEnnemy : Ennemy
 
         Vector2 mouvement = rigidBody.position + _velocity * Time.fixedDeltaTime;
         rigidBody.MovePosition(mouvement);
-        if (CanAttack() && !inAttack)
+        if (CanAttack() && !inAttack && tryAttack)
         {
             Attack();
         }
     }
 
+    private void RegarderJoueur(float directionX)
+    {
+        if (Mathf.Approximately(directionX, 0f))
+        {
+            return;
+        }
 
+        Vector3 localScale = transform.localScale;
+
+        if (directionX > 0f)
+        {
+            localScale.x = Mathf.Abs(localScale.x);
+        }
+        else if (directionX < 0f)
+        {
+            localScale.x = -Mathf.Abs(localScale.x);
+        }
+        transform.localScale = localScale;
+    }
     private bool CheckOnGround()
     {
         var hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheck, LayerMask);

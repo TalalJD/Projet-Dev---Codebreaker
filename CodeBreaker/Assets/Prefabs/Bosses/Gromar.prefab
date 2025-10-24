@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1405231111829877236}
   - component: {fileID: 968247810624084198}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 7368251832082625002}
   - component: {fileID: 8726294625089918997}
   - component: {fileID: 2963311256672540555}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Gromar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4089490608842845852}
   - component: {fileID: 4553732223184419533}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
