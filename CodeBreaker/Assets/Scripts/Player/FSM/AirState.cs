@@ -35,7 +35,7 @@ public class AirState : PlayerState
         float maxSpeed = PhysicsInfo.TopSpeed;
         Vector2 velocity = Player.Rb.linearVelocity;
 
-        float wallCheck = 0.35f;
+        float wallCheck = 0.55f;
 
 
         if (inputX == 0)
@@ -48,7 +48,7 @@ public class AirState : PlayerState
             Vector2 dir = new Vector2(Mathf.Sign(inputX), 0f);
             RaycastHit2D hit = Physics2D.Raycast(origin, dir, wallCheck, Player.LayerMask);
             Debug.DrawRay(origin, dir * wallCheck, hit ? Color.red : Color.green);
-
+            
             if (hit)
             {
                 Player.GroundSpeed = 0f;
@@ -106,13 +106,16 @@ public class AirState : PlayerState
 
         Player.Rb.linearVelocity = new Vector2(Player.GroundSpeed, Player.YSpeed);
 
-        if (Player.YSpeed < 0)
+        if (Player.YSpeed < 0 && Player.CheckWall())
         {
-            if (Player.CheckOnGround())
-            {
-               
-                Machine.Set<MoveState>();
-            }
+            Machine.Set<WallState>();
+            return;
+        }
+
+        if(Player.YSpeed <= 0 && Player.CheckOnGround())
+        {
+            Machine.Set<MoveState>();
+            
         }
     }
 

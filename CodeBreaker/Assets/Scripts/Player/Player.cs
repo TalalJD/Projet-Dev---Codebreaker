@@ -9,6 +9,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
+
     public SpriteRenderer spriteRenderer;
 
     public Animator animator;
@@ -312,16 +313,41 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("EnnemyBullet"))
+        if (other.GetComponent<Projectile>() != null)
         {
             ModifyHealth(-1);
-            Destroy(other.gameObject); // player decides when bullet is destroyed
         }
+
+        //if (other.CompareTag("EnnemyBullet"))
+        //{
+        //    ModifyHealth(-1);
+        //    Destroy(other.gameObject); // player decides when bullet is destroyed
+        //}
 
         if (other.CompareTag("EnnemyHitbox"))
         {
             var ennemyHitbox = other.GetComponent<EnnemyAttackHitbox>();
             ModifyHealth(-ennemyHitbox._ennemyInfo.attackDamage);
         }
+    }
+
+    public bool CheckWall()
+    {
+        // Vérifie si le joueur touche un mur à gauche ou à droite
+        float wallCheckDistance = 0.6f; // distance pour détecter le mur
+        LayerMask wallLayer = LayerMask.GetMask("WallJump"); // assurez-vous que vos murs sont sur ce layer
+
+        bool touchingLeft = Physics2D.Raycast(transform.position, Vector2.left, wallCheckDistance, wallLayer);
+        bool touchingRight = Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, wallLayer);
+
+        return touchingLeft || touchingRight;
+    }
+
+    public bool CheckRightWall()
+    {
+        float wallCheckDistance = 0.6f;
+        LayerMask wallLayer = LayerMask.GetMask("WallJump");
+
+        return Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, wallLayer);
     }
 }
