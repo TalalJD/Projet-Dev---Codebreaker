@@ -110,6 +110,15 @@ public class Player : MonoBehaviour
             Debug.Log("imshooting");
             SelectedWeapon?.Attack();
         }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log("Using Consumable");
+            SelectedConsumable?.UseConsumable();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            CycleConsumableInventory();
+        }
         if (Input.GetKeyDown(KeyCode.I))
         {
             CycleWeaponInventory();
