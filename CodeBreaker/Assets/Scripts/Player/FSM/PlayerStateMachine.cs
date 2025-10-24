@@ -29,6 +29,7 @@ namespace CodeBreaker
         {
             Add(new MoveState());
             Add(new AirState());
+            Add(new WallState());
             Initialize<MoveState>();
 
         }
