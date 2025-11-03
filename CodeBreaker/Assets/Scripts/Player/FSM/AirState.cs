@@ -95,7 +95,8 @@ public class AirState : PlayerState
     }
     public override void OnUpdate()
     {
-        
+        if (Input.GetKeyDown(KeyCode.B))
+            Machine.Set<DashState>();
     }
 
     // on verifie si le joueur a fini de jump 

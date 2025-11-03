@@ -99,6 +99,8 @@ public class MoveState : PlayerState
             jumpRequested = true;
             
         }
+        if (Input.GetKeyDown(KeyCode.B))
+            Machine.Set<DashState>();
 
     }
 
