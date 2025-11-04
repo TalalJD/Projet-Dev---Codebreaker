@@ -15,7 +15,7 @@ public class GromarStateMachine : StateMachine<GromarState>
     private List<AttackPattern> attackPatterns = new(); // tous les patterns du boss
     private Queue<StateCall> currentPatternQueue; // etapes du pattern en cours
     private AttackPattern currentPattern; // pattern actuellement actif
-
+    
 
     public override void Add(GromarState state)
     {
@@ -55,8 +55,9 @@ public class GromarStateMachine : StateMachine<GromarState>
             AttackPatternBuilder.New("Pattern B", 3f)
                 .Repeat(10, b => b
                     .Warp(new WarpArgs { CornerOnly = true })
-                    .Cone(new ConeArgs { Count = 1, Delay = 0.3f })
+                    .Cone(new ConeArgs { Count = 1, Delay = 0f , Speed = 20f})
                 )
+                .ForAllNextStateDelay(.1f)
                .Build()
         );
 
