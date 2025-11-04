@@ -19,6 +19,7 @@ public class GS_Warp : GromarState
     private bool tpCornerOnly = false;
     private bool tpSpawn = false;
     private bool skipNextState = false;
+    private float nextStateDelay = 0.3f;
 
     public GS_Warp() : base(1) { }
 
@@ -30,15 +31,18 @@ public class GS_Warp : GromarState
         // reinitialisation
         warpTimes = 1;
         tpOnPlayer = tpMiddle = tpCornerOnly = tpSpawn = skipNextState = false;
+        nextStateDelay = 0.3f;
+        
 
-        if (args is WarpArgs w)
+        if (args is WarpArgs a)
         {
-            warpTimes = Mathf.Max(1, w.Times);
-            tpOnPlayer = w.OnPlayer;
-            tpMiddle = w.Middle;
-            tpCornerOnly = w.CornerOnly;
-            tpSpawn = w.Spawn;
-            skipNextState = w.SkipNextState;
+            warpTimes = Mathf.Max(1, a.Times);
+            tpOnPlayer = a.OnPlayer;
+            tpMiddle = a.Middle;
+            tpCornerOnly = a.CornerOnly;
+            tpSpawn = a.Spawn;
+            skipNextState = a.SkipNextState;
+            nextStateDelay = Mathf.Max(0f, a.nextStateDelay);
         }
     }
 
@@ -65,7 +69,7 @@ public class GS_Warp : GromarState
         // passe a l'etat suivant sauf si skipNextState est actif
         if (!skipNextState)
         {
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(nextStateDelay);
             Machine.ExecuteNextState();
         }
     }

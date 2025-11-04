@@ -5,6 +5,9 @@ public class GS_Cone : GromarState
 {
     private int numberOfCones = 1;
     private float delay = 0.3f;
+    private float nextStateDelay = 0.3f;
+    private float speed = 10f;
+
 
     public GS_Cone() : base(2) { }
 
@@ -13,11 +16,15 @@ public class GS_Cone : GromarState
         // reset to defaults each time
         numberOfCones = 1;
         delay = 0.3f;
+        nextStateDelay = 0.3f;
+        speed = 10f;
 
         if (args is ConeArgs a)
         {
             numberOfCones = Mathf.Max(1, a.Count);
             delay = Mathf.Max(0f, a.Delay);
+            nextStateDelay = Mathf.Max(0f, a.nextStateDelay);
+            speed = Mathf.Max(0f, a.Speed);
         }
     }
 
@@ -39,7 +46,7 @@ public class GS_Cone : GromarState
             if (delay > 0f) yield return new WaitForSeconds(delay);
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(nextStateDelay);
         Machine.ExecuteNextState();
     }
 }

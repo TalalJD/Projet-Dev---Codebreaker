@@ -7,7 +7,14 @@ using UnityEngine;
 public class GS_Explosion : GromarState
 {
     public GS_Explosion() : base(4) { }
+    private float nextStateDelay = 0.3f;
 
+    public override void SetParam(object args)
+    {
+        nextStateDelay = 0.3f;
+        if (args is ExplosionArgs a)
+            nextStateDelay = Mathf.Max(0f, a.nextStateDelay);
+    }
     public override void OnEnter()
     {
         // Lance la coroutine qui gere les degats de l'explosion
@@ -32,7 +39,7 @@ public class GS_Explosion : GromarState
         }
 
         // petite pause avant de passer a l'etat suivant
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(nextStateDelay);
         Machine.ExecuteNextState();
     }
 }

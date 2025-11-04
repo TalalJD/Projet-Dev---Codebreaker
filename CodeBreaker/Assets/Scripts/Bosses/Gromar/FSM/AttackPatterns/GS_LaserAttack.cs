@@ -30,18 +30,22 @@ public class GS_LaserAttack : GromarState
     private float warningBeamWidth = 0.05f;
     private float shootingBeamWidth = 1.25f;
 
+    private float nextStateDelay = 0.3f;
+
     public override void SetParam(object args)
     {
         // reinitialisation
         warningTime = 1f;
         lockDelay = 0.2f;
         fireDuration = 1.5f;
+        nextStateDelay = 0.3f;
 
         if (args is LaserArgs a)
         {
             if (a.WarningTime > 0f) warningTime = a.WarningTime;
             if (a.LockDelay > 0f) lockDelay = a.LockDelay;
             if (a.FireDuration > 0f) fireDuration = a.FireDuration;
+            nextStateDelay = Mathf.Max(0f, a.nextStateDelay);
         }
     }
 
@@ -124,7 +128,7 @@ public class GS_LaserAttack : GromarState
         // fin de l'attaque
         firingActive = false;
         laser.enabled = false;
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(nextStateDelay);
         Machine.ExecuteNextState();
     }
 

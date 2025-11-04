@@ -8,6 +8,7 @@ public class GS_MissilAttack : GromarState
 {
     private int nbMissile = 1; // nombre de missiles a tirer
     private float delay = 1f;  // delai entre chaque tir
+    private float nextStateDelay = 0.3f;
 
     public GS_MissilAttack() : base(3) { }
 
@@ -18,11 +19,13 @@ public class GS_MissilAttack : GromarState
     {
         nbMissile = 1;
         delay = 1f;
+        nextStateDelay = 0.3f;
 
         if (args is ParabolicMissileArgs a)
         {
             nbMissile = Mathf.Max(1, a.Count);
             delay = Mathf.Max(0f, a.Delay);
+            nextStateDelay = Mathf.Max(0f, a.nextStateDelay);
         }
     }
 
@@ -62,7 +65,7 @@ public class GS_MissilAttack : GromarState
         }
 
         // courte pause avant de passer a l'etat suivant
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(nextStateDelay);
         Machine.ExecuteNextState();
     }
 }
