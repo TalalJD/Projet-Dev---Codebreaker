@@ -46,7 +46,6 @@ public class GS_MissilAttack : GromarState
         {
             Vector2 origin = gromar.ShootingPoint.position;
             Vector2 target = gromar.player.transform.position + Vector3.up * 0.5f;
-
             if (ProjectileManager.Instance != null)
             {
                 var missile = ProjectileManager.Instance.Spawn(ProjectileType.ParabolicMissile, origin, target);
