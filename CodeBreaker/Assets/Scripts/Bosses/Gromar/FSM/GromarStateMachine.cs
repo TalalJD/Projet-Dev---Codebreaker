@@ -1,21 +1,15 @@
-using CodeBreaker;
+﻿using CodeBreaker;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Machine d'etats du boss Gromar :
-/// gere les transitions entre ses differents comportements
-/// et execute les sequences d'attaques (AttackPatterns).
+/// Machine d'états du boss Gromar,
+/// basée sur AttackPatternStateMachine.
 /// </summary>
-public class GromarStateMachine : StateMachine<GromarState>
+public class GromarStateMachine : AttackPatternStateMachine<GromarState>
 {
-    private Dictionary<int, System.Type> shortcutMap; // raccourcis clavier -> etats
-    private List<AttackPattern> attackPatterns = new(); // tous les patterns du boss
-    private Queue<StateCall> currentPatternQueue; // etapes du pattern en cours
-    private AttackPattern currentPattern; // pattern actuellement actif
-    
+    private Dictionary<int, Type> shortcutMap; // raccourcis clavier -> états
 
     public override void Add(GromarState state)
     {
@@ -30,7 +24,7 @@ public class GromarStateMachine : StateMachine<GromarState>
     }
 
     /// <summary>
-    /// Initialise les etats et les patterns d'attaque du boss.
+    /// Initialise les états et les patterns d'attaque du boss.
     /// </summary>
     public void Init()
     {
@@ -55,10 +49,10 @@ public class GromarStateMachine : StateMachine<GromarState>
             AttackPatternBuilder.New("Pattern B", 3f)
                 .Repeat(10, b => b
                     .Warp(new WarpArgs { CornerOnly = true })
-                    .Cone(new ConeArgs { Count = 1, Delay = 0f , Speed = 20f})
+                    .Cone(new ConeArgs { Count = 1, Delay = 0f, Speed = 20f })
                 )
                 .ForAllNextStateDelay(.1f)
-               .Build()
+                .Build()
         );
 
         attackPatterns.Add(
@@ -78,49 +72,15 @@ public class GromarStateMachine : StateMachine<GromarState>
     }
 
     /// <summary>
-    /// Selectionne et demarre un pattern aleatoire.
+    /// Appelé automatiquement quand un pattern est terminé (queue vide).
+    /// On applique la logique spécifique de Gromar :
+    /// warp aléatoire + Idle avec délai.
     /// </summary>
-    public void StartRandomPattern()
+    protected override void OnPatternFinished(float delay)
     {
-        if (attackPatterns.Count == 0)
-            return;
-
-        int index = UnityEngine.Random.Range(0, attackPatterns.Count);
-        currentPattern = attackPatterns[index];
-        currentPatternQueue = new Queue<StateCall>(currentPattern.sequence);
-
-        Debug.Log($"Starting pattern: {currentPattern.name}");
-        ExecuteNextState();
+        SetIdleWithDelay(delay);
     }
 
-    /// <summary>
-    /// Passe a l'etat suivant du pattern en cours.
-    /// </summary>
-    public void ExecuteNextState()
-    {
-        if (currentPatternQueue == null || currentPatternQueue.Count == 0)
-        {
-            float delay = currentPattern != null ? currentPattern.delay : 1f;
-            SetIdleWithDelay(delay);
-            return;
-        }
-
-        var nextCall = currentPatternQueue.Dequeue();
-        SetStateCall(nextCall);
-    }
-
-    private void SetStateCall(StateCall statecall)
-    {
-        var state = AvailableStates.Find(s => s.GetType() == statecall.stateType);
-        if (state == null) return;
-
-        state.SetParam(statecall.arg); // applique les parametres du StateCall
-        ForceSet(state);               // active l'etat
-    }
-
-    /// <summary>
-    /// Fait un warp aleatoire (spawn/milieu) puis attend avant de relancer un pattern.
-    /// </summary>
     private void SetIdleWithDelay(float delay)
     {
         var warpState = Get<GS_Warp>();
@@ -141,9 +101,6 @@ public class GromarStateMachine : StateMachine<GromarState>
         GoIdle(delay);
     }
 
-    /// <summary>
-    /// Lance l'etat d'attente (Idle) avec un delai avant le prochain pattern.
-    /// </summary>
     private void GoIdle(float delay)
     {
         var idleState = Get<GS_Idle>();
@@ -154,7 +111,7 @@ public class GromarStateMachine : StateMachine<GromarState>
     }
 
     /// <summary>
-    /// Permet de changer d'etat avec les touches 1,2,3... (debug / test)
+    /// Permet de changer d'état avec les touches 1,2,3... (debug / test)
     /// </summary>
     private void HandleShortcutKeys()
     {
