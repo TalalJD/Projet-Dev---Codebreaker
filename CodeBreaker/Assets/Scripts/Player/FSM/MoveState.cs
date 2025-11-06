@@ -94,13 +94,25 @@ public class MoveState : PlayerState
     {
         SetDirection(Player.GroundSpeed); //met a jouer la direction du joueur
 
+
+        // Cooldown timer pour le dash dans le ground state
+        if (DashState.dashCurrentCooldown > 0)
+        {
+            DashState.dashCurrentCooldown -= Time.deltaTime;
+            if (DashState.dashCurrentCooldown < 0)
+                DashState.dashCurrentCooldown = 0;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
             jumpRequested = true;
             
         }
-        if (Input.GetKeyDown(KeyCode.B))
+
+        if (Input.GetKeyDown(KeyCode.B) && DashState.dashCurrentCooldown <= 0)
+        {
             Machine.Set<DashState>();
+        }
 
     }
 

@@ -113,6 +113,7 @@ public class AirState : PlayerState
             // Peut pas dash 2 fois dans les airs
             if (!hasDashed)
             {
+                //Debug.Log("Dashed in the air 1/1");
                 hasDashed = true;
                 Machine.Set<DashState>();
             }
@@ -141,7 +142,7 @@ public class AirState : PlayerState
             // hasDashed false pour faire une autre dash dans les airs
             hasDashed = false;
             Machine.Set<MoveState>();
-           
+            //Debug.Log("Dashed Done 1/1, back on the ground");
 
         }
     }

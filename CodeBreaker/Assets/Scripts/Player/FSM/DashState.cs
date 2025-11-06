@@ -10,8 +10,9 @@ public class DashState : PlayerState
     private int dashDirection; // -1 ou 1 / gauche ou droite
     private bool isDashing;
 
-    private static float dashCooldown = 5f;
-    private static float dashCurrentCooldown = 0f;
+    private static float dashCooldown = 2f; // 2-second cooldown
+    public static float dashCurrentCooldown = 0f;
+
 
 
     public DashState() : base(3){ }
@@ -59,8 +60,7 @@ public class DashState : PlayerState
         SetDirection(Player.Direction);
 
         
-        if (dashCurrentCooldown > 0)
-            dashCurrentCooldown -= Time.deltaTime;
+        
 
         
         if (Input.GetKeyDown(KeyCode.B) && !isDashing && dashCurrentCooldown <= 0)
@@ -80,7 +80,7 @@ public class DashState : PlayerState
 
         if (dashTimer > 0)
         {
-            Player.Rb.linearVelocity = new Vector2(Player.Direction * dashSpeed, 0);
+            Player.Rb.linearVelocity = new Vector2(dashDirection * dashSpeed, 0);
         }
         else
         {
