@@ -40,7 +40,7 @@ public class BaseEnnemy : Ennemy
 
         bool aggro = distanceTarget <= aggroRange;
         bool idle = distanceTarget >= stopAggroRange;
-        bool tryAttack = distanceTarget < inAttackRange;
+        bool tryAttack = distanceTarget <= inAttackRange;
 
         if (inAttack || idle)
         {
@@ -52,8 +52,8 @@ public class BaseEnnemy : Ennemy
             _velocity.x = directionX;
             RegarderJoueur(_targetDirection.x);
         }
-
-            _isGrounded = CheckOnGround();
+        
+        _isGrounded = CheckOnGround();
 
         if (!_isGrounded)
         {
@@ -92,6 +92,16 @@ public class BaseEnnemy : Ennemy
     }
     public override void Attack()
     {
+        if (_target == null)
+        {
+            return;
+        }
+
+        float distNow = Vector2.Distance(transform.position, _target.position);
+        if (distNow > inAttackRange)
+        {
+            return;
+        }
         StartCoroutine(DoAttack());
     }
 
