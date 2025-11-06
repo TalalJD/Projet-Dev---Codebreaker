@@ -16,9 +16,9 @@ public class BaseEnnemy : Ennemy
     [SerializeField] private GameObject capsuleHitbox;
     private SpriteRenderer _renderer;
     private float attackDuration = 0.5f;
-    [SerializeField] private float aggroRange = 8f;
-    [SerializeField] private float stopAggroRange = 12f;
-    [SerializeField] private float inAttackRange = 1f;
+    private float aggroRange = 8f;
+    private float stopAggroRange = 12f;
+    private float inAttackRange = 2f;
     protected float distanceTarget;
     protected override void Start()
     {
