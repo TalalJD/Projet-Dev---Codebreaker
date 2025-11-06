@@ -1101,7 +1101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8737978799106204385, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8737978799106204385, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
       propertyPath: m_TagString
@@ -1147,7 +1147,7 @@ MonoBehaviour:
   capsuleHitbox: {fileID: 1785084363}
   aggroRange: 8
   stopAggroRange: 12
-  inAttackRange: 3
+  inAttackRange: 2
 --- !u!61 &328203282651845651
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1269,7 +1269,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4777526448715554087, guid: df3ce7fbdb4a217449edfe2886d3587d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4777526448715554087, guid: df3ce7fbdb4a217449edfe2886d3587d, type: 3}
       propertyPath: m_TagString

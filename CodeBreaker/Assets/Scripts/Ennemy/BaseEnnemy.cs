@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseEnnemy : Ennemy
 {
-    private float moveSpeed = 10f;
+    private float moveSpeed = 12f;
     private float gravity = -30f;
     private float maxFallSpeed = -20f;
 
@@ -105,5 +105,11 @@ public class BaseEnnemy : Ennemy
         _renderer.enabled = false;
         capsuleHitbox.SetActive(false);
         ResetCooldown();
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow; Gizmos.DrawWireSphere(transform.position, aggroRange);
+        Gizmos.color = Color.cyan; Gizmos.DrawWireSphere(transform.position, stopAggroRange);
+        Gizmos.color = Color.red; Gizmos.DrawWireSphere(transform.position, inAttackRange);
     }
 }
