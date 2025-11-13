@@ -66,6 +66,9 @@ namespace CodeBreaker
         public AttackPatternBuilder Laser(LaserArgs args = null)
             => Add(typeof(GS_LaserAttack), args ?? new LaserArgs());
 
+        public AttackPatternBuilder HomingMissile(HomingMissileArgs args)
+             => Add(typeof(GS_HomingMissile), args);
+
         /// <summary>
         /// Ajoute un etat d'attente (Idle) pour une duree precise.
         /// </summary>
