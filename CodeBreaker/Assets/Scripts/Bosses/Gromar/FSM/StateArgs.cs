@@ -30,6 +30,13 @@ public class ParabolicMissileArgs : StateBaseArgs
  
 }
 
+public class HomingMissileArgs : StateBaseArgs
+{
+    public int Count = 1;
+    public float Delay = 1f;
+}
+
+
 public class LaserArgs : StateBaseArgs
 {
     public float WarningTime = 1f;
