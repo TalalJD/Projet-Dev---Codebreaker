@@ -34,6 +34,7 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
         Add(new GS_Cone());
         Add(new GS_MissilAttack());
         Add(new GS_LaserAttack());
+        Add(new GS_HomingMissile());
 
         // --- Definition des schemas d'attaque ---
         attackPatterns.Add(
@@ -62,6 +63,14 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
                 .Warp()
                 .Build()
         );
+
+        attackPatterns.Add(
+             AttackPatternBuilder.New("Homing Pattern", 3f)
+                .Warp(new WarpArgs { CornerOnly = true })
+                .HomingMissile(new HomingMissileArgs { Count = 5, Delay = 5f })
+                .Build()
+        );
+
 
         Initialize<GS_Idle>();
 
