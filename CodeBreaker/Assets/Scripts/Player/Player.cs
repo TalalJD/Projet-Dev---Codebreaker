@@ -47,6 +47,11 @@ public class Player : MonoBehaviour
     public int currentHealth;
     public int maxHealth = 3;
 
+
+    public bool canTakeDmg;
+    public float blockCooldown = 4f;
+    public float blockTimer = 0f;
+
     public float XSpeed //vitesse horizontale du joueur
     {
         get => Rb.linearVelocity.x;
@@ -132,6 +137,20 @@ public class Player : MonoBehaviour
         {
             ModifyHealth(1);
         }
+
+
+        //if (Input.GetKey(KeyCode.M))
+        //{
+        //    blockTimer -= Time.fixedDeltaTime;
+
+        //    if (blockTimer >= 0)
+        //    {
+        //        {
+
+        //        }
+
+        //    }   
+        //}
     }
     /// <summary>
     /// Methode qui permet de cycler dans l'inventaire du joueur
@@ -283,27 +302,32 @@ public class Player : MonoBehaviour
     /// <param name="amount">chifre positif ou negatif pour le heal / damage que le joueur prend</param>
     public void ModifyHealth(int amount)
     {
-        currentHealth += amount;
-
-       
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-
-
-        if (amount < 0)
+        if (canTakeDmg)
         {
-            Debug.Log($"Le joueur a pris {-amount} degat! Vie = {currentHealth}/{maxHealth}");
-        }
-        else if (amount > 0)
-        {
-            Debug.Log($"Le joueur a heal {amount}! Vie = {currentHealth}/{maxHealth}");
-        }
+            currentHealth += amount;
 
-        if (currentHealth <= 0)
-        {
-            Die();
+
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+
+            if (amount < 0)
+            {
+                Debug.Log($"Le joueur a pris {-amount} degat! Vie = {currentHealth}/{maxHealth}");
+            }
+            else if (amount > 0)
+            {
+                Debug.Log($"Le joueur a heal {amount}! Vie = {currentHealth}/{maxHealth}");
+            }
+
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
+        
+        
     }
 
     private void Die()

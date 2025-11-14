@@ -100,6 +100,13 @@ public class MoveState : PlayerState
             
         }
 
+        // Rentre Blocking State
+        if (Input.GetKey(KeyCode.M))
+        {
+            Machine.Set<BlockingState>();
+            return;
+        }
+
     }
 
     public override void OnFixedUpdate()
