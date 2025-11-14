@@ -17,6 +17,10 @@ public class GS_Explosion : GromarState
     }
     public override void OnEnter()
     {
+        if (gromar != null)
+            gromar.showExplosionGizmo = true;
+
+        float radius = gromar != null ? gromar.explosionRadius : 3f;
         // Lance la coroutine qui gere les degats de l'explosion
         gromar.StartCoroutine(DoExplosionDamage(3f, 1));
     }
@@ -40,6 +44,10 @@ public class GS_Explosion : GromarState
 
         // petite pause avant de passer a l'etat suivant
         yield return new WaitForSeconds(nextStateDelay);
+
+        if (gromar != null)
+            gromar.showExplosionGizmo = false;
+
         Machine.ExecuteNextState();
     }
 }
