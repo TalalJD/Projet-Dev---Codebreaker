@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 75928a53b845fff4cb84b8a2feb0263b
+guid: e3f5f75a371fe2a44acbaf88518879cc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -783732462629389591
-    second: Boss_Explosion2_0
+      213: 6011686013202646730
+    second: Boss_EnergyBall2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_Explosion2_0
+      name: Boss_EnergyBall2_0
       rect:
         serializedVersion: 2
-        x: 36
-        y: 32
-        width: 57
-        height: 63
+        x: 40
+        y: 69
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9ea78064a7f9f15f0800000000000000
-      internalID: -783732462629389591
+      spriteID: ac6c026e39ccd6350800000000000000
+      internalID: 6011686013202646730
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Boss_Explosion2_0: -783732462629389591
+      Boss_EnergyBall2_0: 6011686013202646730
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5bec9ed6f9a95aa4fa3524eb4b9cab01
+guid: 377ab9a9ca3f2334c864c00ef92c3744
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8784606874718082446
-    second: Boss_Explosion4_0
+      213: 8912577142773884511
+    second: Boss_Slash2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_Explosion4_0
+      name: Boss_Slash2_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 37
-        width: 64
-        height: 62
+        x: 27
+        y: 10
+        width: 66
+        height: 103
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 27a69fc179ec61680800000000000000
-      internalID: -8784606874718082446
+      spriteID: f56ad44c0b5dfab70800000000000000
+      internalID: 8912577142773884511
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Boss_Explosion4_0: -8784606874718082446
+      Boss_Slash2_0: 8912577142773884511
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

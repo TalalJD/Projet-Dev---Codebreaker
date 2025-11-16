@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 22f114fb429b1d644a5b03898a8e253f
+guid: b88084ed716b8d242a145fdeaacc3b7d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8244038243362017454
-    second: Boss_Missile4_0
+      213: 5010173956987269878
+    second: Boss_EnergyBall1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_Missile4_0
+      name: Boss_EnergyBall1_0
       rect:
         serializedVersion: 2
-        x: 49
-        y: 53
-        width: 37
-        height: 15
+        x: 34
+        y: 68
+        width: 45
+        height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25febad75ea479d80800000000000000
-      internalID: -8244038243362017454
+      spriteID: 6f2b3293ba6b78540800000000000000
+      internalID: 5010173956987269878
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Boss_Missile4_0: -8244038243362017454
+      Boss_EnergyBall1_0: 5010173956987269878
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

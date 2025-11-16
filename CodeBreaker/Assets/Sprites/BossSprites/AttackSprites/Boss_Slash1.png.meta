@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c34dc5baf511fb44e8cd0765aeea0896
+guid: e0e5b0717ffa3c24488a24b498a7d625
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8244097467847074358
-    second: Boss_Missile2_0
+      213: -8861464012885395139
+    second: Boss_Slash1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_Missile2_0
+      name: Boss_Slash1_0
       rect:
         serializedVersion: 2
-        x: 36
-        y: 32
-        width: 57
-        height: 63
+        x: 33
+        y: 10
+        width: 59
+        height: 103
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 632e8b8c7fae86270800000000000000
-      internalID: 8244097467847074358
+      spriteID: d39fe0a2e61c50580800000000000000
+      internalID: -8861464012885395139
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Boss_Missile2_0: 8244097467847074358
+      Boss_Slash1_0: -8861464012885395139
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

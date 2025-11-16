@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: dee7481202f2ddc4ea03f90a0761e224
+guid: c211b0f0007e709409d94ec30b2b4849
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -186936225253685243
-    second: Boss_Beam1_0
+      213: 3176732159568962505
+    second: Boss_Missile1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -100,11 +100,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Boss_Beam1_0
+      name: Boss_Missile1_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 0
+        x: 36
+        y: 32
         width: 57
         height: 63
       alignment: 0
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5080a1a5e7ed76df0800000000000000
-      internalID: -186936225253685243
+      spriteID: 9c3eaad6115061c20800000000000000
+      internalID: 3176732159568962505
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Boss_Beam1_0: -186936225253685243
+      Boss_Missile1_0: 3176732159568962505
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
