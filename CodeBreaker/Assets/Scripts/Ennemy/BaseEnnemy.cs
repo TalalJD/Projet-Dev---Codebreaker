@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseEnnemy : Ennemy
 {
-    private float moveSpeed = 10f;
+    private float moveSpeed = 12f;
     private float gravity = -30f;
     private float maxFallSpeed = -20f;
 
@@ -16,9 +16,9 @@ public class BaseEnnemy : Ennemy
     [SerializeField] private GameObject capsuleHitbox;
     private SpriteRenderer _renderer;
     private float attackDuration = 0.5f;
-    [SerializeField] private float aggroRange = 8f;
-    [SerializeField] private float stopAggroRange = 12f;
-    [SerializeField] private float inAttackRange = 1f;
+    private float aggroRange = 8f;
+    private float stopAggroRange = 12f;
+    private float inAttackRange = 2f;
     protected float distanceTarget;
     protected override void Start()
     {
@@ -40,7 +40,7 @@ public class BaseEnnemy : Ennemy
 
         bool aggro = distanceTarget <= aggroRange;
         bool idle = distanceTarget >= stopAggroRange;
-        bool tryAttack = distanceTarget < inAttackRange;
+        bool tryAttack = distanceTarget <= inAttackRange;
 
         if (inAttack || idle)
         {
@@ -52,8 +52,8 @@ public class BaseEnnemy : Ennemy
             _velocity.x = directionX;
             RegarderJoueur(_targetDirection.x);
         }
-
-            _isGrounded = CheckOnGround();
+        
+        _isGrounded = CheckOnGround();
 
         if (!_isGrounded)
         {
@@ -76,25 +76,6 @@ public class BaseEnnemy : Ennemy
         }
     }
 
-    private void RegarderJoueur(float directionX)
-    {
-        if (Mathf.Approximately(directionX, 0f))
-        {
-            return;
-        }
-
-        Vector3 localScale = transform.localScale;
-
-        if (directionX > 0f)
-        {
-            localScale.x = Mathf.Abs(localScale.x);
-        }
-        else if (directionX < 0f)
-        {
-            localScale.x = -Mathf.Abs(localScale.x);
-        }
-        transform.localScale = localScale;
-    }
     private bool CheckOnGround()
     {
         var hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheck, LayerMask);
@@ -111,6 +92,16 @@ public class BaseEnnemy : Ennemy
     }
     public override void Attack()
     {
+        if (_target == null)
+        {
+            return;
+        }
+
+        float distNow = Vector2.Distance(transform.position, _target.position);
+        if (distNow > inAttackRange)
+        {
+            return;
+        }
         StartCoroutine(DoAttack());
     }
 
@@ -124,5 +115,11 @@ public class BaseEnnemy : Ennemy
         _renderer.enabled = false;
         capsuleHitbox.SetActive(false);
         ResetCooldown();
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow; Gizmos.DrawWireSphere(transform.position, aggroRange);
+        Gizmos.color = Color.cyan; Gizmos.DrawWireSphere(transform.position, stopAggroRange);
+        Gizmos.color = Color.red; Gizmos.DrawWireSphere(transform.position, inAttackRange);
     }
 }

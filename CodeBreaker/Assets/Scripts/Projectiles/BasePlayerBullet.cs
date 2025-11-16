@@ -29,12 +29,11 @@ public class  BasePlayerBullet : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Ennemy"))
+        if (other.CompareTag("Ennemy") || !other.isTrigger)
         {
-           
-            Destroy(gameObject, .5f);
+            Destroy(gameObject);
         }
     }
 }

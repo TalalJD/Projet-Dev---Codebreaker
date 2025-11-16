@@ -31,7 +31,7 @@ public abstract class Projectile : MonoBehaviour
         return;
 
     // Destroy if it hits anything else (like walls, ground, etc.)
-    Destroy(gameObject);
+    //Destroy(gameObject);
 }
 
 

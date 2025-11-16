@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CodeBreaker
 {
@@ -12,7 +13,7 @@ namespace CodeBreaker
         private readonly string _name;          // nom du pattern
         private readonly float _endDelay;       // delai apres la fin du pattern
         private readonly List<StateCall> _seq = new(); // sequence des appels d'etats
-
+       
         private AttackPatternBuilder(string name, float endDelay)
         {
             _name = name;
@@ -24,9 +25,27 @@ namespace CodeBreaker
         /// </summary>
         public static AttackPatternBuilder New(string name, float endDelay) => new(name, endDelay);
 
+        public AttackPatternBuilder ForAllNextStateDelay(float seconds)
+        {
+            foreach (var sc in _seq)
+            {
+                if (sc.arg is StateBaseArgs args)
+                {
+                    if (Mathf.Approximately(args.nextStateDelay, 0.3f))
+                    {
+                        args.nextStateDelay = seconds;
+                    }
+                }
+            }
+
+            return this;
+        }
+
+
         /// <summary>
         /// Ajoute un etat avec ses arguments a la sequence.
         /// </summary>
+        /// 
         public AttackPatternBuilder Add(Type stateType, object arg = null)
         {
             _seq.Add(new StateCall(stateType, arg));
@@ -46,6 +65,9 @@ namespace CodeBreaker
 
         public AttackPatternBuilder Laser(LaserArgs args = null)
             => Add(typeof(GS_LaserAttack), args ?? new LaserArgs());
+
+        public AttackPatternBuilder HomingMissile(HomingMissileArgs args)
+             => Add(typeof(GS_HomingMissile), args);
 
         /// <summary>
         /// Ajoute un etat d'attente (Idle) pour une duree precise.

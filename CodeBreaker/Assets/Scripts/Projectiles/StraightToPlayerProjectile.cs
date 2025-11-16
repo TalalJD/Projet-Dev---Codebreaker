@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StraightToTargetProjectile : Projectile
+public class StraightToPlayerProjectile : Projectile
 {
     private Vector2 direction;
 
@@ -14,7 +14,7 @@ public class StraightToTargetProjectile : Projectile
 
     protected override void Update()
     {
-        base.Update();
+        base.Update(); 
         transform.position += (Vector3)(direction * speed * Time.deltaTime);
     }
 }
