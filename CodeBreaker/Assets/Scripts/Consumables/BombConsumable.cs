@@ -9,7 +9,7 @@ public class BombConsumable : Consumable
     public override void UseConsumable()
     {
 
-        Player player = FindAnyObjectByType<Player>();
+        Player player = FindFirstObjectByType<Player>();
         int facing = player.Direction >= 0 ? 1 : -1;
 
         Vector3 spawnPos = player.WeaponHolder != null ? player.WeaponHolder.position : player.transform.position;

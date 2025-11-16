@@ -1,4 +1,9 @@
-public class WarpArgs
+public abstract class StateBaseArgs
+{
+    public float nextStateDelay = 0.3f;
+}
+
+public class WarpArgs : StateBaseArgs
 {
     public int Times = 1;
     public bool OnPlayer;
@@ -6,28 +11,46 @@ public class WarpArgs
     public bool CornerOnly;
     public bool Spawn;
     public bool SkipNextState;
+   
 }
 
-public class ConeArgs
+public class ConeArgs : StateBaseArgs
 {
     public int Count = 1;
     public float Delay = 0.3f;
+    public float Speed = 10f;
+
+    
 }
 
-public class ParabolicMissileArgs
+public class ParabolicMissileArgs : StateBaseArgs
+{
+    public int Count = 1;
+    public float Delay = 1f;
+ 
+}
+
+public class HomingMissileArgs : StateBaseArgs
 {
     public int Count = 1;
     public float Delay = 1f;
 }
 
-public class LaserArgs
+
+public class LaserArgs : StateBaseArgs
 {
     public float WarningTime = 1f;
     public float LockDelay = 0.2f;
     public float FireDuration = 1.5f;
+
 }
 
-public class IdleArgs
+public class IdleArgs : StateBaseArgs
 {
     public float Duration = 1f;
+}
+
+public class ExplosionArgs : StateBaseArgs
+{
+  
 }
