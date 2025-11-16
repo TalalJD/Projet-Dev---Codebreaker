@@ -3,35 +3,67 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Etat du boss qui gere les teleports (warps) de Gromar.
+/// </summary>
 public class GS_Warp : GromarState
 {
-    SpriteRenderer[] sprites;
-    Queue<Transform> WarpHistory = new Queue<Transform>();
-    int maxHistory = 3;
-    int warpTimes = 1;
+    private SpriteRenderer[] sprites;             // sprites du boss, caches pendant le teleport
+    private readonly Queue<Transform> warpHistory = new(); // historique des derniers points de teleport
+    private const int maxHistory = 3;             // taille max de l'historique
+
+    // parametres du warp
+    private int warpTimes = 1;
+    private bool tpOnPlayer = false;
+    private bool tpMiddle = false;
+    private bool tpCornerOnly = false;
+    private bool tpSpawn = false;
+    private bool skipNextState = false;
+    private float nextStateDelay = 0.3f;
+
+    public GS_Warp() : base(1) { }
+
+    /// <summary>
+    /// Recoit et applique les arguments du warp (WarpArgs).
+    /// </summary>
+    public override void SetParam(object args)
+    {
+        // reinitialisation
+        warpTimes = 1;
+        tpOnPlayer = tpMiddle = tpCornerOnly = tpSpawn = skipNextState = false;
+        nextStateDelay = 0.3f;
+        
+
+        if (args is WarpArgs a)
+        {
+            warpTimes = Mathf.Max(1, a.Times);
+            tpOnPlayer = a.OnPlayer;
+            tpMiddle = a.Middle;
+            tpCornerOnly = a.CornerOnly;
+            tpSpawn = a.Spawn;
+            skipNextState = a.SkipNextState;
+            nextStateDelay = Mathf.Max(0f, a.nextStateDelay);
+        }
+    }
+
+    /// <summary>
+    /// Lance la sequence de teleportations.
+    /// </summary>
     public override void OnEnter()
     {
+        base.OnEnter();
         sprites = gromar.GetComponentsInChildren<SpriteRenderer>();
         gromar.StartCoroutine(DoWarp());
     }
 
-    /// <summary>
-    /// Permet de set le nombre de fois que le boss va warp
-    /// </summary>
-    /// <param name="count">nombre de warps</param>
-    public GS_Warp(int count)
+    public override void OnExit()
     {
-        warpTimes = count;
-    }
-    public GS_Warp()
-    {
-      
+        base.OnExit();
     }
 
     /// <summary>
-    /// coroutine qui va faire warp le boss avec un delai de 0.3s entre chaque warp
+    /// Coroutine qui effectue plusieurs teleports consecutifs.
     /// </summary>
-    /// <returns></returns>
     private IEnumerator DoWarp()
     {
         for (int i = 0; i < warpTimes; i++)
@@ -39,97 +71,106 @@ public class GS_Warp : GromarState
             WarpPosition();
             yield return new WaitForSeconds(0.3f);
         }
+
+        // passe a l'etat suivant sauf si skipNextState est actif
+        if (!skipNextState)
+        {
+            yield return new WaitForSeconds(nextStateDelay);
+            Machine.ExecuteNextState();
+        }
     }
 
     /// <summary>
-    /// methode qui fait warp le boss avec un point random et qui ajoute ce point dans une liste de memoire 
+    /// Choisit une nouvelle position selon les options de teleport.
     /// </summary>
-   public void WarpPosition()
+    public void WarpPosition()
     {
-        DisableOrEnableSprites(false);
+        DisableSprites(false); // fait disparaitre le sprite pendant le teleport
 
-        Transform targetPoint = GetRandomPointAvoidPattern();
-
-        gromar.transform.position = targetPoint.position;
-
-        WarpHistory.Enqueue(targetPoint);
-
-        if (WarpHistory.Count > maxHistory)
+        if (tpOnPlayer)
         {
-            WarpHistory.Dequeue();
+            // se teleporte sur le joueur
+            var p = gromar.player.transform.position;
+            gromar.transform.position = new Vector3(p.x, 1f, gromar.transform.position.z);
+        }
+        else if (tpMiddle)
+        {
+            gromar.transform.position = gromar.MAPMIDPOINT.position;
+        }
+        else if (tpSpawn)
+        {
+            gromar.transform.position = gromar.SPAWNPOINT.position;
+        }
+        else
+        {
+            // se teleporte vers un point aleatoire en evitant les repetitions
+            Transform target = GetRandomPointAvoidPattern();
+            gromar.transform.position = target.position;
+
+            warpHistory.Enqueue(target);
+            if (warpHistory.Count > maxHistory) warpHistory.Dequeue();
         }
 
-        DisableOrEnableSprites(true);
-
-        
-
+        DisableSprites(true); // reapparait
     }
 
     /// <summary>
-    /// methode qui va regarder la liste de memoir pour verifier que le prochain warp point ne replique pas un pattern ABAB ou qui retourne 
-    /// un point random simple si la liste de memoire n'est pas assez longue pour verifier le patterne
+    /// Choisit un point aleatoire qui evite les motifs repetitifs (ex: ABAB).
     /// </summary>
-    /// <returns></returns>
     public Transform GetRandomPointAvoidPattern()
     {
-        // Si l'historique est pas assez long on utilise la methode simplifiee
-        if (WarpHistory.Count < 3)
+        var points = gromar.mapPoints;
+
+        if (warpHistory.Count < 3)
             return GetRandomPointSimple();
 
-        // recuperer les 2 derniers points pour verifier le patterne
-        Transform last = WarpHistory.Last(); //point le plus recent
-        Transform secondLast = WarpHistory.ElementAt(WarpHistory.Count - 2); // deuxieme point
+        Transform last = warpHistory.Last();
+        Transform secondLast = warpHistory.ElementAt(warpHistory.Count - 2);
+        Transform thirdLast = warpHistory.First();
 
-        // faire la liste de points potentiels
-        var possiblePoints = gromar.mapPoints
-            .Where(point =>
+        var possible = points
+            .Where(p =>
             {
-                // ignorer le point ou le boss est deja present
-                if (point.position == gromar.transform.position)
-                    return false;
+                if (p.position == gromar.transform.position) return false;
+                if (tpCornerOnly && p.position == gromar.MAPMIDPOINT.position) return false;
 
-                // Verifier pour un pattern A B A B
-                // Si les 2 derniers points sont A & B, ne pas choisir A encore
-                if (WarpHistory.Count >= 3)
+                // evite le pattern ABAB : si on a deja fait A -> B -> A, ne pas refaire B
+                if (warpHistory.Count >= 3)
                 {
-                    Transform thirdLast = WarpHistory.First(); //point le plus ancien
-                    if (thirdLast == last && point == secondLast) //Si il ya patterne ABAB de potentiel on ignore le point B
-                        return false; 
+                    if (thirdLast == last && p == secondLast) return false;
                 }
-
                 return true;
             })
             .ToList();
 
-       //choisir un point random dans la liste
-        int randomIndex = Random.Range(0, possiblePoints.Count);
-        return possiblePoints[randomIndex];
+        int idx = Random.Range(0, possible.Count);
+        return possible[idx];
     }
 
     /// <summary>
-    /// methdoe qui retourne un point random sur la map parmis la liste des points en evitant de prendre un point ou le boss se trouve deja
+    /// Choisit un point aleatoire sans verification de pattern.
     /// </summary>
-    /// <returns></returns>
     private Transform GetRandomPointSimple()
     {
-        var possiblePoints = gromar.mapPoints
-            .Where(p => p.position != gromar.transform.position)
+        var possible = gromar.mapPoints
+            .Where(p =>
+            {
+                if (p.position == gromar.transform.position) return false;
+                if (tpCornerOnly && p.position == gromar.MAPMIDPOINT.position) return false;
+                return true;
+            })
             .ToList();
 
-        int randomIndex = Random.Range(0, possiblePoints.Count);
-        return possiblePoints[randomIndex];
+        int idx = Random.Range(0, possible.Count);
+        return possible[idx];
     }
 
     /// <summary>
-    /// methode qui active ou desactive les sprite du boss pour le faire disparaitre visuellement
+    /// Active ou desactive les sprites (utile pendant les teleports).
     /// </summary>
-    /// <param name="choice"></param>
-    public void DisableOrEnableSprites(bool choice)
+    private void DisableSprites(bool enable)
     {
-        foreach (var sprite in sprites)
-        {
-            sprite.enabled = choice;
-        }
+        if (sprites == null) return;
+        foreach (var s in sprites) s.enabled = enable;
     }
-    
 }
