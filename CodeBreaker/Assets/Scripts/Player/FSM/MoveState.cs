@@ -114,12 +114,14 @@ public class MoveState : PlayerState
         {
             Machine.Set<BlockingState>();
             return;
+        }
         if (Input.GetKeyDown(KeyCode.B) && DashState.dashCurrentCooldown <= 0)
         {
             Machine.Set<DashState>();
         }
 
     }
+
 
     public override void OnFixedUpdate()
     {
