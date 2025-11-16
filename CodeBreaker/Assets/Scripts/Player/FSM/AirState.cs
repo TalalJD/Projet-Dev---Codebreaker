@@ -8,21 +8,22 @@ public class AirState : PlayerState
     public AirState() : base(1) { }
 
     public bool isJump;
-    
+    private bool hasDashed;
+
     /// <summary>
     /// Gere le movement du joueur quand il est dans les aires en appliquant la gravite. 
     /// permet aussi de varier la force du saut dependant que quand le joueur relache la touche espace
     /// </summary>
     public void MovementVertical()
     {
-        if (isJump && Player.YSpeed > PhysicsInfo.JumpCutoff && Input.GetKeyUp(KeyCode.Space)) 
+        if (isJump && Player.YSpeed > PhysicsInfo.JumpCutoff && Input.GetKeyUp(KeyCode.Space))
         {
-            Player.YSpeed = PhysicsInfo.JumpCutoff; 
+            Player.YSpeed = PhysicsInfo.JumpCutoff;
         }
 
         Player.YSpeed -= PhysicsInfo.Gravity * Time.fixedDeltaTime;
 
-        if(Player.YSpeed < -PhysicsInfo.MaxFallSpeed)
+        if (Player.YSpeed < -PhysicsInfo.MaxFallSpeed)
         {
             Player.YSpeed = -PhysicsInfo.MaxFallSpeed;
         }
@@ -36,9 +37,19 @@ public class AirState : PlayerState
         Vector2 velocity = Player.Rb.linearVelocity;
         float airControl = 0.6f;
         float airMaxSpeed = PhysicsInfo.TopSpeed * 0.3f;
+       
 
         float wallCheck = 0.55f;
 
+        //Mettre à jour Player.Direction dans les airs
+        if (inputX != 0f)
+        {
+            Player.Direction = (int)Mathf.Sign(inputX);
+
+            // Flip le Player après le changement de direction dans les airs
+            if (Player.spriteRenderer != null)
+                Player.spriteRenderer.flipX = Player.Direction < 0;
+        }
 
         if (inputX == 0)
         {
@@ -50,7 +61,7 @@ public class AirState : PlayerState
             Vector2 dir = new Vector2(Mathf.Sign(inputX), 0f);
             RaycastHit2D hit = Physics2D.Raycast(origin, dir, wallCheck, Player.LayerMask);
             Debug.DrawRay(origin, dir * wallCheck, hit ? Color.red : Color.green);
-            
+
             if (hit)
             {
                 Player.GroundSpeed = 0f;
@@ -86,17 +97,30 @@ public class AirState : PlayerState
 
     public override void OnEnter()
     {
-
+        
     }
 
     public override void OnExit()
     {
         isJump = false;
-        
+
     }
     public override void OnUpdate()
     {
-        
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            // Peut pas dash 2 fois dans les airs
+            if (!hasDashed)
+            {
+                //Debug.Log("Dashed in the air 1/1");
+                hasDashed = true;
+                Machine.Set<DashState>();
+            }
+             
+        }
+           
+    
     }
 
     // on verifie si le joueur a fini de jump 
@@ -113,10 +137,13 @@ public class AirState : PlayerState
             return;
         }
 
-        if(Player.YSpeed <= 0 && Player.CheckOnGround())
+        if (Player.YSpeed <= 0 && Player.CheckOnGround())
         {
+            // hasDashed false pour faire une autre dash dans les airs
+            hasDashed = false;
             Machine.Set<MoveState>();
-            
+            //Debug.Log("Dashed Done 1/1, back on the ground");
+
         }
     }
 
