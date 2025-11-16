@@ -316,6 +316,11 @@ public class Player : MonoBehaviour
         if (other.GetComponent<Projectile>() != null)
         {
             ModifyHealth(-1);
+            if (other.GetComponent<HomingMissile>() != null || other.GetComponent<ParabolicMissile>() != null)
+            {
+                Destroy(other.gameObject);
+            }
+            
         }
 
         //if (other.CompareTag("EnnemyBullet"))
