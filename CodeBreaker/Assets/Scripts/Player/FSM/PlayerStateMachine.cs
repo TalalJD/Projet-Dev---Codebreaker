@@ -30,6 +30,7 @@ namespace CodeBreaker
             Add(new MoveState());
             Add(new AirState());
             Add(new WallState());
+            Add(new BlockingState());
             Add(new DashState());
             Initialize<MoveState>();
 

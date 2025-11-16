@@ -107,6 +107,12 @@ public class AirState : PlayerState
     }
     public override void OnUpdate()
     {
+        // Rentre Blocking State
+        if (Input.GetKey(KeyCode.M))
+        {
+            Machine.Set<BlockingState>();
+            return;
+        }
 
         if (Input.GetKeyDown(KeyCode.B))
         {
