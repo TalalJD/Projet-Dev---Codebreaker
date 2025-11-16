@@ -17,6 +17,7 @@
         public GromarStateMachine StateMachine;
         public Player player;
         public Transform ShootingPoint;
+        public Animator animator;
 
 
         public int maxHealth = 3;

@@ -31,7 +31,12 @@ public class GS_HomingMissile : GromarState
 
     public override void OnEnter()
     {
+        base.OnEnter();
         gromar.StartCoroutine(ShootHomingMissiles());
+    }
+    public override void OnExit()
+    {
+        base.OnExit();
     }
 
     /// <summary>

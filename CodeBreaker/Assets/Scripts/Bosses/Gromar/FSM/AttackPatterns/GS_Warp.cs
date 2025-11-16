@@ -51,8 +51,14 @@ public class GS_Warp : GromarState
     /// </summary>
     public override void OnEnter()
     {
+        base.OnEnter();
         sprites = gromar.GetComponentsInChildren<SpriteRenderer>();
         gromar.StartCoroutine(DoWarp());
+    }
+
+    public override void OnExit()
+    {
+        base.OnExit();
     }
 
     /// <summary>

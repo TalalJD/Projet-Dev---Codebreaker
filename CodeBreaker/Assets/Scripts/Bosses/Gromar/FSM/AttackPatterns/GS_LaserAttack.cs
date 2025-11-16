@@ -54,6 +54,7 @@ public class GS_LaserAttack : GromarState
     /// </summary>
     public override void OnEnter()
     {
+        base.OnEnter();
         firingPoint = gromar.ShootingPoint;
         player = gromar.player.transform;
 
@@ -73,6 +74,7 @@ public class GS_LaserAttack : GromarState
     public override void OnExit()
     {
         if (laser != null) laser.enabled = false;
+        base.OnExit();
     }
 
     /// <summary>

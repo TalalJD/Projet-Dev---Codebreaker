@@ -34,7 +34,13 @@ public class GS_MissilAttack : GromarState
     /// </summary>
     public override void OnEnter()
     {
+        base.OnEnter();
         gromar.StartCoroutine(ShootAtPlayerContinuously());
+    }
+
+    public override void OnExit()
+    {
+        base.OnExit();
     }
 
     /// <summary>
