@@ -74,6 +74,26 @@ public abstract class Ennemy : MonoBehaviour
         attackCooldown = _ennemyInfo.attackSpeed;
     }
 
+    protected virtual void RegarderJoueur(float directionX)
+    {
+        if (Mathf.Approximately(directionX, 0f))
+        {
+            return;
+        }
+
+        Vector3 localScale = transform.localScale;
+
+        if (directionX > 0f)
+        {
+            localScale.x = Mathf.Abs(localScale.x);
+        }
+        else if (directionX < 0f)
+        {
+            localScale.x = -Mathf.Abs(localScale.x);
+        }
+        transform.localScale = localScale;
+    }
+
     protected virtual void FindPlayer()
     {
         if (_target != null)

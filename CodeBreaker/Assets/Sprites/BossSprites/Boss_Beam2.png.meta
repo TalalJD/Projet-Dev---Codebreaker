@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d5053e303b95b0d4aae14d90687b5c9f
+guid: b62ad9f46308a1545a9655b60cd19936
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6669706231774302165
-    second: FlyRobot_Hit_0
+      213: -8132191880527491010
+    second: Boss_Beam2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FlyRobot_Hit_0
+      name: Boss_Beam2_0
       rect:
         serializedVersion: 2
-        x: 10
-        y: 9
-        width: 41
-        height: 50
+        x: 3
+        y: 0
+        width: 58
+        height: 63
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b2032e215817073a0800000000000000
-      internalID: -6669706231774302165
+      spriteID: e30d7d32296a42f80800000000000000
+      internalID: -8132191880527491010
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      FlyRobot_Hit_0: -6669706231774302165
+      Boss_Beam2_0: -8132191880527491010
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

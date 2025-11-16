@@ -17,5 +17,5 @@ MonoBehaviour:
   weaponPrefab: {fileID: 5263507671525512894, guid: c21d4dabcedcb4844abf447d22e0dc81, type: 3}
   damage: 1
   attackSpeed: 1
-  bulletSpeed: 5
+  bulletSpeed: 10
   bulletLifeTime: 3
