@@ -123,9 +123,14 @@ MonoBehaviour:
   WeaponInventory:
   - {fileID: 11400000, guid: f47f38498061d484398922edb12d4dd8, type: 2}
   ConsumableInventory: []
+  SelectedConsumable: {fileID: 0}
+  SelectedConsumableInfo: {fileID: 0}
   WeaponHolder: {fileID: 5591325052629256456}
   currentHealth: 0
   maxHealth: 3
+  canTakeDmg: 0
+  blockCooldown: 4
+  blockTimer: 0
 --- !u!114 &3490334863278385395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,7 +153,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e66b39791a8cd054d8d1811f0d7ae7c0, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
