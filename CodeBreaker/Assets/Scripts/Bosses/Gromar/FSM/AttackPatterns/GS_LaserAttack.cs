@@ -27,8 +27,8 @@ public class GS_LaserAttack : GromarState
 
     // parametres visuels
     private float beamLength = 200f;
-    private float warningBeamWidth = 0.05f;
-    private float shootingBeamWidth = 1.25f;
+    private float warningBeamWidth = 0.05f;   // epaisseur "fine" (utilisee au debut)
+    private float shootingBeamWidth = 15f;  // epaisseur max (au bout du laser en phase 3)
 
     private float nextStateDelay = 0.3f;
 
@@ -54,9 +54,10 @@ public class GS_LaserAttack : GromarState
     /// </summary>
     public override void OnEnter()
     {
-        base.OnEnter();
         firingPoint = gromar.LaserSP;
         player = gromar.player.transform;
+
+        gromar.animator.SetTrigger("LaserAttack");
 
         // cree le laser s'il n'existe pas encore
         if (laser == null)
@@ -68,13 +69,13 @@ public class GS_LaserAttack : GromarState
             laser.sharedMaterial = gromar.laserPrefab.GetComponent<LineRenderer>().sharedMaterial;
         }
 
-        gromar.StartCoroutine(LaserRoutine());
+        // pense a lancer la coroutine depuis la state machine ou ici :
+        // gromar.StartCoroutine(LaserRoutine());
     }
 
     public override void OnExit()
     {
         if (laser != null) laser.enabled = false;
-        base.OnExit();
     }
 
     /// <summary>
@@ -83,7 +84,7 @@ public class GS_LaserAttack : GromarState
     /// 2. verrouillage
     /// 3. tir
     /// </summary>
-    private IEnumerator LaserRoutine()
+    public IEnumerator LaserRoutine()
     {
         // PHASE 1 : avertissement
         laser.enabled = true;
@@ -115,8 +116,10 @@ public class GS_LaserAttack : GromarState
         // PHASE 3 : tir
         firingActive = true;
         damageTimer = 0f;
-        laser.startWidth = shootingBeamWidth;
-        laser.endWidth = shootingBeamWidth;
+
+        // ICI : forme "cône" -> fin au debut, plus large au bout
+        laser.startWidth = warningBeamWidth;    // mince au niveau du shooting point
+        laser.endWidth = shootingBeamWidth;   // épais au bout du rayon
 
         float fireTimer = 0f;
         while (fireTimer < fireDuration)

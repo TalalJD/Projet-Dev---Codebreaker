@@ -11,18 +11,10 @@ public class GromarState : State
 
     public override void OnEnter()
     {
-        // Sync avec l’Animator
-        if (gromar != null && gromar.animator != null)
-        {
-            gromar.animator.SetInteger("StateNumber", StateNumber);
-        }
+
     }
     public override void OnExit() 
     {
-        // Sync avec l’Animator
-        if (gromar != null && gromar.animator != null)
-        {
-            gromar.animator.SetInteger("StateNumber", 0);
-        }
+      
     }
 }

@@ -51,9 +51,9 @@ public class GS_Warp : GromarState
     /// </summary>
     public override void OnEnter()
     {
-        base.OnEnter();
+        gromar.animator.SetTrigger("Warp");
         sprites = gromar.GetComponentsInChildren<SpriteRenderer>();
-        gromar.StartCoroutine(DoWarp());
+        //gromar.StartCoroutine(DoWarp());
     }
 
     public override void OnExit()
@@ -64,7 +64,7 @@ public class GS_Warp : GromarState
     /// <summary>
     /// Coroutine qui effectue plusieurs teleports consecutifs.
     /// </summary>
-    private IEnumerator DoWarp()
+    public IEnumerator DoWarp()
     {
         for (int i = 0; i < warpTimes; i++)
         {

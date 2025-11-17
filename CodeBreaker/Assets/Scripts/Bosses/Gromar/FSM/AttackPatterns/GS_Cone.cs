@@ -30,15 +30,15 @@ public class GS_Cone : GromarState
 
     public override void OnEnter()
     {
-        base.OnEnter();
-        gromar.StartCoroutine(ShootCone());
+        gromar.animator.SetTrigger("ConeAttack");
+        //gromar.StartCoroutine(ShootCone());
     }
 
     public override void OnExit()
     {
         base.OnExit();
     }
-    private IEnumerator ShootCone()
+    public IEnumerator ShootCone()
     {
         for (int i = 0; i < numberOfCones; i++)
         {

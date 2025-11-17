@@ -34,19 +34,16 @@ public class GS_Lobe : GromarState
     /// </summary>
     public override void OnEnter()
     {
-        base.OnEnter();
-        gromar.StartCoroutine(ShootAtPlayerContinuously());
+        gromar.animator.SetTrigger("LobeAttack");   
+     
     }
 
-    public override void OnExit()
-    {
-        base.OnExit();
-    }
+  
 
     /// <summary>
     /// Tire plusieurs missiles vers le joueur avec un delai entre chaque tir.
     /// </summary>
-    private IEnumerator ShootAtPlayerContinuously()
+    public IEnumerator ShootAtPlayerContinuously()
     {
         for (int i = 0; i < nbMissile; i++)
         {

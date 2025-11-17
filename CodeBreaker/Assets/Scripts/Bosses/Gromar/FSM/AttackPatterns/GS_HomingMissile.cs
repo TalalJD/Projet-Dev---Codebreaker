@@ -31,18 +31,16 @@ public class GS_HomingMissile : GromarState
 
     public override void OnEnter()
     {
-        base.OnEnter();
-        gromar.StartCoroutine(ShootHomingMissiles());
+        gromar.animator.SetTrigger("HomingMissilAttack");
+      
     }
-    public override void OnExit()
-    {
-        base.OnExit();
-    }
+ 
+ 
 
     /// <summary>
     /// Tire plusieurs missiles a tete chercheuse vers le joueur avec un delai entre chaque tir.
     /// </summary>
-    private IEnumerator ShootHomingMissiles()
+    public IEnumerator ShootHomingMissiles()
     {
         for (int i = 0; i < nbMissile; i++)
         {
