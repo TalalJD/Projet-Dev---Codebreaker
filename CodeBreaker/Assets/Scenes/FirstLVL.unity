@@ -577,6 +577,7 @@ GameObject:
   - component: {fileID: 617017269}
   - component: {fileID: 617017268}
   - component: {fileID: 617017267}
+  - component: {fileID: 617017271}
   m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
@@ -596,7 +597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9037f469b371094fa2e77dd89036170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {fileID: 1360134174}
 --- !u!61 &617017268
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -713,6 +713,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &617017271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617017266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103072b9a6248904b98681c9cb51d2ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destination: {fileID: 1360134174}
 --- !u!1 &687583729
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,6 +943,7 @@ GameObject:
   - component: {fileID: 1360134173}
   - component: {fileID: 1360134172}
   - component: {fileID: 1360134171}
+  - component: {fileID: 1360134175}
   m_Layer: 0
   m_Name: Square (1)
   m_TagString: Untagged
@@ -949,7 +963,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9037f469b371094fa2e77dd89036170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {fileID: 617017270}
 --- !u!61 &1360134172
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1066,6 +1079,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1360134175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360134170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103072b9a6248904b98681c9cb51d2ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destination: {fileID: 617017270}
 --- !u!1 &1577539806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2038,7 +2064,7 @@ Tilemap:
   - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: 61923e83bf8acb74f869febed44f27de, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 69
+  - m_RefCount: 67
     m_Data: {fileID: -1464315064, guid: 1dc605a79f3b7c8438e14db4e6331ce4, type: 3}
   - m_RefCount: 5
     m_Data: {fileID: 2038130650, guid: 1dc605a79f3b7c8438e14db4e6331ce4, type: 3}
