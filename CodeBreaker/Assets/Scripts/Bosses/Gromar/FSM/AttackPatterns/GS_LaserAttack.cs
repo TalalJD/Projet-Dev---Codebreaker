@@ -55,7 +55,7 @@ public class GS_LaserAttack : GromarState
     public override void OnEnter()
     {
         base.OnEnter();
-        firingPoint = gromar.ShootingPoint;
+        firingPoint = gromar.LaserSP;
         player = gromar.player.transform;
 
         // cree le laser s'il n'existe pas encore
@@ -171,7 +171,7 @@ public class GS_LaserAttack : GromarState
         if (damageTimer > 0f) return;
         damageTimer = 1f; // applique les degats une fois par seconde
 
-        Vector2 start = gromar.ShootingPoint.position;
+        Vector2 start = gromar.LaserSP.position;
         RaycastHit2D[] hits = Physics2D.RaycastAll(start, lockedDirection, beamLength);
 
         foreach (var hit in hits)

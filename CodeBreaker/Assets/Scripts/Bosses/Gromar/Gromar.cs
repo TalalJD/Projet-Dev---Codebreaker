@@ -16,7 +16,10 @@
 
         public GromarStateMachine StateMachine;
         public Player player;
-        public Transform ShootingPoint;
+        public Transform LobeSP;
+        public Transform LaserSP;
+        public Transform HomingSP;
+        public Transform ConeSP;
         public Animator animator;
 
 

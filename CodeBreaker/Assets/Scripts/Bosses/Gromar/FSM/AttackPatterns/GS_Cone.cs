@@ -42,7 +42,7 @@ public class GS_Cone : GromarState
     {
         for (int i = 0; i < numberOfCones; i++)
         {
-            Vector2 origin = gromar.ShootingPoint.position;
+            Vector2 origin = gromar.ConeSP.position;
             Vector2 target = gromar.player.transform.position + Vector3.up * 1.5f;
 
             var cone = ProjectileManager.Instance.Spawn(ProjectileType.Cone, origin, target);

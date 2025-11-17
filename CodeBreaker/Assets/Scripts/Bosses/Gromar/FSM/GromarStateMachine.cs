@@ -32,7 +32,7 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
         Add(new GS_Warp());
         Add(new GS_Explosion());
         Add(new GS_Cone());
-        Add(new GS_MissilAttack());
+        Add(new GS_Lobe());
         Add(new GS_LaserAttack());
         Add(new GS_HomingMissile());
 
