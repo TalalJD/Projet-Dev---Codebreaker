@@ -28,6 +28,7 @@ public class Gromar : MonoBehaviour
 
     public float explosionRadius = 2.5f;
     [NonSerialized] public bool showExplosionGizmo = false;
+    public bool forcedExplosion = false;
 
 
 
@@ -141,6 +142,22 @@ public class Gromar : MonoBehaviour
     void Update()
     {
         FacePlayer();
+        CheckExplosionProximity();
+    }
+    private void CheckExplosionProximity()
+    {
+        if (player == null || StateMachine == null)
+            return;
+
+        // Distance 2D entre Gromar et le joueur
+        float dist = Vector2.Distance(player.transform.position, transform.position);
+
+        // Si le joueur est dans le rayon de l'explosion, on force l'explosion
+        if (dist <= explosionRadius)
+        {
+            forcedExplosion = true;
+            StateMachine.ForceExplosion();
+        }
     }
 
 }

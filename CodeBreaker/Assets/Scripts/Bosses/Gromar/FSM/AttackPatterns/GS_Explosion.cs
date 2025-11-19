@@ -51,6 +51,15 @@ public class GS_Explosion : GromarState
         if (gromar != null)
             gromar.showExplosionGizmo = false;
 
-        Machine.ExecuteNextState();
+        if (gromar.forcedExplosion)
+        {
+            Machine.StartRandomPattern();
+            gromar.forcedExplosion = false;
+        }
+        else
+        {
+            Machine.ExecuteNextState();
+        }
+          
     }
 }

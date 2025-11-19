@@ -154,4 +154,27 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
     {
         CurrentState?.OnFixedUpdate();
     }
+
+    public void ForceExplosion()
+    {
+        // Si on est déjà en explosion, ne rien faire
+        if (IsCurrentState<GS_Explosion>())
+            return;
+
+        // Arrêter complètement le pattern en cours
+        DebugStop(); // remet currentPattern = null, queue = null, inPatternMode = false
+
+        // Récupérer l'état d'explosion
+        var explosionState = Get<GS_Explosion>();
+        if (explosionState == null)
+        {
+            Debug.LogWarning("GS_Explosion state not found in GromarStateMachine.");
+            return;
+        }
+
+        // Forcer le changement d'état vers l'explosion
+        ForceSet(explosionState);
+    }
+
+
 }
