@@ -15,6 +15,6 @@ MonoBehaviour:
   ennemySprite: {fileID: 21300000, guid: c8cac2914c5401644b635e3d956b4fac, type: 3}
   ennemyPrefab: {fileID: 8737978799106204385, guid: 79a71443df91f6e4faf3a0e2aa81b169, type: 3}
   movementSpeed: 5
-  healthPoints: 1
+  healthPoints: 2
   attackSpeed: 2
   attackDamage: 1
