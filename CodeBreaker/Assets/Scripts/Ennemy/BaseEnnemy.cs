@@ -18,7 +18,7 @@ public class BaseEnnemy : Ennemy
     private float attackDuration = 0.5f;
     private float aggroRange = 8f;
     private float stopAggroRange = 12f;
-    private float inAttackRange = 2f;
+    [SerializeField] private float inAttackRange = 1f;
     protected float distanceTarget;
     protected override void Start()
     {
@@ -74,6 +74,15 @@ public class BaseEnnemy : Ennemy
         {
             Attack();
         }
+
+        if (_velocity.x != 0)
+        {
+            animator.SetBool("IsWalking", true);
+        }
+        else
+        {
+            animator.SetBool("IsWalking", false);
+        }
     }
 
     private bool CheckOnGround()
@@ -102,12 +111,13 @@ public class BaseEnnemy : Ennemy
         {
             return;
         }
+        base.Attack();
         StartCoroutine(DoAttack());
     }
 
     private IEnumerator DoAttack()
     {
-        _renderer.enabled = true;
+        _renderer.enabled = false;
         inAttack = true;
         capsuleHitbox.SetActive(true);
         yield return new WaitForSeconds(attackDuration);

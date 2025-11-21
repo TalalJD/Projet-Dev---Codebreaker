@@ -11,17 +11,19 @@ public abstract class Ennemy : MonoBehaviour
 
     protected SpriteRenderer sprite;
     protected Rigidbody2D rigidBody;
+    protected Animator animator;
     protected Transform _target;
     protected Vector2 _targetDirection;
     
     protected float attackCooldown;
     protected float _currentHealth;
     protected bool inAttack;
+
     protected virtual void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
-
+        animator = GetComponentInChildren<Animator>();
         attackCooldown = 0f;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
@@ -55,6 +57,7 @@ public abstract class Ennemy : MonoBehaviour
     }
     public virtual void TakeDamage(float amount)
     {
+        animator.SetTrigger("Damaged");
         _currentHealth -= amount;
         Debug.Log($"took damage {_currentHealth}");
         if (_currentHealth <= 0f)
@@ -63,7 +66,10 @@ public abstract class Ennemy : MonoBehaviour
         }
 
     }
-    public abstract void Attack();
+    public virtual void Attack()
+    {
+        animator.SetTrigger("Attack");
+    }
     public virtual bool CanAttack()
     {
         return attackCooldown <= 0f;

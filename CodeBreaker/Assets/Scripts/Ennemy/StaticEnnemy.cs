@@ -22,7 +22,7 @@ public class StaticEnnemy : Ennemy
         {
             firePoint = transform;
         }
-        _rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>(); 
         ResetCooldown();
     }
     private void FixedUpdate()
@@ -38,9 +38,9 @@ public class StaticEnnemy : Ennemy
 
         if (distanceTarget <= attackRange)
         {
+            RegarderJoueur(_targetDirection.x);
             if (CanAttack())
             {
-                RegarderJoueur(_targetDirection.x);
                 Attack();
             }
             else
@@ -67,6 +67,7 @@ public class StaticEnnemy : Ennemy
     }
     public override void Attack()
     {
+        base.Attack();
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
         Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
         if (rb != null)
