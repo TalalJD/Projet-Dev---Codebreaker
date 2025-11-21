@@ -25,7 +25,7 @@ public class GS_Idle : GromarState
     /// </summary>
     public override void OnEnter()
     {
-        base.OnEnter();
+       
         gromar.StartCoroutine(WaitAndAttack());
     }
 

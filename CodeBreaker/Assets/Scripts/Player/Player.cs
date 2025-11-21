@@ -112,6 +112,8 @@ public class Player : MonoBehaviour
 
         UpdateAnimator();
 
+     
+
         if (Input.GetKeyDown(KeyCode.J))
         {
             Debug.Log("imshooting");
@@ -208,6 +210,7 @@ public class Player : MonoBehaviour
             weapon.AssignWeapon(weaponInfo);
             SelectedWeapon = weapon;
             SelectedWeaponInfo = weaponInfo;
+           
         }
         else
         {

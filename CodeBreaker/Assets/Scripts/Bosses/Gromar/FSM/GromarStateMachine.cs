@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class GromarStateMachine : AttackPatternStateMachine<GromarState>
 {
-    private Dictionary<int, Type> shortcutMap; // raccourcis clavier -> états
+   
 
     public override void Add(GromarState state)
     {
@@ -32,25 +32,25 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
         Add(new GS_Warp());
         Add(new GS_Explosion());
         Add(new GS_Cone());
-        Add(new GS_MissilAttack());
+        Add(new GS_Lobe());
         Add(new GS_LaserAttack());
         Add(new GS_HomingMissile());
 
         // --- Definition des schemas d'attaque ---
         attackPatterns.Add(
-            AttackPatternBuilder.New("Pattern A", 3f)
+            AttackPatternBuilder.New("3 cones x 6 lobes", 3f)
                 .Warp(new WarpArgs { CornerOnly = true })
-                .Cone(new ConeArgs { Count = 3, Delay = 0.3f })
+                .Repeat(3, b => b.Cone(new ConeArgs { Speed = 20f }))
                 .Warp(new WarpArgs { CornerOnly = true })
-                .ParabolicMissile(new ParabolicMissileArgs { Count = 6, Delay = 0.1f })
+                .Repeat(6, b => b.ParabolicMissile(new ParabolicMissileArgs { nextStateDelay = 0.1f }))
                 .Build()
         );
 
         attackPatterns.Add(
-            AttackPatternBuilder.New("Pattern B", 3f)
+            AttackPatternBuilder.New("10 cones x warp", 3f)
                 .Repeat(10, b => b
                     .Warp(new WarpArgs { CornerOnly = true })
-                    .Cone(new ConeArgs { Count = 1, Delay = 0f, Speed = 20f })
+                    .Cone(new ConeArgs { Speed = 20f })
                 )
                 .ForAllNextStateDelay(.1f)
                 .Build()
@@ -65,19 +65,23 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
         );
 
         attackPatterns.Add(
-             AttackPatternBuilder.New("Homing Pattern", 3f)
+             AttackPatternBuilder.New("5 homings", 3f)
                 .Warp(new WarpArgs { CornerOnly = true })
-                .HomingMissile(new HomingMissileArgs { Count = 5, Delay = 5f })
+                // repeat the homing-shot 5 times; each homing state will wait 5s before next
+                .Repeat(5, b => b.HomingMissile(new HomingMissileArgs { nextStateDelay = 2f }))
+                .Build()
+        );
+
+        attackPatterns.Add(
+             AttackPatternBuilder.New("Explosion middle", 3f)
+                .Warp(new WarpArgs { Middle = true })
+                .Add(typeof(GS_Explosion))
                 .Build()
         );
 
 
         Initialize<GS_Idle>();
 
-        // map clavier : 1 -> Idle, 2 -> Warp, etc.
-        shortcutMap = new();
-        for (int i = 0; i < AvailableStates.Count; i++)
-            shortcutMap[i + 1] = AvailableStates[i].GetType();
     }
 
     /// <summary>
@@ -119,20 +123,7 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
         Set<GS_Idle>();
     }
 
-    /// <summary>
-    /// Permet de changer d'état avec les touches 1,2,3... (debug / test)
-    /// </summary>
-    private void HandleShortcutKeys()
-    {
-        for (int i = 1; i <= shortcutMap.Count; i++)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-            {
-                Set(shortcutMap[i]);
-                Debug.Log($"Switched to state: {shortcutMap[i].Name}");
-            }
-        }
-    }
+
 
     private void Set(Type stateType)
     {
@@ -147,11 +138,33 @@ public class GromarStateMachine : AttackPatternStateMachine<GromarState>
     private void Update()
     {
         CurrentState?.OnUpdate();
-        HandleShortcutKeys();
     }
 
     private void FixedUpdate()
     {
         CurrentState?.OnFixedUpdate();
     }
+
+    public void ForceExplosion()
+    {
+        // Si on est déjà en explosion, ne rien faire
+        if (IsCurrentState<GS_Explosion>())
+            return;
+
+        // Arrêter complètement le pattern en cours
+        DebugStop(); // remet currentPattern = null, queue = null, inPatternMode = false
+
+        // Récupérer l'état d'explosion
+        var explosionState = Get<GS_Explosion>();
+        if (explosionState == null)
+        {
+            Debug.LogWarning("GS_Explosion state not found in GromarStateMachine.");
+            return;
+        }
+
+        // Forcer le changement d'état vers l'explosion
+        ForceSet(explosionState);
+    }
+
+
 }
