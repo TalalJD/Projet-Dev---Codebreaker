@@ -48,9 +48,9 @@ public class Player : MonoBehaviour
     public int maxHealth = 3;
 
 
-    public bool canTakeDmg = true;
-    public float blockCooldown = 4f;
-    public float blockTimer = 0f;
+    public bool canTakeDmg;
+    public float blockCooldown = 4f;   // la duration 
+    public float blockTimer = 0f;      // timer
 
     public float XSpeed //vitesse horizontale du joueur
     {
@@ -109,6 +109,7 @@ public class Player : MonoBehaviour
     void Update()
     {
 
+
         UpdateAnimator();
 
      
@@ -140,18 +141,20 @@ public class Player : MonoBehaviour
             ModifyHealth(1);
         }
 
+        // Commencer le timer
+        if (blockTimer > 0f)
+        {
+            blockTimer -= Time.deltaTime;
+            if (blockTimer < 0f) blockTimer = 0f;
+        }
 
-        //if (Input.GetKey(KeyCode.M))
+        //if (blockTimer > 0)
         //{
-        //    blockTimer -= Time.fixedDeltaTime;
-
-        //    if (blockTimer >= 0)
-        //    {
-        //        {
-
-        //        }
-
-        //    }   
+        //    Debug.Log($"Block cooldown: {blockTimer:F1} seconds left");
+        //}
+        //else
+        //{
+        //    Debug.Log("Block READY");
         //}
     }
     /// <summary>
