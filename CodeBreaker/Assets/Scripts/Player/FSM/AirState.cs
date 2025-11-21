@@ -108,7 +108,7 @@ public class AirState : PlayerState
     public override void OnUpdate()
     {
         // Rentre Blocking State
-        if (Input.GetKey(KeyCode.M))
+        if (Input.GetKey(KeyCode.M) && Player.CheckOnGround())
         {
             Machine.Set<BlockingState>();
             return;

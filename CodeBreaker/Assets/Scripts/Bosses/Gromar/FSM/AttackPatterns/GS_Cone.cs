@@ -3,26 +3,20 @@ using UnityEngine;
 
 public class GS_Cone : GromarState
 {
-    private int numberOfCones = 1;
-    private float delay = 0.3f;
     private float nextStateDelay = 0.3f;
     private float speed = 10f;
-
+    private const string animName = "ConeAttack";
 
     public GS_Cone() : base(2) { }
 
     public override void SetParam(object args)
     {
         // reset to defaults each time
-        numberOfCones = 1;
-        delay = 0.3f;
         nextStateDelay = 0.3f;
         speed = 10f;
 
         if (args is ConeArgs a)
         {
-            numberOfCones = Mathf.Max(1, a.Count);
-            delay = Mathf.Max(0f, a.Delay);
             nextStateDelay = Mathf.Max(0f, a.nextStateDelay);
             speed = Mathf.Max(0f, a.Speed);
         }
@@ -31,27 +25,39 @@ public class GS_Cone : GromarState
     public override void OnEnter()
     {
         base.OnEnter();
-        gromar.StartCoroutine(ShootCone());
+
+        // Force animation restart so animation events fire even for repeated identical states
+        if (gromar?.animator != null)
+        {
+            gromar.animator.ResetTrigger(animName);
+            gromar.animator.SetTrigger(animName);
+            // Try to force the clip to restart immediately
+            //gromar.animator.Play(animName, 0, 0f);
+        }
+        else
+        {
+            Debug.LogWarning("[GS_Cone] animator is null.");
+        }
+
+        // Do NOT start the logic coroutine here — wait for the animation event (CallCone) to start it.
     }
 
     public override void OnExit()
     {
         base.OnExit();
     }
-    private IEnumerator ShootCone()
+
+    // Fire exactly one cone when started by the animation event (via Gromar.CallCone).
+    public IEnumerator ShootCone()
     {
-        for (int i = 0; i < numberOfCones; i++)
-        {
-            Vector2 origin = gromar.ShootingPoint.position;
-            Vector2 target = gromar.player.transform.position + Vector3.up * 1.5f;
+        Vector2 origin = gromar.ConeSP.position;
+        Vector2 target = gromar.player.transform.position + Vector3.up * 1.5f;
 
-            var cone = ProjectileManager.Instance.Spawn(ProjectileType.Cone, origin, target);
-            if (cone != null) cone.speed = 10f;
+        var cone = ProjectileManager.Instance.Spawn(ProjectileType.Cone, origin, target);
+        if (cone != null) cone.speed = speed;
 
-            if (delay > 0f) yield return new WaitForSeconds(delay);
-        }
+        if (nextStateDelay > 0f) yield return new WaitForSeconds(nextStateDelay);
 
-        yield return new WaitForSeconds(nextStateDelay);
-        Machine.ExecuteNextState();
+        NotifyLogicFinished();
     }
 }

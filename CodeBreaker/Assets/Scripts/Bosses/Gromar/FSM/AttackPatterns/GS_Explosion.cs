@@ -22,19 +22,16 @@ public class GS_Explosion : GromarState
             gromar.showExplosionGizmo = true;
 
         float radius = gromar != null ? gromar.explosionRadius : 3f;
+        gromar.animator.SetTrigger("ExplosionAttack");
         // Lance la coroutine qui gere les degats de l'explosion
-        gromar.StartCoroutine(DoExplosionDamage(3f, 1));
+        //gromar.StartCoroutine(DoExplosionDamage(3f, 1));
     }
 
-    public override void OnExit()
-    {
-        base.OnExit();
-    }
 
     /// <summary>
     /// Applique des degats a tous les joueurs dans un rayon specifique.
     /// </summary>
-    private IEnumerator DoExplosionDamage(float radius, int damage)
+    public IEnumerator DoExplosionDamage(float radius, int damage)
     {
         Vector2 center = gromar.transform.position;
         Collider2D[] hits = Physics2D.OverlapCircleAll(center, radius);
@@ -54,6 +51,15 @@ public class GS_Explosion : GromarState
         if (gromar != null)
             gromar.showExplosionGizmo = false;
 
-        Machine.ExecuteNextState();
+        if (gromar.forcedExplosion)
+        {
+            Machine.StartRandomPattern();
+            gromar.forcedExplosion = false;
+        }
+        else
+        {
+            NotifyLogicFinished();
+        }
+          
     }
 }

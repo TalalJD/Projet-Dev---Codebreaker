@@ -61,7 +61,7 @@ namespace CodeBreaker
             => Add(typeof(GS_Cone), args);
 
         public AttackPatternBuilder ParabolicMissile(ParabolicMissileArgs args)
-            => Add(typeof(GS_MissilAttack), args);
+            => Add(typeof(GS_Lobe), args);
 
         public AttackPatternBuilder Laser(LaserArgs args = null)
             => Add(typeof(GS_LaserAttack), args ?? new LaserArgs());
