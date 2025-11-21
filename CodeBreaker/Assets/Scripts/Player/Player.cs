@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
     public event Action OnWeaponInventoryChanged;
     public event Action OnConsInventoryChanged;
     public event Action<int, int> OnHealthChanged;
-   
+
 
 
     public int currentHealth;
@@ -67,13 +67,14 @@ public class Player : MonoBehaviour
 
     public void UpdateAnimator()
     {
-        if (animator != null) {
+        if (animator != null)
+        {
             spriteRenderer.flipX = Direction == -1;
             animator.SetFloat("Xspeed", Mathf.Abs(XSpeed));
             animator.SetFloat("Yspeed", YSpeed);
             animator.SetInteger("StateNumber", StateMachine.CurrentState.StateNumber);
         }
-        
+
     }
 
     /// <summary>
@@ -83,7 +84,7 @@ public class Player : MonoBehaviour
     public bool CheckOnGround()
     {
         var GroundRay = Physics2D.Raycast(transform.position, Vector2.down, GroundRayLenght, LayerMask);
-        Debug.DrawRay(transform.position, Vector2.down* GroundRayLenght);
+        Debug.DrawRay(transform.position, Vector2.down * GroundRayLenght);
         if (GroundRay)
         {
             Rb.position = GroundRay.point;
@@ -98,11 +99,12 @@ public class Player : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        canTakeDmg = true;
         if (StateMachine != null)
         {
             StateMachine.Init();
         }
-            
+
 
 
     }
@@ -112,7 +114,7 @@ public class Player : MonoBehaviour
 
         UpdateAnimator();
 
-     
+
 
         if (Input.GetKeyDown(KeyCode.J))
         {
@@ -162,7 +164,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public void CycleWeaponInventory()
     {
-        if (WeaponInventory.Count > 0) 
+        if (WeaponInventory.Count > 0)
         {
             inventoryIndex++;
             if (inventoryIndex >= WeaponInventory.Count)
@@ -210,7 +212,7 @@ public class Player : MonoBehaviour
             weapon.AssignWeapon(weaponInfo);
             SelectedWeapon = weapon;
             SelectedWeaponInfo = weaponInfo;
-           
+
         }
         else
         {
@@ -246,17 +248,17 @@ public class Player : MonoBehaviour
     /// <param name="item">scriptable object recupere</param>
     public void AddItemToInventory(ScriptableObject item)
     {
-        if(item.GetType() == typeof(WeaponInfo) && WeaponInventory != null)
+        if (item.GetType() == typeof(WeaponInfo) && WeaponInventory != null)
         {
-            if (WeaponInventory.Count < 2) 
+            if (WeaponInventory.Count < 2)
             {
                 WeaponInventory.Add(item);
             }
             else
             {
-                if (SelectedWeapon != null) 
+                if (SelectedWeapon != null)
                 {
-                   int selectedIndex = WeaponInventory.IndexOf(SelectedWeaponInfo);
+                    int selectedIndex = WeaponInventory.IndexOf(SelectedWeaponInfo);
                     if (selectedIndex != -1)
                     {
                         WeaponInventory[selectedIndex] = item; // replace in place
@@ -282,14 +284,14 @@ public class Player : MonoBehaviour
             }
             else
             {
-                    if (SelectedConsumable != null)
+                if (SelectedConsumable != null)
+                {
+                    int selectedIndex = ConsumableInventory.IndexOf(SelectedConsumableInfo);
+                    if (selectedIndex != -1)
                     {
-                        int selectedIndex = ConsumableInventory.IndexOf(SelectedConsumableInfo);
-                        if (selectedIndex != -1)
-                        {
-                            ConsumableInventory[selectedIndex] = item;
-                            EquipConsumable(selectedIndex);
-                        }
+                        ConsumableInventory[selectedIndex] = item;
+                        EquipConsumable(selectedIndex);
+                    }
                 }
                 else
                 {
@@ -308,37 +310,40 @@ public class Player : MonoBehaviour
     /// <param name="amount">chifre positif ou negatif pour le heal / damage que le joueur prend</param>
     public void ModifyHealth(int amount)
     {
-        
-            currentHealth += amount;
 
-
-            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
-
+        if (canTakeDmg && amount < 0)
+        {
 
             if (amount < 0)
             {
+                currentHealth += amount;
+                currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+                OnHealthChanged?.Invoke(currentHealth, maxHealth);
                 Debug.Log($"Le joueur a pris {-amount} degat! Vie = {currentHealth}/{maxHealth}");
             }
-            
-
-            if (currentHealth <= 0)
-            {
-                Die();
-            }
-        
-            else if (amount > 0)
-            {
+        }
+        else if (amount > 0)
+        {
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
             Debug.Log($"Le joueur a heal {amount}! Vie = {currentHealth}/{maxHealth}");
-             }
+        }
+
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+
+
 
 
     }
 
     private void Die()
     {
-       
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -350,7 +355,7 @@ public class Player : MonoBehaviour
             {
                 Destroy(other.gameObject);
             }
-            
+
         }
 
         //if (other.CompareTag("EnnemyBullet"))
