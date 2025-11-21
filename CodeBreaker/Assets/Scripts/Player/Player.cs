@@ -305,8 +305,7 @@ public class Player : MonoBehaviour
     /// <param name="amount">chifre positif ou negatif pour le heal / damage que le joueur prend</param>
     public void ModifyHealth(int amount)
     {
-        if (canTakeDmg)
-        {
+        
             currentHealth += amount;
 
 
@@ -319,18 +318,19 @@ public class Player : MonoBehaviour
             {
                 Debug.Log($"Le joueur a pris {-amount} degat! Vie = {currentHealth}/{maxHealth}");
             }
-            else if (amount > 0)
-            {
-                Debug.Log($"Le joueur a heal {amount}! Vie = {currentHealth}/{maxHealth}");
-            }
+            
 
             if (currentHealth <= 0)
             {
                 Die();
             }
-        }
         
-        
+            else if (amount > 0)
+            {
+            Debug.Log($"Le joueur a heal {amount}! Vie = {currentHealth}/{maxHealth}");
+             }
+
+
     }
 
     private void Die()
