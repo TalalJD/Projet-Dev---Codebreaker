@@ -17,7 +17,7 @@ public class GS_Explosion : GromarState
     }
     public override void OnEnter()
     {
-       
+        base.OnEnter();
         if (gromar != null)
             gromar.showExplosionGizmo = true;
 
@@ -58,7 +58,7 @@ public class GS_Explosion : GromarState
         }
         else
         {
-            Machine.ExecuteNextState();
+            NotifyLogicFinished();
         }
           
     }

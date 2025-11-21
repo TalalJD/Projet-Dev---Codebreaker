@@ -54,6 +54,7 @@ public class GS_LaserAttack : GromarState
     /// </summary>
     public override void OnEnter()
     {
+        base.OnEnter();
         firingPoint = gromar.LaserSP;
         player = gromar.player.transform;
 
@@ -134,7 +135,7 @@ public class GS_LaserAttack : GromarState
         firingActive = false;
         laser.enabled = false;
         yield return new WaitForSeconds(nextStateDelay);
-        Machine.ExecuteNextState();
+        NotifyLogicFinished();
     }
 
     /// <summary>

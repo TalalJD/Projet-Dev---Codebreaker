@@ -23,7 +23,7 @@ public class Gromar : MonoBehaviour
     public Animator animator;
 
 
-    public int maxHealth = 3;
+    public int maxHealth = 50;
     public int currentHealth;
 
     public float explosionRadius = 2.5f;
@@ -109,34 +109,83 @@ public class Gromar : MonoBehaviour
 
     public void CallMissilAttack()
     {
-        StartCoroutine(StateMachine.Get<GS_HomingMissile>().ShootHomingMissiles());
+        // Ne lance l’attaque que si le state courant EST GS_HomingMissile
+        if (!StateMachine.IsCurrentState<GS_HomingMissile>())
+            return;
+
+        var st = StateMachine.Get<GS_HomingMissile>();
+        if (st == null) return;
+        if (st.LogicStarted) return;
+
+        st.LogicStarted = true;
+        StartCoroutine(st.ShootHomingMissiles());
     }
 
     public void CallLobe()
     {
-        StartCoroutine(StateMachine.Get<GS_Lobe>().ShootAtPlayerContinuously());
+        if (!StateMachine.IsCurrentState<GS_Lobe>())
+            return;
 
+        var st = StateMachine.Get<GS_Lobe>();
+        if (st == null) return;
+        if (st.LogicStarted) return;
+
+        st.LogicStarted = true;
+        StartCoroutine(st.ShootAtPlayerContinuously());
     }
 
     public void CallWarp()
     {
-        StartCoroutine(StateMachine.Get<GS_Warp>().DoWarp());
+        if (!StateMachine.IsCurrentState<GS_Warp>())
+            return;
+
+        var st = StateMachine.Get<GS_Warp>();
+        if (st == null) return;
+        if (st.LogicStarted) return;
+
+        st.LogicStarted = true;
+        StartCoroutine(st.DoWarp());
     }
 
     public void CallCone()
     {
-        StartCoroutine(StateMachine.Get<GS_Cone>().ShootCone());
+        if (!StateMachine.IsCurrentState<GS_Cone>())
+            return;
+
+        var st = StateMachine.Get<GS_Cone>();
+        if (st == null) return;
+        if (st.LogicStarted) return;
+
+        st.LogicStarted = true;
+        StartCoroutine(st.ShootCone());
     }
 
     public void CallLaser()
     {
-        StartCoroutine(StateMachine.Get<GS_LaserAttack>().LaserRoutine());
+        if (!StateMachine.IsCurrentState<GS_LaserAttack>())
+            return;
+
+        var st = StateMachine.Get<GS_LaserAttack>();
+        if (st == null) return;
+        if (st.LogicStarted) return;
+
+        st.LogicStarted = true;
+        StartCoroutine(st.LaserRoutine());
     }
 
     public void CallExplosion()
     {
-        StartCoroutine(StateMachine.Get<GS_Explosion>().DoExplosionDamage(explosionRadius, 1));
+        if (!StateMachine.IsCurrentState<GS_Explosion>())
+            return;
+
+        var st = StateMachine.Get<GS_Explosion>();
+        if (st == null) return;
+        if (st.LogicStarted) return;
+
+        st.LogicStarted = true;
+        StartCoroutine(st.DoExplosionDamage(explosionRadius, 1));
     }
+
 
     // Update is called once per frame
     void Update()
