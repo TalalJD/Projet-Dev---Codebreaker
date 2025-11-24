@@ -10,28 +10,19 @@ public class BlockingState : PlayerState
         Player.canTakeDmg = false;
         Player.IsBlocking = true;
 
-        // stop any movement immediately to avoid "floating" while blocking
         if (Player != null && Player.Rb != null)
         {
-            // zero the Rigidbody2D velocity
             Player.Rb.linearVelocity = Vector2.zero;
-
-            // also zero the convenience properties so other code sees 0 speed
             Player.XSpeed = 0f;
             Player.YSpeed = 0f;
         }
 
-        // destroy equipped weapon so player can't shoot while blocking
-        if (Player.SelectedWeapon != null)
-        {
-            GameObject.Destroy(Player.SelectedWeapon.gameObject);
-            Player.SelectedWeapon = null;
-            Player.SelectedWeaponInfo = null;
-            // notify listeners via raiser method (can't invoke event from outside Player)
-            Player.RaiseWeaponInventoryChanged();
-        }
+        // --- MODIFICATION ICI ---
+        // Au lieu de détruire manuellement et d'appeler RaiseWeaponInventoryChanged,
+        // utilise la méthode publique qui existe déjà dans Player :
+        Player.ClearHeldItem();
+        // ------------------------
 
-        // make sure there is no pending jump when we start blocking
         var move = Machine.Get<MoveState>();
         if (move != null) move.jumpRequested = false;
     }

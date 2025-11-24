@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3862288122820072897}
   - component: {fileID: 2672997335119880054}
+  - component: {fileID: 7865405142589682719}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -44,23 +45,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4531976c767d8b41a249fc59c40efb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vies:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  inventaireArme1: {fileID: 0}
-  inventaireArme2: {fileID: 0}
-  inventaireConsomable1: {fileID: 0}
-  inventaireConsomable2: {fileID: 0}
-  invArmeImg1: {fileID: 0}
-  invArmeImg2: {fileID: 0}
-  invConsImg1: {fileID: 0}
-  invConsImg2: {fileID: 0}
   WeaponInventory: []
   ConsumableInventory: []
-  horlogeText: {fileID: 0}
   temps: 0
-  rotationHorloge: {fileID: 0}
   rotationAngle: 90
   rotationInterval: 1
   rotationTimer: 0
+--- !u!114 &7865405142589682719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4679016891467183578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9aeeba75b5fd6544a9e9b6d90adfd8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smallBulletPrefab: {fileID: 0}
+  bigBulletPrefab: {fileID: 0}
+  parabolicMissilePrefab: {fileID: 0}
+  homingMissilePrefab: {fileID: 0}
+  Cone: {fileID: 0}
+  enemyBulletPrefab: {fileID: 0}

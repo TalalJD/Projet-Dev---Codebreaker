@@ -34,12 +34,18 @@ public class Player : MonoBehaviour
     public Consumable SelectedConsumable;
     public ConsumableInfo SelectedConsumableInfo;
     public Transform WeaponHolder;
-    private int inventoryIndex = -1; //index de l'item selectionee dans l'inventaire
+    private Vector3 weaponHolderInitialLocalPos; // store initial local pos to flip on direction change
+    private Vector3 weaponHolderInitialLocalScale; // store initial local scale to flip the gun sprite
+    private int inventoryIndex = -1; //index de l'item selectionee dans l'inventaire (legacy)
     private int ConsumableInventoryIndex = -1;
 
+    // Combined-cycling state
+    private int heldCombinedIndex = -1; // -1 = nothing held
 
     public event Action OnWeaponInventoryChanged;
     public event Action OnConsInventoryChanged;
+    // Event to notify UI of held item change: pass currently held ScriptableObject or null
+    public event Action<ScriptableObject> OnHeldItemChanged;
     public event Action<int, int> OnHealthChanged;
 
 
@@ -55,6 +61,8 @@ public class Player : MonoBehaviour
     // New flag to indicate blocking state (used to prevent weapon equip/instantiate)
     public bool IsBlocking = false;
 
+
+    public float WallRayLength = 0.6f; // Longueur du rayon pour détecter le mur
 
     public float XSpeed //vitesse horizontale du joueur
     {
@@ -79,6 +87,23 @@ public class Player : MonoBehaviour
             animator.SetInteger("StateNumber", StateMachine.CurrentState.StateNumber);
         }
 
+        // Keep WeaponHolder on the correct side based on Direction.
+        // Use the initial local position X as magnitude and apply sign by Direction.
+        if (WeaponHolder != null)
+        {
+            // Ensure we captured initial local pos/scale in Start()
+            Vector3 initialPos = weaponHolderInitialLocalPos;
+            Vector3 initialScale = weaponHolderInitialLocalScale;
+
+            int dirSign = (Direction == 0) ? 1 : Math.Sign(Direction);
+
+            float newLocalX = Mathf.Abs(initialPos.x) * dirSign;
+            WeaponHolder.localPosition = new Vector3(newLocalX, initialPos.y, initialPos.z);
+
+            // Flip the WeaponHolder's localScale.x so the weapon sprite/axes are mirrored when facing left
+            float newScaleX = Mathf.Abs(initialScale.x) * dirSign;
+            WeaponHolder.localScale = new Vector3(newScaleX, initialScale.y, initialScale.z);
+        }
     }
 
     /// <summary>
@@ -97,9 +122,6 @@ public class Player : MonoBehaviour
         return false;
     }
 
-
-
-
     void Start()
     {
         currentHealth = maxHealth;
@@ -109,8 +131,27 @@ public class Player : MonoBehaviour
             StateMachine.Init();
         }
 
+        // record WeaponHolder initial local position & scale so we can flip it later
+        if (WeaponHolder != null)
+        {
+            weaponHolderInitialLocalPos = WeaponHolder.localPosition;
+            weaponHolderInitialLocalScale = WeaponHolder.localScale;
+        }
 
+        // ensure inventories are not null
+        if (WeaponInventory == null) WeaponInventory = new List<ScriptableObject>();
+        if (ConsumableInventory == null) ConsumableInventory = new List<ScriptableObject>();
 
+        // if something is already equipped in inspector, do not override
+        // otherwise, try to initialize heldCombinedIndex to first item if any
+        if (heldCombinedIndex == -1)
+        {
+            if (WeaponInventory.Count + ConsumableInventory.Count > 0)
+            {
+                heldCombinedIndex = 0;
+                EquipHeldFromCombinedIndex(heldCombinedIndex);
+            }
+        }
     }
     void Update()
     {
@@ -122,8 +163,18 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            Debug.Log("imshooting");
-            SelectedWeapon?.Attack();
+            // unified use key: use currently held item (weapon preferred over consumable)
+            if (IsBlocking) return; // don't use while blocking
+
+            if (SelectedWeapon != null)
+            {
+                SelectedWeapon.Attack();
+            }
+            else if (SelectedConsumable != null)
+            {
+                SelectedConsumable.UseConsumable();
+                // if consumable should be consumed/removed, ensure the Consumable implementation handles destruction
+            }
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
@@ -136,7 +187,8 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
-            CycleWeaponInventory();
+            // unified cycle between consumables and weapons
+            CycleHeldItem();
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -163,8 +215,154 @@ public class Player : MonoBehaviour
         //    Debug.Log("Block READY");
         //}
     }
+
+    /// <summary>
+    /// Returns combined inventory as list of tuples (item, isWeapon)
+    /// weapon entries come first (in order), then consumables.
+    /// </summary>
+    private List<(ScriptableObject item, bool isWeapon)> GetCombinedInventory()
+    {
+        var combined = new List<(ScriptableObject, bool)>();
+        if (WeaponInventory != null)
+        {
+            foreach (var w in WeaponInventory) combined.Add((w, true));
+        }
+        if (ConsumableInventory != null)
+        {
+            foreach (var c in ConsumableInventory) combined.Add((c, false));
+        }
+        return combined;
+    }
+
+    /// <summary>
+    /// Cycle through combined inventory and equip next item.
+    /// </summary>
+    public void CycleHeldItem()
+    {
+        if (IsBlocking) return;
+
+        var combined = GetCombinedInventory();
+        if (combined.Count == 0)
+        {
+            // clear any held item
+            ClearHeldItem();
+            return;
+        }
+
+        heldCombinedIndex = (heldCombinedIndex + 1) % combined.Count;
+        EquipHeldFromCombinedIndex(heldCombinedIndex);
+    }
+
+    /// <summary>
+    /// Equip the item referenced by combined index.
+    /// </summary>
+    private void EquipHeldFromCombinedIndex(int combinedIndex)
+    {
+        var combined = GetCombinedInventory();
+        if (combinedIndex < 0 || combinedIndex >= combined.Count)
+        {
+            ClearHeldItem();
+            return;
+        }
+
+        var entry = combined[combinedIndex];
+        if (entry.isWeapon)
+        {
+            // destroy consumable object if present
+            if (SelectedConsumable != null)
+            {
+                Destroy(SelectedConsumable.gameObject);
+                SelectedConsumable = null;
+                SelectedConsumableInfo = null;
+                OnConsInventoryChanged?.Invoke();
+            }
+
+            // Find index in weapon list and equip using existing method
+            int wIndex = WeaponInventory.IndexOf(entry.item);
+            if (wIndex >= 0)
+            {
+                EquipWeapon(wIndex);
+            }
+            else
+            {
+                // fallback: instantiate directly
+                var wi = entry.item as WeaponInfo;
+                if (wi != null)
+                {
+                    if (SelectedWeapon != null) Destroy(SelectedWeapon.gameObject);
+                    GameObject weaponObj = Instantiate(wi.weaponPrefab, WeaponHolder);
+                    var weapon = weaponObj.GetComponent<Weapon>();
+                    weapon.AssignWeapon(wi);
+                    SelectedWeapon = weapon;
+                    SelectedWeaponInfo = wi;
+                    OnWeaponInventoryChanged?.Invoke();
+                }
+            }
+
+            // notify held change
+            OnHeldItemChanged?.Invoke(entry.item);
+        }
+        else
+        {
+            // equip consumable: destroy weapon object if present
+            if (SelectedWeapon != null)
+            {
+                Destroy(SelectedWeapon.gameObject);
+                SelectedWeapon = null;
+                SelectedWeaponInfo = null;
+                OnWeaponInventoryChanged?.Invoke();
+            }
+
+            int cIndex = ConsumableInventory.IndexOf(entry.item);
+            if (cIndex >= 0)
+            {
+                EquipConsumable(cIndex);
+            }
+            else
+            {
+                var ci = entry.item as ConsumableInfo;
+                if (ci != null)
+                {
+                    if (SelectedConsumable != null) Destroy(SelectedConsumable.gameObject);
+                    GameObject consObj = Instantiate(ci.consumablePrefab, WeaponHolder);
+                    var cons = consObj.GetComponent<Consumable>();
+                    cons.AssignConsumable(ci);
+                    SelectedConsumable = cons;
+                    SelectedConsumableInfo = ci;
+                    OnConsInventoryChanged?.Invoke();
+                }
+            }
+
+            OnHeldItemChanged?.Invoke(entry.item);
+        }
+    }
+
+    /// <summary>
+    /// Clears any held object in WeaponHolder and resets selection.
+    /// </summary>
+    public void ClearHeldItem()
+    {
+        if (SelectedWeapon != null)
+        {
+            Destroy(SelectedWeapon.gameObject);
+            SelectedWeapon = null;
+            SelectedWeaponInfo = null;
+            OnWeaponInventoryChanged?.Invoke();
+        }
+        if (SelectedConsumable != null)
+        {
+            Destroy(SelectedConsumable.gameObject);
+            SelectedConsumable = null;
+            SelectedConsumableInfo = null;
+            OnConsInventoryChanged?.Invoke();
+        }
+        heldCombinedIndex = -1;
+        OnHeldItemChanged?.Invoke(null);
+    }
+
     /// <summary>
     /// Methode qui permet de cycler dans l'inventaire du joueur
+    /// (legacy: still available if you need separate cycling)
     /// </summary>
     public void CycleWeaponInventory()
     {
@@ -180,6 +378,10 @@ public class Player : MonoBehaviour
             }
 
             EquipWeapon(inventoryIndex);
+            // keep heldCombinedIndex in sync (point to first matching combined entry for this weapon)
+            var combined = GetCombinedInventory();
+            for (int i = 0; i < combined.Count; i++)
+                if (combined[i].item == WeaponInventory[inventoryIndex]) { heldCombinedIndex = i; break; }
         }
     }
 
@@ -193,16 +395,18 @@ public class Player : MonoBehaviour
                 ConsumableInventoryIndex = 0; // retour au d�but
             }
             EquipConsumable(ConsumableInventoryIndex);
+
+            // keep heldCombinedIndex in sync
+            var combined = GetCombinedInventory();
+            for (int i = 0; i < combined.Count; i++)
+                if (combined[i].item == ConsumableInventory[ConsumableInventoryIndex]) { heldCombinedIndex = i; break; }
         }
     }
 
     /// <summary>
-    /// Equipe une arme a partir de l'inventaire en utilisant l'index donn�.
-    /// D�truit l'arme actuellement �quip�e si n�cessaire, instancie le prefab associ�
-    /// au ScriptableObject <see cref="WeaponInfo"/>, puis assigne ses donn�es
-    /// (logique, stats, sprite, etc.) au composant <see cref="Weapon"/>.
+    /// Equipe une arme a partir de l'inventaire en utilisant l'index donn�
+    /// (unchanged)
     /// </summary>
-    /// <param name="index">Index de l'arme dans la liste Inventory</param>
     private void EquipWeapon(int index)
     {
         // Prevent equipping while blocking (safety check)
@@ -223,6 +427,7 @@ public class Player : MonoBehaviour
             SelectedWeapon = weapon;
             SelectedWeaponInfo = weaponInfo;
             OnWeaponInventoryChanged?.Invoke();
+            OnHeldItemChanged?.Invoke(weaponInfo);
         }
         else
         {
@@ -246,6 +451,7 @@ public class Player : MonoBehaviour
             SelectedConsumable = cons;
             SelectedConsumableInfo = consumableInfo;
             OnConsInventoryChanged?.Invoke();
+            OnHeldItemChanged?.Invoke(consumableInfo);
         }
         else
         {
@@ -347,9 +553,6 @@ public class Player : MonoBehaviour
             Die();
         }
 
-
-
-
     }
 
     private void Die()
@@ -371,45 +574,42 @@ public class Player : MonoBehaviour
 
         //if (other.CompareTag("EnnemyBullet"))
         //{
-        //    ModifyHealth(-1);
-        //    Destroy(other.gameObject); // player decides when bullet is destroyed
+        //    health--;
+        //    if (health <= 0)
+        //    {
+        //        Die();
+        //    }
+        //    Destroy(other.gameObject);
         //}
-
-        if (other.CompareTag("EnnemyHitbox"))
-        {
-            var ennemyHitbox = other.GetComponent<EnnemyAttackHitbox>();
-            ModifyHealth(-ennemyHitbox._ennemyInfo.attackDamage);
-        }
     }
 
-    public bool CheckWall()
-    {
-        // Vérifie si le joueur touche un mur à gauche ou à droite
-        float wallCheckDistance = 0.6f; // distance pour détecter le mur
-        LayerMask wallLayer = LayerMask.GetMask("WallJump"); // assurez-vous que vos murs sont sur ce layer
-
-        bool touchingLeft = Physics2D.Raycast(transform.position, Vector2.left, wallCheckDistance, wallLayer);
-        bool touchingRight = Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, wallLayer);
-
-        return touchingLeft || touchingRight;
-    }
-
+    /// <summary>
+    /// Vérifie s'il y a un mur à droite
+    /// </summary>
     public bool CheckRightWall()
     {
-        float wallCheckDistance = 0.6f;
-        LayerMask wallLayer = LayerMask.GetMask("WallJump");
-
-        return Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, wallLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, WallRayLength, LayerMask);
+        Debug.DrawRay(transform.position, Vector2.right * WallRayLength, Color.red); // Pour voir le rayon dans la scène
+        return hit.collider != null;
     }
 
-    // Public raiser methods for events so other types can notify listeners safely
-    public void RaiseWeaponInventoryChanged()
+    /// <summary>
+    /// Vérifie s'il y a un mur à gauche
+    /// </summary>
+    public bool CheckLeftWall()
     {
-        OnWeaponInventoryChanged?.Invoke();
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left, WallRayLength, LayerMask);
+        Debug.DrawRay(transform.position, Vector2.left * WallRayLength, Color.red);
+        return hit.collider != null;
     }
 
-    public void RaiseConsInventoryChanged()
+    /// <summary>
+    /// Vérifie s'il y a un mur d'un côté ou de l'autre (utilisé pour rester dans l'état Wall)
+    /// </summary>
+    public bool CheckWall()
     {
-        OnConsInventoryChanged?.Invoke();
+        return CheckRightWall() || CheckLeftWall();
     }
+
+
 }

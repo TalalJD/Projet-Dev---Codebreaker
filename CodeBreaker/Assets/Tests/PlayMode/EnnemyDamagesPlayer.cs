@@ -12,7 +12,7 @@ public class EnemyDamagesPlayer
     private Player _player;
 
     private GameObject _enemyGO;
-    private StaticEnnemy _enemy;
+    private FlyingEnnemy _enemy;
 
     [SetUp]
     public void Setup()
@@ -32,7 +32,7 @@ public class EnemyDamagesPlayer
         _player.SendMessage("Start"); // initialise currentHealth = maxHealth
 
 
-        var enemyPrefab = AssetDatabase.LoadAssetAtPath<StaticEnnemy>("Assets/Prefabs/EnnemyPrefab/EnnemyStatic.prefab");
+        var enemyPrefab = AssetDatabase.LoadAssetAtPath<FlyingEnnemy>("Assets/Prefabs/EnnemyPrefab/EnnemyStatic.prefab");
 
         Assert.IsNotNull(enemyPrefab);
 

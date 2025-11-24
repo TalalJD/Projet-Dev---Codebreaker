@@ -102,6 +102,14 @@ public abstract class Ennemy : MonoBehaviour
 
     protected virtual void FindPlayer()
     {
+        // Re-acquire the player if we lost the reference (handles player respawn/new instance)
+        if (_target == null)
+        {
+            var go = GameObject.FindGameObjectWithTag("Player");
+            if (go != null)
+                _target = go.transform;
+        }
+
         if (_target != null)
         {
             _targetDirection = (_target.position - transform.position).normalized;

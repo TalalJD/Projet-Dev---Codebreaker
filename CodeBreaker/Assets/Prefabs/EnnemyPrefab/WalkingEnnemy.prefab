@@ -262,7 +262,7 @@ GameObject:
   - component: {fileID: 8289864378691448166}
   - component: {fileID: 368325218050792072}
   m_Layer: 8
-  m_Name: EnnemyBase
+  m_Name: WalkingEnnemy
   m_TagString: Ennemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,6 +330,8 @@ MonoBehaviour:
     m_Bits: 0
   capsuleHitbox: {fileID: 5368122707703635188}
   inAttackRange: 1.5
+  enablePatrol: 1
+  patrolRange: 3
 --- !u!61 &368325218050792072
 BoxCollider2D:
   m_ObjectHideFlags: 0

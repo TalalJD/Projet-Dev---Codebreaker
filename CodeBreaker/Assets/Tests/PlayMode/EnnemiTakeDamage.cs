@@ -13,7 +13,7 @@ public class EnnemiTakeDamage
     Player _player;
 
     GameObject _enemyGO;
-    StaticEnnemy _enemy;
+    FlyingEnnemy _enemy;
 
     [SetUp]
     public void Setup()
@@ -54,7 +54,7 @@ public class EnnemiTakeDamage
 
         // Charger le prefab StaticEnnemy
 
-        var enemyPrefab = AssetDatabase.LoadAssetAtPath<StaticEnnemy>("Assets/Prefabs/EnnemyPrefab/EnnemyStatic.prefab");
+        var enemyPrefab = AssetDatabase.LoadAssetAtPath<FlyingEnnemy>("Assets/Prefabs/EnnemyPrefab/EnnemyStatic.prefab");
 
 
         Assert.IsNotNull(enemyPrefab);
