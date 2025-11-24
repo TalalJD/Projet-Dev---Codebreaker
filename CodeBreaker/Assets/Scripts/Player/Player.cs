@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 
 
     //attributs pour la logique de deplacement
-    public float GroundRayLenght; //longueur du ray pour dectecter le ground check
+    public float GroundRayLenght; //longueur du ray pour dectetecter le ground check
     public Rigidbody2D Rb;
     public PhysicsInfo PhysicsInfo;
     public float GroundSpeed;
@@ -51,6 +51,10 @@ public class Player : MonoBehaviour
     public bool canTakeDmg;
     public float blockCooldown = 4f;   // la duration 
     public float blockTimer = 0f;      // timer
+
+    // New flag to indicate blocking state (used to prevent weapon equip/instantiate)
+    public bool IsBlocking = false;
+
 
     public float XSpeed //vitesse horizontale du joueur
     {
@@ -164,6 +168,9 @@ public class Player : MonoBehaviour
     /// </summary>
     public void CycleWeaponInventory()
     {
+        // Prevent weapon cycling/instantiation while blocking
+        if (IsBlocking) return;
+
         if (WeaponInventory.Count > 0)
         {
             inventoryIndex++;
@@ -198,6 +205,9 @@ public class Player : MonoBehaviour
     /// <param name="index">Index de l'arme dans la liste Inventory</param>
     private void EquipWeapon(int index)
     {
+        // Prevent equipping while blocking (safety check)
+        if (IsBlocking) return;
+
         // d�truire l�arme pr�c�dente si elle existe
         if (SelectedWeapon != null)
         {
@@ -212,7 +222,7 @@ public class Player : MonoBehaviour
             weapon.AssignWeapon(weaponInfo);
             SelectedWeapon = weapon;
             SelectedWeaponInfo = weaponInfo;
-
+            OnWeaponInventoryChanged?.Invoke();
         }
         else
         {
@@ -235,6 +245,7 @@ public class Player : MonoBehaviour
             cons.AssignConsumable(consumableInfo);
             SelectedConsumable = cons;
             SelectedConsumableInfo = consumableInfo;
+            OnConsInventoryChanged?.Invoke();
         }
         else
         {
@@ -389,5 +400,16 @@ public class Player : MonoBehaviour
         LayerMask wallLayer = LayerMask.GetMask("WallJump");
 
         return Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, wallLayer);
+    }
+
+    // Public raiser methods for events so other types can notify listeners safely
+    public void RaiseWeaponInventoryChanged()
+    {
+        OnWeaponInventoryChanged?.Invoke();
+    }
+
+    public void RaiseConsInventoryChanged()
+    {
+        OnConsInventoryChanged?.Invoke();
     }
 }

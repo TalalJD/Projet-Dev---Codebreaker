@@ -3,78 +3,62 @@ using UnityEngine;
 
 public class BlockingState : PlayerState
 {
-    
     public BlockingState() : base(4) { }
-
 
     public override void OnEnter()
     {
         Player.canTakeDmg = false;
+        Player.IsBlocking = true;
 
+        // stop any movement immediately to avoid "floating" while blocking
+        if (Player != null && Player.Rb != null)
+        {
+            // zero the Rigidbody2D velocity
+            Player.Rb.linearVelocity = Vector2.zero;
+
+            // also zero the convenience properties so other code sees 0 speed
+            Player.XSpeed = 0f;
+            Player.YSpeed = 0f;
+        }
+
+        // destroy equipped weapon so player can't shoot while blocking
+        if (Player.SelectedWeapon != null)
+        {
+            GameObject.Destroy(Player.SelectedWeapon.gameObject);
+            Player.SelectedWeapon = null;
+            Player.SelectedWeaponInfo = null;
+            // notify listeners via raiser method (can't invoke event from outside Player)
+            Player.RaiseWeaponInventoryChanged();
+        }
+
+        // make sure there is no pending jump when we start blocking
+        var move = Machine.Get<MoveState>();
+        if (move != null) move.jumpRequested = false;
     }
 
     public override void OnExit()
     {
         Player.canTakeDmg = true;
+        Player.IsBlocking = false;
 
-        // Commencer le cooldown quand M n'est plus touché
-        Player.blockTimer = Player.blockCooldown;  
+        // ensure jump is cleared when leaving block
+        var move = Machine.Get<MoveState>();
+        if (move != null) move.jumpRequested = false;
     }
 
     public override void OnUpdate()
     {
+        // Prevent the player from queuing a jump while blocking.
+        // Keep clearing any jump request every frame while blocking.
+        var move = Machine.Get<MoveState>();
+        if (move != null) move.jumpRequested = false;
+
+        // Exit blocking when the block key is released
         if (!Input.GetKey(KeyCode.M))
         {
-            
-            if (Player.CheckOnGround())
-                Machine.Set<MoveState>();
-            else
-                Machine.Set<AirState>();
-        }
-
-        // La direction du player (Sprite)
-        float inputX = Input.GetAxisRaw("Horizontal");
-        if (inputX != 0)
-        {
-            Player.Direction = (int)Mathf.Sign(inputX);
-            Player.spriteRenderer.flipX = Player.Direction < 0;
+            Machine.Set<MoveState>();
+            return;
         }
     }
-
-    public override void OnFixedUpdate()
-    {
-        float inputX = Input.GetAxisRaw("Horizontal");
-
-        // vitesse reduit
-        float maxSpeedDec = Player.PhysicsInfo.TopSpeed * 0.15f;
-
-        float accel = Player.PhysicsInfo.Acceleration;
-        float decel = Player.PhysicsInfo.Deceleration;
-
-        if (inputX == 0)
-        {
-            // deaccelere si pas de input
-            Player.GroundSpeed = Mathf.MoveTowards(
-                Player.GroundSpeed,
-                0,
-                decel * Time.fixedDeltaTime
-            );
-        }
-        else
-        {
-            // applique le ralentissement
-            float target = inputX * maxSpeedDec;
-
-            Player.GroundSpeed = Mathf.MoveTowards(
-                Player.GroundSpeed,
-                target,
-                accel * Time.fixedDeltaTime
-            );
-        }
-
-        // la velocité
-        Player.XSpeed = Player.GroundSpeed;
-    }
-
 }
 
