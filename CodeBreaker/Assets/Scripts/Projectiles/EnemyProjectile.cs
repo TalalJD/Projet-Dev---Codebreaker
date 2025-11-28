@@ -5,7 +5,7 @@ using UnityEngine;
 // receive the hit (Player.OnTriggerEnter2D) to apply damage — avoids double-damage.
 public class EnemyProjectile : Projectile
 {
-    [SerializeField] private int damage = 1;
+    //[SerializeField] private int damage = 1;
 
     private Vector2 direction;
 
