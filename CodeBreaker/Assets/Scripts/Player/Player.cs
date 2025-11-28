@@ -176,20 +176,20 @@ public class Player : MonoBehaviour
                 // if consumable should be consumed/removed, ensure the Consumable implementation handles destruction
             }
         }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            Debug.Log("Using Consumable");
-            SelectedConsumable?.UseConsumable();
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            CycleConsumableInventory();
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            // unified cycle between consumables and weapons
-            CycleHeldItem();
-        }
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    Debug.Log("Using Consumable");
+        //    SelectedConsumable?.UseConsumable();
+        //}
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    CycleConsumableInventory();
+        //}
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    // unified cycle between consumables and weapons
+        //    CycleHeldItem();
+        //}
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             ModifyHealth(-1);
@@ -590,7 +590,11 @@ public class Player : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, WallRayLength, LayerMask);
         Debug.DrawRay(transform.position, Vector2.right * WallRayLength, Color.red); // Pour voir le rayon dans la scène
-        return hit.collider != null;
+
+        if (hit.collider == null) return false;
+
+        // Accept either "Wall" or "wall" tag to be tolerant of casing
+        return hit.collider.CompareTag("wall");
     }
 
     /// <summary>
@@ -600,7 +604,8 @@ public class Player : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left, WallRayLength, LayerMask);
         Debug.DrawRay(transform.position, Vector2.left * WallRayLength, Color.red);
-        return hit.collider != null;
+        if (hit.collider == null) return false;
+        return hit.collider.CompareTag("wall");
     }
 
     /// <summary>
