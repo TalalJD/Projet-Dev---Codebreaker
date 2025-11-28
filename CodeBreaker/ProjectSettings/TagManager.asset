@@ -9,6 +9,7 @@ TagManager:
   - Boss
   - EnnemyHitbox
   - Ennemy
+  - wall
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,6 @@ TagManager:
   - Item
   - Ennemy
   - WallJump
-  - 
   - 
   - 
   - 

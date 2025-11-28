@@ -110,11 +110,11 @@ public class MoveState : PlayerState
         }
 
         // Rentre Blocking State et attend pour le cooldown
-        if (Input.GetKey(KeyCode.M) && Player.blockTimer <= 0)
+        if (Input.GetKey(KeyCode.L) && Player.blockTimer <= 0)
         {
             Machine.Set<BlockingState>();
         }
-        if (Input.GetKeyDown(KeyCode.B) && DashState.dashCurrentCooldown <= 0)
+        if (Input.GetKeyDown(KeyCode.K) && DashState.dashCurrentCooldown <= 0)
         {
             Machine.Set<DashState>();
         }

@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
 
 
     public bool canTakeDmg;
-    public float blockCooldown = 4f;   // la duration 
+    public float blockCooldown = 2f;   // la duration 
     public float blockTimer = 0f;      // timer
 
     // New flag to indicate blocking state (used to prevent weapon equip/instantiate)

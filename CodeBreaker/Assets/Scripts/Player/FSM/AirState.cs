@@ -108,13 +108,13 @@ public class AirState : PlayerState
     public override void OnUpdate()
     {
         // Rentre Blocking State
-        if (Input.GetKey(KeyCode.M) && Player.CheckOnGround())
+        if (Input.GetKey(KeyCode.L) && Player.CheckOnGround())
         {
             Machine.Set<BlockingState>();
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.K))
         {
             // Peut pas dash 2 fois dans les airs
             if (!hasDashed)

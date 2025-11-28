@@ -3177,14 +3177,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5879286581781062522, guid: c57f234139f54344e87307f2598d07aa, type: 3}
-      propertyPath: WeaponInventory.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5879286581781062522, guid: c57f234139f54344e87307f2598d07aa, type: 3}
-      propertyPath: 'WeaponInventory.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 75f06ea73fc46744db31bb29e62da20d, type: 2}
     - target: {fileID: 7677633579942445629, guid: c57f234139f54344e87307f2598d07aa, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3202,14 +3194,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 932688157086340690, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 932688157086340690, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3588326844227554633, guid: 6eb3e60621698d54987e60913c55d058, type: 3}
       propertyPath: m_Name
       value: Gromar
