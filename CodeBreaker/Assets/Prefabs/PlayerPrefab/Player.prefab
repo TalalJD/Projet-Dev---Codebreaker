@@ -131,6 +131,8 @@ MonoBehaviour:
   canTakeDmg: 0
   blockCooldown: 4
   blockTimer: 0
+  IsBlocking: 0
+  WallRayLength: 0.6
 --- !u!114 &3490334863278385395
 MonoBehaviour:
   m_ObjectHideFlags: 0
