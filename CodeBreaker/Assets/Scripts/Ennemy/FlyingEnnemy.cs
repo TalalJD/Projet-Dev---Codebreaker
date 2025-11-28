@@ -28,7 +28,7 @@ public class FlyingEnnemy : Ennemy
     [Header("Movement")]
     [SerializeField] private Vector2 followOffset = new Vector2(2f, 4f);
     [SerializeField] private float moveSpeed = 4f;
-    [SerializeField] private float maxY = 0f;
+    
 
     // runtime
     protected float distanceTarget;
