@@ -120,8 +120,8 @@ public class WallState : PlayerState
 
             jumpDir.Normalize();
 
-            Player.YSpeed = PhysicsInfo.WallJumpVert;
-            Player.GroundSpeed = jumpDir.x * PhysicsInfo.WallJumpHori;
+            Player.YSpeed = PhysicsInfo.WallJumpVert * 1.25f;
+            Player.GroundSpeed = jumpDir.x * (PhysicsInfo.WallJumpHori * 3.3f);
 
             Machine.Get<AirState>().isJump = true;
             Machine.Set<AirState>();
