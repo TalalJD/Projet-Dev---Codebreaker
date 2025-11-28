@@ -67,9 +67,10 @@ MonoBehaviour:
   HomingSP: {fileID: 4678515042934128402}
   ConeSP: {fileID: 6958829804364716473}
   animator: {fileID: 9163855024910352102}
-  maxHealth: 3
+  maxHealth: 150
   currentHealth: 0
   explosionRadius: 3
+  forcedExplosion: 0
 --- !u!114 &2963311256672540555
 MonoBehaviour:
   m_ObjectHideFlags: 0
