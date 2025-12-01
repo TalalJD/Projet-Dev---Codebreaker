@@ -44,9 +44,11 @@ public class Player : MonoBehaviour
 
     public event Action OnWeaponInventoryChanged;
     public event Action OnConsInventoryChanged;
+
     // Event to notify UI of held item change: pass currently held ScriptableObject or null
     public event Action<ScriptableObject> OnHeldItemChanged;
     public event Action<int, int> OnHealthChanged;
+    public event Action OnDeath;
 
 
 
@@ -557,7 +559,7 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-
+        StateMachine.Set<DeathState>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -571,16 +573,6 @@ public class Player : MonoBehaviour
             }
 
         }
-
-        //if (other.CompareTag("EnnemyBullet"))
-        //{
-        //    health--;
-        //    if (health <= 0)
-        //    {
-        //        Die();
-        //    }
-        //    Destroy(other.gameObject);
-        //}
     }
 
     /// <summary>
@@ -616,5 +608,9 @@ public class Player : MonoBehaviour
         return CheckRightWall() || CheckLeftWall();
     }
 
+    public void TriggerDeathEvent()
+    {
+        OnDeath?.Invoke();
+    }
 
 }
