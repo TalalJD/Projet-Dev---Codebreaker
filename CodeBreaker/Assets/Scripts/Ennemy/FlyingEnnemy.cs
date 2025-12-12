@@ -5,36 +5,25 @@ using UnityEngine;
 public class FlyingEnnemy : Ennemy
 {
     [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject projectilePrefab; // optional fallback
+    [SerializeField] private GameObject projectilePrefab; // fallback optionnel
     [SerializeField] private float projectileSpeed = 12f;
 
-    [Header("Ranges")]
-    [SerializeField, Tooltip("Distance at which the enemy will move/attack the player")]
-    private float attackRange = 10f;
+    [SerializeField] private float attackRange = 10f;
+    [SerializeField] private float idleRange = 15f;
 
-    [SerializeField, Tooltip("Distance used for editor visualization (not used to start/stop patrol)")]
-    private float idleRange = 15f;
+    [SerializeField] private float patrolRange = 3f;
+    [SerializeField] private float patrolMoveDuration = 2f;
+    [SerializeField] private float patrolStopDuration = 2f;
+    [SerializeField] private bool enableIdlePatrol = true;
 
-    [Header("Idle / Patrol")]
-    [SerializeField, Tooltip("Horizontal half-range around spawn where the flying enemy will patrol while idling")]
-    private float patrolRange = 3f;
-    [SerializeField, Tooltip("Seconds to move during idle patrol phase")]
-    private float patrolMoveDuration = 2f;
-    [SerializeField, Tooltip("Seconds to stop during idle patrol phase")]
-    private float patrolStopDuration = 2f;
-    [SerializeField, Tooltip("Enable idle patrol behaviour")]
-    private bool enableIdlePatrol = true;
-
-    [Header("Movement")]
     [SerializeField] private Vector2 followOffset = new Vector2(2f, 4f);
     [SerializeField] private float moveSpeed = 4f;
     
-
-    // runtime
+    // exécution (runtime)
     protected float distanceTarget;
     private Rigidbody2D _rb;
 
-    // patrol runtime state
+    // état d'exécution de la patrouille
     private float patrolCenterX;
     private float patrolMinX;
     private float patrolMaxX;
@@ -52,12 +41,12 @@ public class FlyingEnnemy : Ennemy
         _rb = GetComponent<Rigidbody2D>();
         ResetCooldown();
 
-        // init patrol bounds around spawn position
+        // initialiser les limites de patrouille autour de la position d'apparition
         patrolCenterX = transform.position.x;
         patrolMinX = patrolCenterX - patrolRange;
         patrolMaxX = patrolCenterX + patrolRange;
 
-        // init patrol timing
+        // initialiser le minutage de patrouille
         patrolMoving = true;
         patrolTimer = patrolMoveDuration;
     }
@@ -75,25 +64,25 @@ public class FlyingEnnemy : Ennemy
 
         bool inAttackZone = distanceTarget <= attackRange;
 
-        // If player in attack range and cooldown allows -> stop patrol briefly and shoot.
-        // Otherwise do not interrupt patrol; keep performing idle patrol motion.
+        // Si le joueur est à portée d'attaque et que le cooldown le permet -> arrêter la patrouille brièvement et tirer.
+        // Sinon ne pas interrompre la patrouille ; continuer le mouvement de patrouille en idle.
         if (inAttackZone && CanAttack())
         {
-            // face the player and fire
+            // faire face au joueur et tirer
             RegarderJoueur(_targetDirection.x);
 
-            // interrupt patrol briefly when shooting: enter stop phase
+            // interrompre la patrouille brièvement lors du tir : entrer en phase d'arrêt
             patrolMoving = false;
             patrolTimer = patrolStopDuration;
 
             Attack();
-            // Attack() calls ResetCooldown(); after this frame Normal patrol cycle will continue.
+            // Attack() appelle ResetCooldown(); après cette frame le cycle de patrouille normal continuera.
         }
 
-        // Idle / Patrol always runs (unless disabled). When shooting happens above, we already set patrolMoving=false and patrolTimer.
+        // Idle / Patrouille s'exécutent toujours (sauf si désactivé). Quand un tir se produit ci-dessus, nous avons déjà défini patrolMoving=false et patrolTimer.
         if (enableIdlePatrol)
         {
-            // decrement timer
+            // diminuer le minuteur
             patrolTimer -= Time.fixedDeltaTime;
 
             if (patrolMoving)
@@ -102,8 +91,8 @@ public class FlyingEnnemy : Ennemy
             }
             else
             {
-                // stopped phase - hold position (no horizontal movement)
-                // nothing to do here
+                // phase arrêtée - garder la position (pas de mouvement horizontal)
+                // rien à faire ici
             }
 
             if (patrolTimer <= 0f)
@@ -118,14 +107,14 @@ public class FlyingEnnemy : Ennemy
     {
         if (_rb == null) return;
 
-        // pick target X depending on patrol direction
+        // choisir la position X cible en fonction de la direction de patrouille
         float targetX = patrolDirection > 0 ? patrolMaxX : patrolMinX;
         float diff = targetX - _rb.position.x;
 
         const float epsilon = 0.05f;
         if (Mathf.Abs(diff) <= epsilon)
         {
-            // reached bound -> flip direction
+            // atteint la borne -> inverser la direction
             patrolDirection *= -1;
             targetX = patrolDirection > 0 ? patrolMaxX : patrolMinX;
             diff = targetX - _rb.position.x;
@@ -134,7 +123,7 @@ public class FlyingEnnemy : Ennemy
         float dir = Mathf.Sign(diff);
         if (dir == 0) dir = patrolDirection;
 
-        // Move horizontally toward the intended bound while maintaining Y
+        // Se déplacer horizontalement vers la borne prévue tout en conservant Y
         Vector2 newPos = Vector2.MoveTowards(
             _rb.position,
             new Vector2(targetX, _rb.position.y),
@@ -143,7 +132,7 @@ public class FlyingEnnemy : Ennemy
 
         _rb.MovePosition(newPos);
 
-        // face patrol direction (so the enemy doesn't "lock" visually on the player while patrolling)
+        // faire face à la direction de patrouille (pour éviter que l'ennemi "verrouille" visuellement le joueur pendant la patrouille)
         RegarderJoueur(dir);
     }
 
@@ -151,7 +140,7 @@ public class FlyingEnnemy : Ennemy
     {
         base.Attack();
 
-        // determine a reliable target position (re-query the player if _target was lost)
+        // déterminer une position cible fiable (rechercher le joueur si _target a été perdu)
         Vector2 targetPos;
         if (_target != null)
             targetPos = _target.position;
@@ -161,7 +150,7 @@ public class FlyingEnnemy : Ennemy
             targetPos = go != null ? (Vector2)go.transform.position : (Vector2)firePoint.position;
         }
 
-        // Always use ProjectileManager spawn (returns Projectile instance so you can set speed)
+        // Utiliser toujours ProjectileManager pour spawner (retourne une instance Projectile pour régler la vitesse)
         if (ProjectileManager.Instance != null)
         {
             var proj = ProjectileManager.Instance.Spawn(ProjectileType.EnemyBullet, firePoint.position, targetPos);
@@ -172,7 +161,7 @@ public class FlyingEnnemy : Ennemy
         }
         else
         {
-            // fallback: instantiate prefab and set velocity toward targetPos
+            // secours : instancier le prefab et définir la vélocité vers targetPos
             if (projectilePrefab != null && firePoint != null)
             {
                 GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
@@ -188,7 +177,7 @@ public class FlyingEnnemy : Ennemy
         ResetCooldown();
     }
 
-    // Draw gizmos to visualize ranges in the editor when the object is selected
+    // Dessiner des gizmos pour visualiser les portées dans l'éditeur lorsque l'objet est sélectionné
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -197,7 +186,7 @@ public class FlyingEnnemy : Ennemy
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
-        // draw patrol bounds
+        // dessiner les limites de patrouille
         Gizmos.color = Color.magenta;
         Vector3 min = new Vector3(patrolMinX, transform.position.y - 0.2f, 0f);
         Vector3 max = new Vector3(patrolMaxX, transform.position.y - 0.2f, 0f);

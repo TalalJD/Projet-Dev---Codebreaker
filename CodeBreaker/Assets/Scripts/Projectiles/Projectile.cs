@@ -18,20 +18,19 @@ public abstract class Projectile : MonoBehaviour
 
    public virtual void OnTriggerEnter2D(Collider2D collision)
 {
-    // Ignore other projectiles
+   
     if (collision.GetComponent<Projectile>() != null)
         return;
 
-    // Ignore friendly fire (boss or enemies)
+   
     if (collision.CompareTag("Boss") || collision.CompareTag("Ennemy"))
         return;
 
-    // Ignore the player — player script already handles damage logic
+    
     if (collision.CompareTag("Player"))
         return;
 
-    // Destroy if it hits anything else (like walls, ground, etc.)
-    //Destroy(gameObject);
+   
 }
 
 

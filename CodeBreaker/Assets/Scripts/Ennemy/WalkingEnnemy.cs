@@ -20,17 +20,17 @@ public class WalkingEnnemy : Ennemy
     [SerializeField] private float idleRange = 20f;
     [SerializeField] private float inAttackRange = 1f;
     protected float distanceTarget;
-
-    // Patrol fields
+        
+    // Champs de patrouille
     [Header("Patrol (idle)")]
     [SerializeField] private bool enablePatrol = true;
-    [SerializeField] private float patrolRange = 3f; // half-range from start position
+    [SerializeField] private float patrolRange = 3f; // demi-portée autour de la position de départ
     private float patrolCenterX;
     private float patrolMinX;
     private float patrolMaxX;
-    private int patrolDirection = 1; // 1 = right, -1 = left
+    private int patrolDirection = 1; // 1 = droite, -1 = gauche
 
-    // Idle patrol timing: walk for X seconds, then stop for Y seconds
+    // Timing de patrouille en idle : marcher X secondes, puis s'arrêter Y secondes
     [SerializeField] private float patrolMoveDuration = 2f;
     [SerializeField] private float patrolStopDuration = 2f;
     private float patrolTimer;
@@ -44,12 +44,12 @@ public class WalkingEnnemy : Ennemy
         capsuleHitbox.SetActive(false);
         _renderer.enabled = false;
 
-        // initialize patrol bounds around start position
+        // initialiser les bornes de patrouille autour de la position de départ
         patrolCenterX = transform.position.x;
         patrolMinX = patrolCenterX - patrolRange;
         patrolMaxX = patrolCenterX + patrolRange;
 
-        // initialize patrol timer/state
+        // initialiser le minuteur/état de patrouille
         patrolMoving = true;
         patrolTimer = patrolMoveDuration;
         wasInIdleRange = false;
@@ -65,39 +65,39 @@ public class WalkingEnnemy : Ennemy
             distanceTarget = Mathf.Infinity;
         }
 
-        // aggro = inside yellow circle
+        // aggro = dans le cercle jaune
         bool aggro = distanceTarget <= aggroRange;
-        // withinIdleRange = inside cyan circle (player close enough that enemy should idle/patrol if not aggro)
+        // withinIdleRange = dans le cercle cyan (le joueur est assez proche pour que l'ennemi idle/patrouille s'il n'est pas en aggro)
         bool withinIdleRange = distanceTarget <= idleRange;
         bool tryAttack = distanceTarget <= inAttackRange;
 
         if (inAttack)
         {
-            // currently performing attack animation/hit - don't move
+            // en train d'effectuer l'animation/hit d'attaque - ne pas se déplacer
             _velocity.x = 0;
         }
         else if (tryAttack)
         {
-            // Player is inside attack range: stop moving toward the player so the enemy doesn't push into them.
+            // Le joueur est à portée d'attaque : arrêter de se déplacer vers lui pour ne pas le pousser
             _velocity.x = 0;
-            // still face the player
+            // continuer à faire face au joueur
             RegarderJoueur(_targetDirection.x);
         }
         else if (aggro)
         {
-            // chase the player only when outside attack range
+            // poursuivre le joueur uniquement lorsqu'il est hors de la portée d'attaque
             float directionX = Mathf.Sign(_targetDirection.x) * moveSpeed;
             _velocity.x = directionX;
             RegarderJoueur(_targetDirection.x);
 
-            // leaving idle region - reset patrol cycle so it restarts next time
+            // en quittant la zone d'idle - réinitialiser le cycle de patrouille pour qu'il redémarre la prochaine fois
             wasInIdleRange = false;
         }
         else if (withinIdleRange && enablePatrol)
         {
-            // Player is within idle range but not aggro -> patrol with timed walk/stop cycle
+            // Le joueur est dans la zone d'idle mais pas en aggro -> patrouille avec cycle marche/arrêt temporisé
 
-            // if we just entered idle range, reset the patrol cycle
+            // si on vient d'entrer dans la zone d'idle, réinitialiser le cycle de patrouille
             if (!wasInIdleRange)
             {
                 wasInIdleRange = true;
@@ -105,7 +105,7 @@ public class WalkingEnnemy : Ennemy
                 patrolTimer = patrolMoveDuration;
             }
 
-            // update patrol timer
+            // mettre à jour le minuteur de patrouille
             patrolTimer -= Time.fixedDeltaTime;
 
             if (patrolMoving)
@@ -114,23 +114,23 @@ public class WalkingEnnemy : Ennemy
             }
             else
             {
-                // stopped phase
+                // phase arrêtée
                 _velocity.x = 0;
             }
 
             if (patrolTimer <= 0f)
             {
-                // toggle moving/stopped and reset timer accordingly
+                // basculer marche/arrêt et réinitialiser le minuteur en conséquence
                 patrolMoving = !patrolMoving;
                 patrolTimer = patrolMoving ? patrolMoveDuration : patrolStopDuration;
             }
         }
         else
         {
-            // Player is further than idle range (or patrol disabled) -> stop moving
+            // Le joueur est plus loin que la zone d'idle (ou la patrouille est désactivée) -> arrêter le mouvement
             _velocity.x = 0;
 
-            // reset patrol cycle so it starts fresh next time we enter idle range
+            // réinitialiser le cycle de patrouille pour qu'il recommence proprement la prochaine fois qu'on entre en zone d'idle
             wasInIdleRange = false;
             patrolMoving = true;
             patrolTimer = patrolMoveDuration;
@@ -170,11 +170,11 @@ public class WalkingEnnemy : Ennemy
 
     private void DoPatrol()
     {
-        // Determine direction toward current patrol target and move
+        // Déterminer la direction vers la cible de patrouille actuelle et se déplacer
         float targetX = patrolDirection > 0 ? patrolMaxX : patrolMinX;
         float diff = targetX - transform.position.x;
 
-        // If very close to target, flip direction
+        // Si très proche de la cible, inverser la direction
         const float epsilon = 0.05f;
         if (Mathf.Abs(diff) <= epsilon)
         {
@@ -184,11 +184,11 @@ public class WalkingEnnemy : Ennemy
         }
 
         float dir = Mathf.Sign(diff);
-        if (dir == 0) dir = patrolDirection; // fallback
+        if (dir == 0) dir = patrolDirection; // secours
 
         _velocity.x = dir * moveSpeed;
 
-        // make enemy face patrol direction
+        // faire face à la direction de patrouille
         RegarderJoueur(dir);
     }
 
@@ -239,7 +239,7 @@ public class WalkingEnnemy : Ennemy
         Gizmos.color = Color.cyan; Gizmos.DrawWireSphere(transform.position, idleRange);
         Gizmos.color = Color.red; Gizmos.DrawWireSphere(transform.position, inAttackRange);
 
-        // draw patrol bounds in editor
+        // dessiner les limites de patrouille dans l'éditeur
         Gizmos.color = Color.magenta;
         Gizmos.DrawLine(new Vector3(patrolMinX, transform.position.y - 0.2f, 0f), new Vector3(patrolMaxX, transform.position.y - 0.2f, 0f));
     }

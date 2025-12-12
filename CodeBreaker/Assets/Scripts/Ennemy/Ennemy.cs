@@ -41,7 +41,7 @@ public abstract class Ennemy : MonoBehaviour
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
 
-        if (other.CompareTag("PlayerBullet")) // Make sure your bullet has tag "Bullet"
+        if (other.CompareTag("PlayerBullet")) 
         {
             TakeDamage(1);
         }
@@ -102,7 +102,7 @@ public abstract class Ennemy : MonoBehaviour
 
     protected virtual void FindPlayer()
     {
-        // Re-acquire the player if we lost the reference (handles player respawn/new instance)
+        
         if (_target == null)
         {
             var go = GameObject.FindGameObjectWithTag("Player");

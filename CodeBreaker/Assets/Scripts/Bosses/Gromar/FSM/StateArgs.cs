@@ -16,18 +16,18 @@ public class WarpArgs : StateBaseArgs
 
 public class ConeArgs : StateBaseArgs
 {
-    // Count and per-shot Delay removed: cone is now single-shot per state.
+  
     public float Speed = 10f;
 }
 
 public class ParabolicMissileArgs : StateBaseArgs
 {
-    // Count and Delay removed — single-shot behaviour.
+    
 }
 
 public class HomingMissileArgs : StateBaseArgs
 {
-    // Count and Delay removed — single-shot behaviour.
+   
 }
 
 public class LaserArgs : StateBaseArgs

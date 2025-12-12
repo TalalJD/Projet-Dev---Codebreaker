@@ -7,7 +7,7 @@ public enum ProjectileType
     ParabolicMissile,
     HomingMissile,
     Cone,
-    EnemyBullet // Add EnemyBullet type
+    EnemyBullet 
 }
 
 public class ProjectileManager : MonoBehaviour
@@ -20,7 +20,7 @@ public class ProjectileManager : MonoBehaviour
     public GameObject parabolicMissilePrefab;
     public GameObject homingMissilePrefab;
     public GameObject Cone;
-    public GameObject enemyBulletPrefab; // Add field for enemy bullet prefab
+    public GameObject enemyBulletPrefab; 
 
     void Awake()
     {
@@ -43,7 +43,7 @@ public class ProjectileManager : MonoBehaviour
             ProjectileType.ParabolicMissile => parabolicMissilePrefab,
             ProjectileType.HomingMissile => homingMissilePrefab,
             ProjectileType.Cone => Cone,
-            ProjectileType.EnemyBullet => enemyBulletPrefab, // Add case for EnemyBullet
+            ProjectileType.EnemyBullet => enemyBulletPrefab, 
             _ => null
         };
 

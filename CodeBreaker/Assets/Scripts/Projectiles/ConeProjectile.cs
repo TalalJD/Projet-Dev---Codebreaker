@@ -9,13 +9,13 @@ public class ConeProjectile : Projectile
         base.Initialize(origin, target);
         transform.position = origin;
 
-        // direction toward player
+        // direction 
         direction = (target - origin).normalized;
 
-        // angle of that direction (0° = right)
+        // angle 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        // rotate sprite to face that direction
+        // rotate sprite 
         transform.rotation = Quaternion.Euler(0f, 0f, angle+180f);
     }
 
